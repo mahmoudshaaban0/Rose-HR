@@ -1,0 +1,13 @@
+analyzer:
+  errors:
+    avoid_positional_boolean_parameters: ignore
+    lines_longer_than_80_chars: ignore
+    prefer_single_quotes: ignore
+    public_member_api_docs: ignore
+include: package:very_good_analysis/analysis_options.yaml
+
+linter:
+  rules:
+    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+
