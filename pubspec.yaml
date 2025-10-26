@@ -69,6 +69,7 @@ flutter_assets:
   assets_path:
     - assets/vectors/
     - assets/rasters/
+    - assets/fonts/
   output_path: lib/common/constants
   filename: app_assets.dart
   field_prefix: null
