@@ -10,6 +10,8 @@ interface class AppColors extends ThemeExtension<AppColors> {
     required this.surfaceContainerHigh,
     required this.surfaceContainerLowest,
     required this.surfaceVariant,
+    required this.containerBackground,
+    required this.containerBorder,
 
     // Text & Icons
     required this.onSurface,
@@ -41,12 +43,14 @@ interface class AppColors extends ThemeExtension<AppColors> {
     // Overlays
     required this.scrim,
     required this.black,
+    required this.white,
 
     // Faded / Neutral Variants
     required this.fadedDark,
     required this.fadedBase,
     required this.fadedLight,
     required this.disabledColor,
+    required this.dividerColor,
   });
 
   factory AppColors.light() {
@@ -64,6 +68,8 @@ interface class AppColors extends ThemeExtension<AppColors> {
   final Color surfaceContainerHigh;
   final Color surfaceContainerLowest;
   final Color surfaceVariant;
+  final Color containerBackground;
+  final Color containerBorder;
 
   // ===== Text & Icons =====
   final Color onSurface;
@@ -98,12 +104,14 @@ interface class AppColors extends ThemeExtension<AppColors> {
   // ===== Overlays =====
   final Color scrim;
   final Color black;
+  final Color white;
 
   // ===== Faded / Neutral Variants =====
   final Color fadedDark;
   final Color fadedBase;
   final Color fadedLight;
   final Color disabledColor;
+  final Color dividerColor;
   @override
   ThemeExtension<AppColors> copyWith({
     Color? surface,
@@ -135,10 +143,13 @@ interface class AppColors extends ThemeExtension<AppColors> {
     Color? warningAlt,
     Color? scrim,
     Color? black,
+    Color? white,
     Color? fadedDark,
     Color? fadedBase,
     Color? fadedLight,
     Color? disabledColor,
+    Color? containerBackground,
+    Color? dividerColor,
   }) {
     return AppColors(
       surface: surface ?? this.surface,
@@ -147,6 +158,8 @@ interface class AppColors extends ThemeExtension<AppColors> {
       surfaceContainerHigh: surfaceContainerHigh ?? this.surfaceContainerHigh,
       surfaceContainerLowest: surfaceContainerLowest ?? this.surfaceContainerLowest,
       surfaceVariant: surfaceVariant ?? this.surfaceVariant,
+      containerBackground: containerBackground ?? this.containerBackground,
+      containerBorder: containerBorder,
       onSurface: onSurface ?? this.onSurface,
       onSurfaceVariant: onSurfaceVariant ?? this.onSurfaceVariant,
       textDisabled: textDisabled ?? this.textDisabled,
@@ -170,10 +183,12 @@ interface class AppColors extends ThemeExtension<AppColors> {
       warningAlt: warningAlt ?? this.warningAlt,
       scrim: scrim ?? this.scrim,
       black: black ?? this.black,
+      white: white ?? this.white,
       fadedDark: fadedDark ?? this.fadedDark,
       fadedBase: fadedBase ?? this.fadedBase,
       fadedLight: fadedLight ?? this.fadedLight,
       disabledColor: disabledColor ?? this.disabledColor,
+      dividerColor: dividerColor ?? this.dividerColor,
     );
   }
 
@@ -193,6 +208,8 @@ interface class AppColors extends ThemeExtension<AppColors> {
       surfaceContainerHigh: Color.lerp(surfaceContainerHigh, other.surfaceContainerHigh, t)!,
       surfaceContainerLowest: Color.lerp(surfaceContainerLowest, other.surfaceContainerLowest, t)!,
       surfaceVariant: Color.lerp(surfaceVariant, other.surfaceVariant, t)!,
+      containerBackground: Color.lerp(containerBackground, other.containerBackground, t)!,
+      containerBorder: Color.lerp(containerBorder, other.containerBorder, t)!,
       onSurface: Color.lerp(onSurface, other.onSurface, t)!,
       onSurfaceVariant: Color.lerp(onSurfaceVariant, other.onSurfaceVariant, t)!,
       textDisabled: Color.lerp(textDisabled, other.textDisabled, t)!,
@@ -216,10 +233,12 @@ interface class AppColors extends ThemeExtension<AppColors> {
       warningAlt: Color.lerp(warningAlt, other.warningAlt, t)!,
       scrim: Color.lerp(scrim, other.scrim, t)!,
       black: Color.lerp(black, other.black, t)!,
+      white: Color.lerp(white, other.white, t)!,
       fadedDark: Color.lerp(fadedDark, other.fadedDark, t)!,
       fadedBase: Color.lerp(fadedBase, other.fadedBase, t)!,
       fadedLight: Color.lerp(fadedLight, other.fadedLight, t)!,
       disabledColor: Color.lerp(disabledColor, other.disabledColor, t)!,
+      dividerColor: Color.lerp(dividerColor, other.dividerColor, t)!,
     );
   }
 }
@@ -228,10 +247,11 @@ interface class AppColors extends ThemeExtension<AppColors> {
 @protected
 class AppLightColors extends AppColors {
   AppLightColors({
+    super.dividerColor = const Color(0xffEBE8E4),
     // Neutrals / Surfaces
-    super.surface = const Color(0xFFFFFFFF),
+    super.surface = const Color(0xFFF9F5F1),
     super.surfaceDim = const Color(0xFFF5F7FA),
-    super.onSurface = const Color(0xFF0E121B),
+    super.onSurface = const Color(0xFF212833),
     super.onSurfaceVariant = const Color(0xFF99A0AE),
     super.textDisabled = const Color(0xFFCACFD8),
     super.iconOnSurface = const Color(0xFF0E121B),
@@ -256,16 +276,18 @@ class AppLightColors extends AppColors {
     // Overlays
     super.scrim = const Color(0x3D2B303B), // 24% opacity
     super.black = const Color(0xFF0E121B),
-
+    super.white = const Color(0xFFFFFFFF),
     // Faded / Neutral Variants
     super.fadedDark = const Color(0xFF0E121B),
     super.fadedBase = const Color(0xFF717784),
     super.fadedLight = const Color(0xFFF5F7FA),
     super.surfaceContainerLow = const Color(0xFFF5F7FA),
     super.surfaceContainerHigh = const Color(0xFFE1E4EA),
-    super.surfaceContainerLowest = const Color(0xFFFFFFFF),
+    super.surfaceContainerLowest = const Color.fromARGB(255, 15, 13, 13),
     super.surfaceVariant = const Color(0xFFCACFD8),
     super.disabledColor = const Color(0xFFCACFD8),
+    super.containerBackground = const Color(0xffFFFDFA),
+    super.containerBorder = const Color(0xff525866),
   });
 }
 
@@ -273,6 +295,7 @@ class AppLightColors extends AppColors {
 @protected
 class AppDarkColors extends AppColors {
   AppDarkColors({
+    super.dividerColor = const Color(0xff222530),
     // Neutrals / Surfaces
     super.surface = const Color(0xFF0E121B),
     super.surfaceDim = const Color(0xFF0E121B),
@@ -305,6 +328,7 @@ class AppDarkColors extends AppColors {
     // Overlays
     super.scrim = const Color(0x3D0E121B), // 24% opacity black overlay
     super.black = const Color(0xFF000000),
+    super.white = const Color(0xFFFFFFFF),
 
     // Faded / Neutral Variants
     super.fadedDark = const Color(0xFF0E121B),
@@ -315,5 +339,7 @@ class AppDarkColors extends AppColors {
     super.surfaceContainerLowest = const Color(0xFF0E121B),
     super.surfaceVariant = const Color(0xFF717784),
     super.disabledColor = const Color(0xFF222530),
+    super.containerBackground = const Color(0xff000205),
+    super.containerBorder = const Color(0xffA7A19A),
   });
 }

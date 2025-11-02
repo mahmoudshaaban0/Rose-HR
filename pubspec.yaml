@@ -38,6 +38,7 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
+  rename: ^3.1.0
   vector_graphics_compiler: ^1.1.19
   very_good_analysis: ^9.0.0
 
@@ -52,17 +53,23 @@ flutter:
     - assets/rasters/
 
   fonts:
-    - family: itfMirsalC
+    - family: GraphikArabic
       fonts:
-        - asset: assets/fonts/itfMirsalC.otf
-          weight: 400
-        - asset: assets/fonts/itfMirsalC-Light.otf
+        - asset: assets/fonts/GraphikArabic-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/GraphikArabic-Light.ttf
           weight: 300
-        - asset: assets/fonts/itfMirsalC-Medium.otf
+        - asset: assets/fonts/GraphikArabic-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/GraphikArabic-Medium.ttf
           weight: 500
-        - asset: assets/fonts/itfMirsalC-Bold.otf
+        - asset: assets/fonts/GraphikArabic-Semibold.ttf
+          weight: 600
+        - asset: assets/fonts/GraphikArabic-Bold.ttf
           weight: 700
-        - asset: assets/fonts/itfMirsalC-Black.otf
+        - asset: assets/fonts/GraphikArabic-Black.ttf
+          weight: 800
+        - asset: assets/fonts/GraphikArabic-Super.ttf
           weight: 900
 
 flutter_assets:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rose_hr/common/helpers/adapt.dart';
 import 'package:rose_hr/theme/app_sizes.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -108,8 +109,8 @@ abstract class AppTextButton extends StatelessWidget {
         ),
         shape: WidgetStateProperty.resolveWith(
           (states) {
-            const shape = RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(24)),
+            final shape = RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(AppSpacing.xxl.r(context))),
             );
 
             if (states.contains(WidgetState.disabled)) {
@@ -193,7 +194,7 @@ abstract class AppTextButton extends StatelessWidget {
                     AppButtonSize.medium => context.typography.regular18,
                     AppButtonSize.large => context.typography.regular22,
                     AppButtonSize.xlarge => context.typography.bold28,
-                    AppButtonSize.xxLarge => context.typography.regular18,
+                    AppButtonSize.xxLarge => context.typography.medium18,
                   }).copyWith(
                     color: onTap != null ? textColor(context) : disabledTextColor(context),
                   ),

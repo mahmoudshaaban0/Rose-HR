@@ -8,6 +8,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
   /// {@macro app_typography}
   AppTypography({
     required this.regular12,
+    required this.regular14,
     required this.regular16,
     required this.regular18,
     required this.regular22,
@@ -31,6 +32,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
 
   // Regular
   final TextStyle regular12;
+  final TextStyle regular14;
   final TextStyle regular16;
   final TextStyle regular18;
   final TextStyle regular22;
@@ -58,6 +60,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
   @override
   ThemeExtension<AppTypography> copyWith({
     TextStyle? regular12,
+    TextStyle? regular14,
     TextStyle? regular16,
     TextStyle? regular18,
     TextStyle? regular22,
@@ -77,6 +80,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
   }) {
     return AppTypography(
       regular12: regular12 ?? this.regular12,
+      regular14: regular14 ?? this.regular14,
       regular16: regular16 ?? this.regular16,
       regular18: regular18 ?? this.regular18,
       regular22: regular22 ?? this.regular22,
@@ -105,6 +109,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
 
     return AppTypography(
       regular12: TextStyle.lerp(regular12, other.regular12, t)!,
+      regular14: TextStyle.lerp(regular14, other.regular14, t)!,
       regular16: TextStyle.lerp(regular16, other.regular16, t)!,
       regular18: TextStyle.lerp(regular18, other.regular18, t)!,
       regular22: TextStyle.lerp(regular22, other.regular22, t)!,
@@ -134,25 +139,31 @@ class _AppTypographyLight extends AppTypography {
           fontSize: 12,
           fontWeight: FontWeight.w400,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
+        ),
+        regular14: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: colors.onSurface,
+          fontFamily: 'GraphikArabic',
         ),
         regular16: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         regular18: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w400,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         regular22: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w400,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
 
         // Medium
@@ -160,25 +171,25 @@ class _AppTypographyLight extends AppTypography {
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         medium16: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         medium18: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w500,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         medium22: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w500,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
 
         // Bold
@@ -186,55 +197,55 @@ class _AppTypographyLight extends AppTypography {
           fontSize: 16,
           fontWeight: FontWeight.w700,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         bold18: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w700,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         bold22: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w700,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         bold28: TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w700,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         buttonText: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         semiBold16: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         semiBold18: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         semiBold22: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w600,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         semiBold28: TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w600,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
       );
 }
@@ -248,25 +259,31 @@ class _AppTypographyDark extends AppTypography {
           fontSize: 12,
           fontWeight: FontWeight.w400,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
+        ),
+        regular14: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: colors.onSurface,
+          fontFamily: 'GraphikArabic',
         ),
         regular16: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         regular18: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w400,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         regular22: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w400,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
 
         // Medium
@@ -274,25 +291,25 @@ class _AppTypographyDark extends AppTypography {
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         medium16: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         medium18: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w500,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         medium22: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w500,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
 
         // Bold
@@ -300,55 +317,55 @@ class _AppTypographyDark extends AppTypography {
           fontSize: 16,
           fontWeight: FontWeight.w700,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         bold18: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w700,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         bold22: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w700,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         bold28: TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w700,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         buttonText: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         semiBold16: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         semiBold18: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         semiBold22: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w600,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
         semiBold28: TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w600,
           color: colors.onSurface,
-          fontFamily: 'itfMirsalC',
+          fontFamily: 'GraphikArabic',
         ),
       );
 }

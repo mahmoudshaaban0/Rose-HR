@@ -1,1 +1,30 @@
-
+{
+    "@@locale": "en",
+    "login": "Login",
+    "email": "Email",
+    "pleaseEnterYourEmail": "Please enter your email",
+    "password": "Password",
+    "pleaseEnterYourPassword": "Please enter your password",
+    "forgetPassword": "Forget password",
+    "sendForgetPasswordCode": "Send forget password code",
+    "enterOTP": "Enter OTP",
+    "enterOTPHint": "An OTP has been sent to your email, check your inbox or spam folder",
+    "didNotReceiveOTP": "Did not receive the OTP?",
+    "tryAgainAfter": "Try again after",
+    "checkForNewOTP": "Check for new OTP",
+    "continueAction": "Continue",
+    "home": "Home",
+    "requests": "Requests",
+    "attendance": "Attendance",
+    "account": "Account",
+    "clockInClockOut": "Clock In/Clock Out",
+    "newRequest": "New Request",
+    "attendanceCorrection": "Attendance Correction",
+    "workAssignment": "Work Assignment",
+    "leaveRequest": "Leave Request",
+    "permissionRequest": "Permission Request",
+    "accuredLeaveBalance": "Accured Leave Balance",
+    "timeLeftUntilYourShiftEnds": "Time left until your shift ends",
+    "hours": "Hours"
+    
+}
