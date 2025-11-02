@@ -97,6 +97,162 @@ abstract class AppLocalizations {
     Locale('ar'),
     Locale('en'),
   ];
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @pleaseEnterYourEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get pleaseEnterYourEmail;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @pleaseEnterYourPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get pleaseEnterYourPassword;
+
+  /// No description provided for @forgetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget password'**
+  String get forgetPassword;
+
+  /// No description provided for @sendForgetPasswordCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send forget password code'**
+  String get sendForgetPasswordCode;
+
+  /// No description provided for @enterOTP.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter OTP'**
+  String get enterOTP;
+
+  /// No description provided for @enterOTPHint.
+  ///
+  /// In en, this message translates to:
+  /// **'An OTP has been sent to your email, check your inbox or spam folder'**
+  String get enterOTPHint;
+
+  /// No description provided for @didNotReceiveOTP.
+  ///
+  /// In en, this message translates to:
+  /// **'Did not receive the OTP?'**
+  String get didNotReceiveOTP;
+
+  /// No description provided for @tryAgainAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again after'**
+  String get tryAgainAfter;
+
+  /// No description provided for @checkForNewOTP.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for new OTP'**
+  String get checkForNewOTP;
+
+  /// No description provided for @continueAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueAction;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @requests.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests'**
+  String get requests;
+
+  /// No description provided for @attendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance'**
+  String get attendance;
+
+  /// No description provided for @account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get account;
+
+  /// No description provided for @clockInClockOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock In/Clock Out'**
+  String get clockInClockOut;
+
+  /// No description provided for @newRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'New Request'**
+  String get newRequest;
+
+  /// No description provided for @attendanceCorrection.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance Correction'**
+  String get attendanceCorrection;
+
+  /// No description provided for @workAssignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Assignment'**
+  String get workAssignment;
+
+  /// No description provided for @leaveRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Request'**
+  String get leaveRequest;
+
+  /// No description provided for @permissionRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Request'**
+  String get permissionRequest;
+
+  /// No description provided for @accuredLeaveBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Accured Leave Balance'**
+  String get accuredLeaveBalance;
+
+  /// No description provided for @timeLeftUntilYourShiftEnds.
+  ///
+  /// In en, this message translates to:
+  /// **'Time left until your shift ends'**
+  String get timeLeftUntilYourShiftEnds;
+
+  /// No description provided for @hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get hours;
 }
 
 class _AppLocalizationsDelegate

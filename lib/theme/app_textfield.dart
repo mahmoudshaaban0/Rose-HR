@@ -102,7 +102,7 @@ class AppTextField extends StatelessWidget {
         Row(
           children: [
             Text(title ?? '', style: context.typography.medium16),
-            if (required) Text('*', style: context.typography.medium16.copyWith(color: Colors.blue)),
+            if (required) Text('*', style: context.typography.medium16.copyWith(color: context.colors.error)),
           ],
         ),
         const SizedBox(height: 4),
@@ -136,7 +136,7 @@ class AppTextField extends StatelessWidget {
               color: textColor,
               fontWeight: FontWeight.w500,
               fontSize: 16,
-              fontFamily: 'itfMirsalC',
+              fontFamily: 'GraphikArabic',
             );
           }),
           cursorColor: context.inputTheme.focusedTextDefault,
@@ -155,7 +155,7 @@ class AppTextField extends StatelessWidget {
               return context.inputTheme.inputPlaceHolder.textStyle.copyWith(
                 color: textColor,
                 fontSize: 16,
-                fontFamily: 'itfMirsalC',
+                fontFamily: 'GraphikArabic',
               );
             }),
             labelStyle: WidgetStateTextStyle.resolveWith((states) {
@@ -174,7 +174,7 @@ class AppTextField extends StatelessWidget {
               return context.inputTheme.inputPlaceHolder.textStyle.copyWith(
                 color: textColor,
                 fontSize: 16,
-                fontFamily: 'itfMirsalC',
+                fontFamily: 'GraphikArabic',
               );
             }),
             floatingLabelStyle: WidgetStateTextStyle.resolveWith((states) {
@@ -191,14 +191,14 @@ class AppTextField extends StatelessWidget {
               return context.inputTheme.inputPlaceHolder.textStyle.copyWith(color: textColor);
             }),
             filled: true,
-            fillColor: enabled ? context.colors.surface : context.colors.surfaceContainerHigh,
+            fillColor: enabled ? context.colors.containerBackground : context.colors.surfaceContainerHigh,
             border: WidgetStateInputBorder.resolveWith((states) {
               late final Color borderColor;
 
               if (states.contains(WidgetState.error)) {
                 borderColor = context.inputTheme.borderError;
               } else if (states.contains(WidgetState.focused)) {
-                borderColor = context.colors.fadedDark;
+                borderColor = context.colors.outlineVariant;
               } else if (states.contains(WidgetState.disabled)) {
                 borderColor = context.colors.surfaceContainerHigh;
               } else if (states.contains(WidgetState.hovered)) {
@@ -234,7 +234,8 @@ class AppTextField extends StatelessWidget {
             errorStyle: context.inputTheme.inputPlaceHolder.textStyle.copyWith(
               color: context.inputTheme.errorTextDefault,
               fontSize: 12,
-              fontFamily: 'itfMirsalC',
+              fontFamily: 'GraphikArabic',
+              fontWeight: FontWeight.w500,
             ),
 
             suffixIcon: suffixIcon != null ? FittedBox(fit: BoxFit.scaleDown, child: suffixIcon) : null,

@@ -31,4 +31,7 @@ class AppSpacing {
 
   /// Extra extra extra large spacing of 20.0.
   static const xxxl = 20.0;
+
+  /// Extra extra extra extra large spacing of 24.0.
+  static const xxxxl = 24.0;
 }
