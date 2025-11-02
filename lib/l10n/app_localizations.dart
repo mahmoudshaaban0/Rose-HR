@@ -253,6 +253,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hours'**
   String get hours;
+
+  /// No description provided for @inRange.
+  ///
+  /// In en, this message translates to:
+  /// **'In Range'**
+  String get inRange;
+
+  /// No description provided for @fingerPrintRegistration.
+  ///
+  /// In en, this message translates to:
+  /// **'FingerPrint Registration'**
+  String get fingerPrintRegistration;
 }
 
 class _AppLocalizationsDelegate

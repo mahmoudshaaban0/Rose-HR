@@ -66,14 +66,12 @@ class RequestItem extends StatelessWidget {
           child: Container(
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.r(context), vertical: AppSpacing.xxxxl.r(context)),
-            child: Flexible(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  title,
-                  style: context.typography.semiBold16,
-                  textAlign: TextAlign.center,
-                ),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                title,
+                style: context.typography.semiBold16,
+                textAlign: TextAlign.center,
               ),
             ),
           ),

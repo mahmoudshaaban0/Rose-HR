@@ -87,4 +87,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get hours => 'ساعات ';
+
+  @override
+  String get inRange => 'داخل النطاق';
+
+  @override
+  String get fingerPrintRegistration => 'تسجيل بصمة';
 }

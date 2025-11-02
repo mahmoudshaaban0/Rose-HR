@@ -86,4 +86,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hours => 'Hours';
+
+  @override
+  String get inRange => 'In Range';
+
+  @override
+  String get fingerPrintRegistration => 'FingerPrint Registration';
 }

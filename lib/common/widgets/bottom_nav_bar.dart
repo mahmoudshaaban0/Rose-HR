@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
+import 'package:rose_hr/features/auth/presentation/screens/login_screen.dart';
 import 'package:rose_hr/features/home/presentation/screens/home_screen.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
@@ -51,7 +52,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         ),
       ),
       PersistentTabConfig(
-        screen: Container(),
+        screen: const LoginScreen(),
         item: ItemConfig(
           title: context.localizations.requests,
           textStyle: context.typography.medium16,

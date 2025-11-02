@@ -25,6 +25,8 @@
     "permissionRequest": "Permission Request",
     "accuredLeaveBalance": "Accured Leave Balance",
     "timeLeftUntilYourShiftEnds": "Time left until your shift ends",
-    "hours": "Hours"
+    "hours": "Hours",
+    "inRange": "In Range",
+    "fingerPrintRegistration": "FingerPrint Registration"
     
 }

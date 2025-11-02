@@ -26,5 +26,7 @@
      "permissionRequest": "طلب استئذان",
      "accuredLeaveBalance": "رصيد الإجازة المستحق",
      "timeLeftUntilYourShiftEnds": "تبقى على نهاية دوامك",
-     "hours": "ساعات "
+     "hours": "ساعات ",
+     "inRange": "داخل النطاق",
+     "fingerPrintRegistration": "تسجيل بصمة"
 }

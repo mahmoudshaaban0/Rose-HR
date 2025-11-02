@@ -13,6 +13,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
     required this.regular18,
     required this.regular22,
     required this.medium12,
+    required this.medium14,
     required this.medium16,
     required this.medium18,
     required this.medium22,
@@ -20,6 +21,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
     required this.bold18,
     required this.bold22,
     required this.bold28,
+    required this.semiBold36,
     required this.buttonText,
     required this.semiBold16,
     required this.semiBold18,
@@ -39,6 +41,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
 
   // Medium
   final TextStyle medium12;
+  final TextStyle medium14;
   final TextStyle medium16;
   final TextStyle medium18;
   final TextStyle medium22;
@@ -54,6 +57,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle semiBold18;
   final TextStyle semiBold22;
   final TextStyle semiBold28;
+  final TextStyle semiBold36;
 
   final TextStyle buttonText;
 
@@ -65,6 +69,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? regular18,
     TextStyle? regular22,
     TextStyle? medium12,
+    TextStyle? medium14,
     TextStyle? medium16,
     TextStyle? medium18,
     TextStyle? medium22,
@@ -77,6 +82,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? semiBold22,
     TextStyle? semiBold28,
     TextStyle? buttonText,
+    TextStyle? semiBold36,
   }) {
     return AppTypography(
       regular12: regular12 ?? this.regular12,
@@ -85,6 +91,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
       regular18: regular18 ?? this.regular18,
       regular22: regular22 ?? this.regular22,
       medium12: medium12 ?? this.medium12,
+      medium14: medium14 ?? this.medium14,
       medium16: medium16 ?? this.medium16,
       medium18: medium18 ?? this.medium18,
       medium22: medium22 ?? this.medium22,
@@ -97,6 +104,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
       semiBold22: semiBold22 ?? this.semiBold22,
       semiBold28: semiBold28 ?? this.semiBold28,
       buttonText: buttonText ?? this.buttonText,
+      semiBold36: semiBold36 ?? this.semiBold36,
     );
   }
 
@@ -114,6 +122,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
       regular18: TextStyle.lerp(regular18, other.regular18, t)!,
       regular22: TextStyle.lerp(regular22, other.regular22, t)!,
       medium12: TextStyle.lerp(medium12, other.medium12, t)!,
+      medium14: TextStyle.lerp(medium14, other.medium14, t)!,
       medium16: TextStyle.lerp(medium16, other.medium16, t)!,
       medium18: TextStyle.lerp(medium18, other.medium18, t)!,
       medium22: TextStyle.lerp(medium22, other.medium22, t)!,
@@ -126,6 +135,7 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
       semiBold22: TextStyle.lerp(semiBold22, other.semiBold22, t)!,
       semiBold28: TextStyle.lerp(semiBold28, other.semiBold28, t)!,
       buttonText: TextStyle.lerp(buttonText, other.buttonText, t)!,
+      semiBold36: TextStyle.lerp(semiBold36, other.semiBold36, t)!,
     );
   }
 }
@@ -169,6 +179,12 @@ class _AppTypographyLight extends AppTypography {
         // Medium
         medium12: TextStyle(
           fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: colors.onSurface,
+          fontFamily: 'GraphikArabic',
+        ),
+        medium14: TextStyle(
+          fontSize: 14,
           fontWeight: FontWeight.w500,
           color: colors.onSurface,
           fontFamily: 'GraphikArabic',
@@ -243,6 +259,12 @@ class _AppTypographyLight extends AppTypography {
         ),
         semiBold28: TextStyle(
           fontSize: 28,
+          fontWeight: FontWeight.w600,
+          color: colors.onSurface,
+          fontFamily: 'GraphikArabic',
+        ),
+        semiBold36: TextStyle(
+          fontSize: 36,
           fontWeight: FontWeight.w600,
           color: colors.onSurface,
           fontFamily: 'GraphikArabic',
@@ -293,6 +315,12 @@ class _AppTypographyDark extends AppTypography {
           color: colors.onSurface,
           fontFamily: 'GraphikArabic',
         ),
+        medium14: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: colors.onSurface,
+          fontFamily: 'GraphikArabic',
+        ),
         medium16: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
@@ -363,6 +391,12 @@ class _AppTypographyDark extends AppTypography {
         ),
         semiBold28: TextStyle(
           fontSize: 28,
+          fontWeight: FontWeight.w600,
+          color: colors.onSurface,
+          fontFamily: 'GraphikArabic',
+        ),
+        semiBold36: TextStyle(
+          fontSize: 36,
           fontWeight: FontWeight.w600,
           color: colors.onSurface,
           fontFamily: 'GraphikArabic',

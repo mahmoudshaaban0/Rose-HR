@@ -17,6 +17,7 @@ class BottomSheetWrapper extends StatefulWidget {
     this.thenFunction,
     this.removeAutoScroll = false,
     this.useSolidBackground = false,
+    this.useRootNavigator = false,
   });
   final Widget child;
   final DraggableScrollableController? dragControl;
@@ -28,6 +29,7 @@ class BottomSheetWrapper extends StatefulWidget {
   final bool? disableDrag;
   final bool removeAutoScroll;
   final bool useSolidBackground;
+  final bool? useRootNavigator;
 
   @override
   State<BottomSheetWrapper> createState() => _BottomSheetWrapperState();
@@ -41,6 +43,7 @@ class BottomSheetWrapper extends StatefulWidget {
       elevation: 0,
       backgroundColor: context.colors.surface,
       isScrollControlled: true,
+      useRootNavigator: useRootNavigator ?? false,
       builder: (context) {
         //  final ctrl = DraggableScrollableController();
         final ctrl = dragControl ?? DraggableScrollableController();
