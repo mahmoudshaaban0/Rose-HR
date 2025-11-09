@@ -27,6 +27,9 @@
     "timeLeftUntilYourShiftEnds": "Time left until your shift ends",
     "hours": "Hours",
     "inRange": "In Range",
-    "fingerPrintRegistration": "FingerPrint Registration"
-    
+    "fingerPrintRegistration": "FingerPrint Registration",
+    "attendanceCalendar": "Attendance Calendar",
+    "workHours": "Work Hours",
+    "leave": "Leave",
+    "difference": "Difference"
 }

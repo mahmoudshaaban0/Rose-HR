@@ -28,5 +28,9 @@
      "timeLeftUntilYourShiftEnds": "تبقى على نهاية دوامك",
      "hours": "ساعات ",
      "inRange": "داخل النطاق",
-     "fingerPrintRegistration": "تسجيل بصمة"
+     "fingerPrintRegistration": "تسجيل بصمة",
+     "attendanceCalendar": "تقويم الحضور",
+     "workHours": "ساعات العمل",
+     "leave" : "الأنصراف",
+     "difference": "الفرق"
 }

@@ -265,6 +265,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'FingerPrint Registration'**
   String get fingerPrintRegistration;
+
+  /// No description provided for @attendanceCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance Calendar'**
+  String get attendanceCalendar;
+
+  /// No description provided for @workHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Hours'**
+  String get workHours;
+
+  /// No description provided for @leave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get leave;
+
+  /// No description provided for @difference.
+  ///
+  /// In en, this message translates to:
+  /// **'Difference'**
+  String get difference;
 }
 
 class _AppLocalizationsDelegate

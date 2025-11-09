@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
+import 'package:rose_hr/features/attendance/presentation/screens/attendance_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/login_screen.dart';
 import 'package:rose_hr/features/home/presentation/screens/home_screen.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -43,7 +44,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         screen: const HomeScreen(),
         item: ItemConfig(
           title: context.localizations.home,
-          textStyle: context.typography.medium16,
+          textStyle: context.typography.semiBold14,
           activeForegroundColor: context.colors.onSurface,
           icon: const AppVectorGraphic(path: Assets.vectorsHomeActive),
           inactiveIcon: const AppVectorGraphic(
@@ -52,10 +53,22 @@ class _BottomNavBarState extends State<BottomNavBar> {
         ),
       ),
       PersistentTabConfig(
+        screen: const AttendanceScreen(),
+        item: ItemConfig(
+          title: context.localizations.attendance,
+          textStyle: context.typography.semiBold14,
+          activeForegroundColor: context.colors.onSurface,
+          inactiveIcon: const AppVectorGraphic(
+            path: Assets.vectorsAttendanceInActive,
+          ),
+          icon: const AppVectorGraphic(path: Assets.vectorsAttendanceActive),
+        ),
+      ),
+      PersistentTabConfig(
         screen: const LoginScreen(),
         item: ItemConfig(
           title: context.localizations.requests,
-          textStyle: context.typography.medium16,
+          textStyle: context.typography.semiBold14,
           activeForegroundColor: context.colors.onSurface,
           inactiveIcon: const AppVectorGraphic(
             path: Assets.vectorsRequestsInActive,
@@ -66,20 +79,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
       PersistentTabConfig(
         screen: Container(),
         item: ItemConfig(
-          title: context.localizations.attendance,
-          textStyle: context.typography.medium16,
-          activeForegroundColor: context.colors.onSurface,
-          inactiveIcon: const AppVectorGraphic(
-            path: Assets.vectorsAttendanceInActive,
-          ),
-          icon: const AppVectorGraphic(path: Assets.vectorsAttendanceActive),
-        ),
-      ),
-      PersistentTabConfig(
-        screen: Container(),
-        item: ItemConfig(
           title: context.localizations.account,
-          textStyle: context.typography.medium16,
+          textStyle: context.typography.semiBold14,
           activeForegroundColor: context.colors.onSurface,
           inactiveIcon: const AppVectorGraphic(
             path: Assets.vectorsAccountInActive,

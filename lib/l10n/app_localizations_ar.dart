@@ -93,4 +93,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fingerPrintRegistration => 'تسجيل بصمة';
+
+  @override
+  String get attendanceCalendar => 'تقويم الحضور';
+
+  @override
+  String get workHours => 'ساعات العمل';
+
+  @override
+  String get leave => 'الأنصراف';
+
+  @override
+  String get difference => 'الفرق';
 }

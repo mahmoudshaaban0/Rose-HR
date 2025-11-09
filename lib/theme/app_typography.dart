@@ -7,6 +7,8 @@ import 'package:rose_hr/theme/app_colors.dart';
 interface class AppTypography extends ThemeExtension<AppTypography> {
   /// {@macro app_typography}
   AppTypography({
+    required this.semiBold12,
+    required this.semiBold14,
     required this.regular12,
     required this.regular14,
     required this.regular16,
@@ -53,6 +55,8 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle bold28;
 
   // SemiBold
+  final TextStyle semiBold12;
+  final TextStyle semiBold14;
   final TextStyle semiBold16;
   final TextStyle semiBold18;
   final TextStyle semiBold22;
@@ -85,6 +89,8 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? semiBold36,
   }) {
     return AppTypography(
+      semiBold12: semiBold12 ?? this.semiBold12,
+      semiBold14: semiBold14 ?? this.semiBold14,
       regular12: regular12 ?? this.regular12,
       regular14: regular14 ?? this.regular14,
       regular16: regular16 ?? this.regular16,
@@ -116,6 +122,8 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
     if (other is! AppTypography) return this;
 
     return AppTypography(
+      semiBold12: TextStyle.lerp(semiBold12, other.semiBold12, t)!,
+      semiBold14: TextStyle.lerp(semiBold14, other.semiBold14, t)!,
       regular12: TextStyle.lerp(regular12, other.regular12, t)!,
       regular14: TextStyle.lerp(regular14, other.regular14, t)!,
       regular16: TextStyle.lerp(regular16, other.regular16, t)!,
@@ -144,6 +152,19 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
 class _AppTypographyLight extends AppTypography {
   _AppTypographyLight(AppColors colors)
     : super(
+        // SemiBold
+        semiBold12: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: colors.onSurface,
+          fontFamily: 'GraphikArabic',
+        ),
+        semiBold14: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: colors.onSurface,
+          fontFamily: 'GraphikArabic',
+        ),
         // Regular
         regular12: TextStyle(
           fontSize: 12,
@@ -276,6 +297,19 @@ class _AppTypographyLight extends AppTypography {
 class _AppTypographyDark extends AppTypography {
   _AppTypographyDark(AppColors colors)
     : super(
+        // SemiBold
+        semiBold12: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: colors.onSurface,
+          fontFamily: 'GraphikArabic',
+        ),
+        semiBold14: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: colors.onSurface,
+          fontFamily: 'GraphikArabic',
+        ),
         // Regular
         regular12: TextStyle(
           fontSize: 12,
