@@ -84,7 +84,6 @@ class HeaderAndShiftSection extends StatelessWidget {
                     BottomSheetWrapper(
                       initialSize: 0.35.h,
                       maxChildSize: 0.35.h,
-                      minChildSize: 0.35.h.sp,
                       removeAutoScroll: true,
                       disableDrag: true,
                       useRootNavigator: true,
