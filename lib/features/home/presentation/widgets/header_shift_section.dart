@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
-import 'package:rose_hr/common/helpers/adapt.dart';
 import 'package:rose_hr/common/widgets/bottom_sheet_wrapper.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/home/presentation/widgets/header_section.dart';
@@ -15,21 +15,21 @@ class HeaderAndShiftSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: AppSpacing.xxxl.r(context)),
+      padding: EdgeInsets.only(bottom: AppSpacing.xxxl.r),
       color: context.colors.containerBackground,
       child: Column(
         children: [
           const HeaderSection(),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r(context)),
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r(context), vertical: AppSpacing.xl.r(context)),
+            margin: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.r),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSpacing.lg.r(context)),
+              borderRadius: BorderRadius.circular(AppSpacing.lg.r),
               color: context.colors.surface,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: AppSpacing.md.h(context),
+              spacing: AppSpacing.md.h,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -39,16 +39,16 @@ class HeaderAndShiftSection extends StatelessWidget {
                       style: context.typography.regular14,
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs.r(context), vertical: AppSpacing.xxs.r(context)),
+                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs.r, vertical: AppSpacing.xxs.r),
                       decoration: BoxDecoration(
                         color: context.colors.surface,
-                        borderRadius: BorderRadius.circular(AppSpacing.sm.r(context)),
+                        borderRadius: BorderRadius.circular(AppSpacing.sm.r),
                         border: Border.all(color: context.colors.containerBorder),
                       ),
                       child: Row(
                         children: [
                           const AppVectorGraphic(path: Assets.vectorsLocationIcon),
-                          SizedBox(width: AppSpacing.xs.r(context)),
+                          SizedBox(width: AppSpacing.xs.r),
                           Text(
                             'الرياض',
                             style: context.typography.medium12,
@@ -82,17 +82,17 @@ class HeaderAndShiftSection extends StatelessWidget {
                   label: context.localizations.clockInClockOut,
                   onTap: () {
                     BottomSheetWrapper(
-                      initialSize: 0.35.h(context),
-                      maxChildSize: 0.35.h(context),
-                      minChildSize: 0.35.h(context),
+                      initialSize: 0.35.h,
+                      maxChildSize: 0.35.h,
+                      minChildSize: 0.35.h.sp,
                       removeAutoScroll: true,
                       disableDrag: true,
                       useRootNavigator: true,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r(context), vertical: AppSpacing.xl.r(context)),
+                        padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r, vertical: AppSpacing.xl.r),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          spacing: AppSpacing.md.h(context),
+                          spacing: AppSpacing.md.h,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,12 +105,12 @@ class HeaderAndShiftSection extends StatelessWidget {
                                 ),
                                 Container(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: AppSpacing.xs.r(context),
-                                    vertical: AppSpacing.xxs.r(context),
+                                    horizontal: AppSpacing.xs.r,
+                                    vertical: AppSpacing.xxs.r,
                                   ),
                                   decoration: BoxDecoration(
                                     color: context.colors.surface,
-                                    borderRadius: BorderRadius.circular(AppSpacing.xxl.r(context)),
+                                    borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
                                     border: Border.all(color: context.colors.containerBorder),
                                   ),
                                   child: Row(
@@ -118,7 +118,7 @@ class HeaderAndShiftSection extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       const AppVectorGraphic(path: Assets.vectorsLocationIcon),
-                                      SizedBox(width: AppSpacing.xs.r(context)),
+                                      SizedBox(width: AppSpacing.xs.r),
                                       Text(
                                         'الرياض',
                                         style: context.typography.medium14,
@@ -129,14 +129,14 @@ class HeaderAndShiftSection extends StatelessWidget {
                               ],
                             ),
                             Container(
-                              margin: EdgeInsets.only(bottom: AppSpacing.xxxl.r(context)),
+                              margin: EdgeInsets.only(bottom: AppSpacing.xxxl.r),
                               padding: EdgeInsets.symmetric(
-                                horizontal: AppSpacing.xxl.r(context),
-                                vertical: AppSpacing.xl.r(context),
+                                horizontal: AppSpacing.xxl.r,
+                                vertical: AppSpacing.xl.r,
                               ),
                               decoration: BoxDecoration(
                                 color: context.colors.containerBackground,
-                                borderRadius: BorderRadius.circular(AppSpacing.xxl.r(context)),
+                                borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
                               ),
                               child: Text(
                                 '08:00 AM - 05:00 PM',

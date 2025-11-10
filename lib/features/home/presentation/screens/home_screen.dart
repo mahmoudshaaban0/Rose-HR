@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rose_hr/common/helpers/adapt.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/features/home/presentation/widgets/header_shift_section.dart';
 import 'package:rose_hr/features/home/presentation/widgets/holidays_section.dart';
 import 'package:rose_hr/features/home/presentation/widgets/new_request_section.dart';
@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            spacing: AppSpacing.md.h(context),
+            spacing: AppSpacing.md.h,
             children: const [
               HeaderAndShiftSection(),
               NewRequestSection(),

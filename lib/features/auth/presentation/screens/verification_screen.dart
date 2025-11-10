@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
-import 'package:rose_hr/common/helpers/adapt.dart';
 import 'package:rose_hr/theme/app_shadows.dart';
 import 'package:rose_hr/theme/app_sizes.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
@@ -55,7 +55,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  padding: EdgeInsets.all(AppSpacing.md.h(context)),
+                  padding: EdgeInsets.all(AppSpacing.md.h),
                   width: double.infinity,
                   decoration: BoxDecoration(
                     boxShadow: AppShadow.lg,
@@ -64,7 +64,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: AppSpacing.xs.h(context),
+                    spacing: AppSpacing.xs.h,
                     children: [
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -111,7 +111,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: AppSpacing.md.h(context)), 
+                      SizedBox(height: AppSpacing.md.h),
                       PrimaryTextButton(
                         label: context.localizations.continueAction,
                         appButtonSize: AppButtonSize.xxLarge,

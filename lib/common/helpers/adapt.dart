@@ -1,60 +1,52 @@
-import 'dart:math' as math;
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:flutter/material.dart';
+// /// Legacy helper functions - now using ScreenUtil under the hood
+// double getScaleFactor(BuildContext context) {
+//   return ScreenUtil().scaleWidth;
+// }
 
-double getScaleFactor(BuildContext context) {
-  final screenWidth = MediaQuery.sizeOf(context).width;
-  if (screenWidth < 600) {
-    return screenWidth / 400;
-  } else if (screenWidth < 900) {
-    return screenWidth / 700;
-  } else {
-    return screenWidth / 1000;
-  }
-}
+// double getResponsiveFontSize(BuildContext context, {required double fontSize}) {
+//   return SizeExtension(fontSize).sp;
+// }
 
-double getResponsiveFontSize(BuildContext context, {required double fontSize}) {
-  final scaleFactor = getScaleFactor(context);
-  final responsiveFontSize = fontSize * scaleFactor;
-  final lowerLimit = fontSize * 0.8;
-  final upperLimit = fontSize * 1.2;
-  return responsiveFontSize.clamp(lowerLimit, upperLimit);
-}
+// /// Design system constants
+// class DesignSystem {
+//   static const referenceWidth = 375.0;
+//   static const referenceHeight = 812.0;
+//   static const minScaleFactor = 0.85;
+//   static const maxScaleFactor = 1.25;
+// }
 
-class DesignSystem {
-  static const referenceWidth = 375.0;
-  static const referenceHeight = 812.0;
-  static const minScaleFactor = 0.85;
-  static const maxScaleFactor = 1.25;
-}
+// /// Context extensions for responsive design
+// extension ResponsiveContext on BuildContext {
+//   /// Get screen size
+//   Size get screenSize => MediaQuery.sizeOf(this);
 
-extension ResponsiveContext on BuildContext {
-  /// Get screen size
-  Size get screenSize => MediaQuery.sizeOf(this);
+//   /// Get scale factors
+//   double get scaleWidth => ScreenUtil().scaleWidth;
+//   double get scaleHeight => ScreenUtil().scaleHeight;
+//   double get scale => ScreenUtil().scaleText;
+//   double get safeScale => scale.clamp(DesignSystem.minScaleFactor, DesignSystem.maxScaleFactor);
 
-  /// Get scale factors
-  double get scaleWidth => screenSize.width / DesignSystem.referenceWidth;
-  double get scaleHeight => screenSize.height / DesignSystem.referenceHeight;
-  double get scale => math.min(scaleWidth, scaleHeight);
-  double get safeScale => scale.clamp(DesignSystem.minScaleFactor, DesignSystem.maxScaleFactor);
+//   /// Device type checks
+//   bool get isMobile => ScreenUtil().screenWidth < 600;
+//   bool get isTablet => ScreenUtil().screenWidth >= 600 && ScreenUtil().screenWidth < 900;
+//   bool get isDesktop => ScreenUtil().screenWidth >= 900;
+// }
 
-  /// Device type checks
-  bool get isMobile => screenSize.width < 600;
-  bool get isTablet => screenSize.width >= 600 && screenSize.width < 900;
-  bool get isDesktop => screenSize.width >= 900;
-}
+// /// Wrapper extensions for backward compatibility with existing code
+// /// These allow calling .w(context), .h(context), etc. while using flutter_screenutil under the hood
+// extension ResponsiveNum on num {
+//   /// Responsive width - context parameter kept for backward compatibility but not used
+//   double w(BuildContext context) => SizeExtension(toDouble()).w;
 
-/// Clean responsive extensions for numbers
-extension ResponsiveNum on num {
-  /// Responsive width - requires context
-  double w(BuildContext context) => this * context.scaleWidth;
+//   /// Responsive height - context parameter kept for backward compatibility but not used
+//   double h(BuildContext context) => SizeExtension(toDouble()).h;
 
-  /// Responsive height - requires context
-  double h(BuildContext context) => this * context.scaleHeight;
+//   /// Perfect responsive font size - context parameter kept for backward compatibility but not used
+//   double sp(BuildContext context) => SizeExtension(toDouble()).sp;
 
-  /// Perfect responsive font size - requires context
-  double sp(BuildContext context) => this * context.safeScale;
-
-  /// Responsive radius/padding - requires context
-  double r(BuildContext context) => this * context.scale;
-}
+//   /// Responsive radius/padding - context parameter kept for backward compatibility but not used
+//   double r(BuildContext context) => SizeExtension(toDouble()).r;
+// }

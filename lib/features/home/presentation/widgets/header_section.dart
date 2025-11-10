@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
-import 'package:rose_hr/common/helpers/adapt.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -26,7 +26,7 @@ class HeaderSection extends StatelessWidget {
           padding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
             side: BorderSide(color: context.colors.outlineVariant),
-            borderRadius: BorderRadius.circular(AppSpacing.xxl.r(context)),
+            borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
           ),
         ),
         onPressed: () {

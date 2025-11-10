@@ -89,8 +89,8 @@ interface class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? semiBold36,
   }) {
     return AppTypography(
-      semiBold12: semiBold12 ?? this.semiBold12,
-      semiBold14: semiBold14 ?? this.semiBold14,
+      semiBold12: semiBold12,
+      semiBold14: semiBold14,
       regular12: regular12 ?? this.regular12,
       regular14: regular14 ?? this.regular14,
       regular16: regular16 ?? this.regular16,

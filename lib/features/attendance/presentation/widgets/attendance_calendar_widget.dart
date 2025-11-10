@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:rose_hr/common/helpers/adapt.dart';
 import 'package:rose_hr/theme/app_colors.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -58,7 +57,7 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: AppSpacing.md.h(context)),
+          SizedBox(height: AppSpacing.md.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -90,8 +89,8 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
             },
             headerVisible: false,
             weekendDays: const [DateTime.friday, DateTime.saturday],
-            daysOfWeekHeight: 40.h(context),
-            rowHeight: 50.h(context),
+            daysOfWeekHeight: 40.h,
+            rowHeight: 50.h,
 
             daysOfWeekStyle: DaysOfWeekStyle(
               weekdayStyle: context.typography.regular14.copyWith(

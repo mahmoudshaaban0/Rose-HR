@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rose_hr/common/helpers/adapt.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -10,13 +10,13 @@ class WorkHoursSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r(context), vertical: AppSpacing.xl.r(context)),
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.r),
       decoration: BoxDecoration(
         color: context.colors.containerBackground,
-        borderRadius: BorderRadius.circular(AppSpacing.lg.r(context)),
+        borderRadius: BorderRadius.circular(AppSpacing.lg.r),
       ),
       child: Column(
-        spacing: AppSpacing.md.h(context),
+        spacing: AppSpacing.md.h,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
@@ -29,10 +29,10 @@ class WorkHoursSection extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r(context), vertical: AppSpacing.xl.r(context)),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.r),
                   decoration: BoxDecoration(
                     color: context.colors.surface,
-                    borderRadius: BorderRadius.circular(AppSpacing.lg.r(context)),
+                    borderRadius: BorderRadius.circular(AppSpacing.lg.r),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,13 +49,13 @@ class WorkHoursSection extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: AppSpacing.md.w(context)),
+              SizedBox(width: AppSpacing.md.w),
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r(context), vertical: AppSpacing.xl.r(context)),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.r),
                   decoration: BoxDecoration(
                     color: context.colors.surface,
-                    borderRadius: BorderRadius.circular(AppSpacing.lg.r(context)),
+                    borderRadius: BorderRadius.circular(AppSpacing.lg.r),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,10 +79,10 @@ class WorkHoursSection extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r(context), vertical: AppSpacing.xl.r(context)),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.r),
                   decoration: BoxDecoration(
                     color: context.colors.surface,
-                    borderRadius: BorderRadius.circular(AppSpacing.lg.r(context)),
+                    borderRadius: BorderRadius.circular(AppSpacing.lg.r),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,13 +99,13 @@ class WorkHoursSection extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: AppSpacing.md.w(context)),
+              SizedBox(width: AppSpacing.md.w),
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r(context), vertical: AppSpacing.xl.r(context)),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.r),
                   decoration: BoxDecoration(
                     color: context.colors.surface,
-                    borderRadius: BorderRadius.circular(AppSpacing.lg.r(context)),
+                    borderRadius: BorderRadius.circular(AppSpacing.lg.r),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

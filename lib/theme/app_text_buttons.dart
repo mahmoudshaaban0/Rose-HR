@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rose_hr/common/helpers/adapt.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/theme/app_sizes.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -110,7 +110,7 @@ abstract class AppTextButton extends StatelessWidget {
         shape: WidgetStateProperty.resolveWith(
           (states) {
             final shape = RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(AppSpacing.xxl.r(context))),
+              borderRadius: BorderRadius.all(Radius.circular(AppSpacing.xxl.r)),
             );
 
             if (states.contains(WidgetState.disabled)) {

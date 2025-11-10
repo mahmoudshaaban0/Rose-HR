@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
-import 'package:rose_hr/common/helpers/adapt.dart';
 import 'package:rose_hr/common/helpers/auth_helper.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
@@ -36,21 +36,21 @@ class _LoginScreenState extends State<ForgetPasswordScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.end,
-          spacing: AppSpacing.md.h(context),
+          spacing: AppSpacing.md.h,
           children: [
             Container(
-              padding: EdgeInsets.all(AppSpacing.md.h(context)),
+              padding: EdgeInsets.all(AppSpacing.md.h),
               decoration: BoxDecoration(
                 color: context.colors.containerBackground,
-                borderRadius: BorderRadius.circular(AppSpacing.xxxl.r(context)),
+                borderRadius: BorderRadius.circular(AppSpacing.xxxl.r),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.h(context)),
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.h),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: AppSpacing.lg.h(context),
+                    spacing: AppSpacing.lg.h,
                     children: [
                       Text(context.localizations.forgetPassword, style: context.typography.bold22),
                       AppTextField(
