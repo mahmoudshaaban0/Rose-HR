@@ -33,6 +33,14 @@ class Assets {
   /// assets/fonts/GraphikArabic-Thin.ttf
   static const String fontsGraphikArabicThin = "assets/fonts/GraphikArabic-Thin.ttf";
 
+  /// Assets for rastersFingerPrintRegisterOut
+  /// assets/rasters/finger_print_register_out.png
+  static const String rastersFingerPrintRegisterOut = "assets/rasters/finger_print_register_out.png";
+
+  /// Assets for rastersFingerPrintRegistered
+  /// assets/rasters/finger_print_registered.png
+  static const String rastersFingerPrintRegistered = "assets/rasters/finger_print_registered.png";
+
   /// Assets for rastersLoginBackgrooundImage
   /// assets/rasters/login_backgroound_image.png
   static const String rastersLoginBackgrooundImage = "assets/rasters/login_backgroound_image.png";
@@ -53,9 +61,21 @@ class Assets {
   /// assets/vectors/attendanceInActive.svg
   static const String vectorsAttendanceInActive = "assets/vectors/attendanceInActive.svg";
 
+  /// Assets for vectorsDot
+  /// assets/vectors/dot.svg
+  static const String vectorsDot = "assets/vectors/dot.svg";
+
+  /// Assets for vectorsEdit
+  /// assets/vectors/edit.svg
+  static const String vectorsEdit = "assets/vectors/edit.svg";
+
   /// Assets for vectorsEmailIcon
   /// assets/vectors/email_icon.svg
   static const String vectorsEmailIcon = "assets/vectors/email_icon.svg";
+
+  /// Assets for vectorsHashtag
+  /// assets/vectors/hashtag.svg
+  static const String vectorsHashtag = "assets/vectors/hashtag.svg";
 
   /// Assets for vectorsHomeActive
   /// assets/vectors/homeActive.svg
@@ -69,6 +89,10 @@ class Assets {
   /// assets/vectors/location_icon.svg
   static const String vectorsLocationIcon = "assets/vectors/location_icon.svg";
 
+  /// Assets for vectorsNoRequests
+  /// assets/vectors/no_requests.svg
+  static const String vectorsNoRequests = "assets/vectors/no_requests.svg";
+
   /// Assets for vectorsNotifications
   /// assets/vectors/notifications.svg
   static const String vectorsNotifications = "assets/vectors/notifications.svg";
@@ -80,6 +104,10 @@ class Assets {
   /// Assets for vectorsPasswordVisible
   /// assets/vectors/password_visible.svg
   static const String vectorsPasswordVisible = "assets/vectors/password_visible.svg";
+
+  /// Assets for vectorsPulseLine
+  /// assets/vectors/pulse_line.svg
+  static const String vectorsPulseLine = "assets/vectors/pulse_line.svg";
 
   /// Assets for vectorsRequestsActive
   /// assets/vectors/requestsActive.svg

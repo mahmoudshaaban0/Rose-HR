@@ -104,4 +104,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get difference => 'Difference';
+
+  @override
+  String get youShouldOpenLocationPermission =>
+      'You should open location permission to clock in/clock out';
+
+  @override
+  String get goToSettingsPage => 'Go to settings page';
+
+  @override
+  String get currentRequests => 'Current Requests';
+
+  @override
+  String get completedRequests => 'Completed Requests';
+
+  @override
+  String get noCurrentRequestsUntilNow => 'No current requests until now';
+
+  @override
+  String get noCompletedRequestsUntilNow => 'No completed requests until now';
 }

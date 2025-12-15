@@ -6,6 +6,7 @@ interface class AppColors extends ThemeExtension<AppColors> {
     // Neutrals
     required this.surface,
     required this.surfaceDim,
+    required this.weekendColor,
     required this.surfaceContainerLow,
     required this.surfaceContainerHigh,
     required this.surfaceContainerLowest,
@@ -112,6 +113,9 @@ interface class AppColors extends ThemeExtension<AppColors> {
   final Color fadedLight;
   final Color disabledColor;
   final Color dividerColor;
+
+  // weekend color
+  final Color weekendColor;
   @override
   ThemeExtension<AppColors> copyWith({
     Color? surface,
@@ -150,6 +154,7 @@ interface class AppColors extends ThemeExtension<AppColors> {
     Color? disabledColor,
     Color? containerBackground,
     Color? dividerColor,
+    Color? weekendColor,
   }) {
     return AppColors(
       surface: surface ?? this.surface,
@@ -189,6 +194,7 @@ interface class AppColors extends ThemeExtension<AppColors> {
       fadedLight: fadedLight ?? this.fadedLight,
       disabledColor: disabledColor ?? this.disabledColor,
       dividerColor: dividerColor ?? this.dividerColor,
+      weekendColor: weekendColor ?? this.weekendColor,
     );
   }
 
@@ -239,6 +245,7 @@ interface class AppColors extends ThemeExtension<AppColors> {
       fadedLight: Color.lerp(fadedLight, other.fadedLight, t)!,
       disabledColor: Color.lerp(disabledColor, other.disabledColor, t)!,
       dividerColor: Color.lerp(dividerColor, other.dividerColor, t)!,
+      weekendColor: Color.lerp(weekendColor, other.weekendColor, t)!,
     );
   }
 }
@@ -285,9 +292,10 @@ class AppLightColors extends AppColors {
     super.surfaceContainerHigh = const Color(0xFFE1E4EA),
     super.surfaceContainerLowest = const Color.fromARGB(255, 15, 13, 13),
     super.surfaceVariant = const Color(0xFFCACFD8),
-    super.disabledColor = const Color(0xFFCACFD8),
+    super.disabledColor = const Color(0xffF8F3ED),
     super.containerBackground = const Color(0xffFFFDFA),
     super.containerBorder = const Color(0xff525866),
+    super.weekendColor = const Color(0xffDBCCBB),
   });
 }
 
@@ -338,8 +346,9 @@ class AppDarkColors extends AppColors {
     super.surfaceContainerHigh = const Color(0xFF222530),
     super.surfaceContainerLowest = const Color(0xFF0E121B),
     super.surfaceVariant = const Color(0xFF717784),
-    super.disabledColor = const Color(0xFF222530),
+    super.disabledColor = const Color(0xFF070C12),
     super.containerBackground = const Color(0xff000205),
     super.containerBorder = const Color(0xffA7A19A),
+    super.weekendColor = const Color(0xffDBCCBB),
   });
 }

@@ -26,7 +26,7 @@ class PrimaryTextButton extends AppTextButton {
 
   @override
   Color disabledColor(BuildContext context) {
-    return context.buttonTheme.primaryDisabled;
+    return context.colors.disabledColor;
   }
 
   @override
@@ -42,5 +42,10 @@ class PrimaryTextButton extends AppTextButton {
   @override
   Color textColor(BuildContext context) {
     return context.isLightMode ? context.colors.surface : context.colors.surface;
+  }
+
+  @override
+  BorderSide disabledBorder(BuildContext context) {
+    return BorderSide(color: context.colors.containerBackground);
   }
 }

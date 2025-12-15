@@ -52,7 +52,17 @@ class _LoginScreenState extends State<ForgetPasswordScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     spacing: AppSpacing.lg.h,
                     children: [
-                      Text(context.localizations.forgetPassword, style: context.typography.bold22),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              context.pop();
+                            },
+                            icon: const Icon(Icons.arrow_back),
+                          ),
+                          Text(context.localizations.forgetPassword, style: context.typography.bold22),
+                        ],
+                      ),
                       AppTextField(
                         prefixIcon: const AppVectorGraphic(path: Assets.vectorsEmailIcon),
                         validator: (value) => AuthHelper.validateEmail(context, value),

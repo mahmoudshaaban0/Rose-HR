@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
+import 'package:rose_hr/features/account/presentation/screens/account_screen.dart';
 import 'package:rose_hr/features/attendance/presentation/screens/attendance_screen.dart';
-import 'package:rose_hr/features/auth/presentation/screens/login_screen.dart';
 import 'package:rose_hr/features/home/presentation/screens/home_screen.dart';
+import 'package:rose_hr/features/requests/presentation/screens/requests_screen.dart';
+import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -47,9 +50,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           textStyle: context.typography.semiBold14,
           activeForegroundColor: context.colors.onSurface,
           icon: const AppVectorGraphic(path: Assets.vectorsHomeActive),
-          inactiveIcon: const AppVectorGraphic(
-            path: Assets.vectorsHomeInActive,
-          ),
+          inactiveIcon: const AppVectorGraphic(path: Assets.vectorsHomeInActive),
         ),
       ),
       PersistentTabConfig(
@@ -58,33 +59,35 @@ class _BottomNavBarState extends State<BottomNavBar> {
           title: context.localizations.attendance,
           textStyle: context.typography.semiBold14,
           activeForegroundColor: context.colors.onSurface,
-          inactiveIcon: const AppVectorGraphic(
-            path: Assets.vectorsAttendanceInActive,
-          ),
+          inactiveIcon: const AppVectorGraphic(path: Assets.vectorsAttendanceInActive),
           icon: const AppVectorGraphic(path: Assets.vectorsAttendanceActive),
         ),
       ),
       PersistentTabConfig(
-        screen: const LoginScreen(),
+        screen: const RequestsScreen(),
         item: ItemConfig(
           title: context.localizations.requests,
           textStyle: context.typography.semiBold14,
           activeForegroundColor: context.colors.onSurface,
-          inactiveIcon: const AppVectorGraphic(
+          inactiveIcon: AppVectorGraphic(
             path: Assets.vectorsRequestsInActive,
+            width: 14.w,
+            height: 14.h,
           ),
-          icon: const AppVectorGraphic(path: Assets.vectorsRequestsActive),
+          icon: AppVectorGraphic(
+            path: Assets.vectorsRequestsActive,
+            width: 14.w,
+            height: 14.h,
+          ),
         ),
       ),
       PersistentTabConfig(
-        screen: Container(),
+        screen: const AccountScreen(),
         item: ItemConfig(
           title: context.localizations.account,
           textStyle: context.typography.semiBold14,
           activeForegroundColor: context.colors.onSurface,
-          inactiveIcon: const AppVectorGraphic(
-            path: Assets.vectorsAccountInActive,
-          ),
+          inactiveIcon: const AppVectorGraphic(path: Assets.vectorsAccountInActive),
           icon: const AppVectorGraphic(path: Assets.vectorsAccountActive),
         ),
       ),
@@ -94,19 +97,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        top: false,
-        child: PersistentTabView(
-          backgroundColor: context.colors.surface,
-          tabs: _tabs(context),
-          controller: controller,
-          avoidBottomPadding: false,
-          navBarBuilder: (navBarConfig) => Style1BottomNavBar(
-            navBarConfig: navBarConfig,
-            navBarDecoration: NavBarDecoration(
-              padding: EdgeInsets.zero,
-              color: context.colors.surface,
-            ),
+      body: PersistentTabView(
+        backgroundColor: context.colors.surface,
+        tabs: _tabs(context),
+        controller: controller,
+        navBarBuilder: (navBarConfig) => Style1BottomNavBar(
+          navBarConfig: navBarConfig,
+          navBarDecoration: NavBarDecoration(
+            padding: EdgeInsets.only(top: AppSpacing.md.h),
+            color: context.colors.containerBackground,
           ),
         ),
       ),

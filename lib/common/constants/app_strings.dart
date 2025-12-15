@@ -1,6 +1,6 @@
 class AppStrings {
   AppStrings._();
-  static const String appName = 'Rose Loyality';
+  static const String appName = 'Rose HR';
   static const String contentType = 'Content-Type';
   static const String applicationJson = 'application/json';
   static const String serverFailure = 'Server Failure';

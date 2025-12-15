@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
+import 'package:rose_hr/common/routing/notifier.dart';
 import 'package:rose_hr/common/widgets/bottom_nav_bar.dart';
 import 'package:rose_hr/features/auth/presentation/screens/forget_password_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/login_screen.dart';
@@ -9,6 +10,7 @@ import 'package:rose_hr/features/splash/presentation/screens/splash_screen.dart'
 class AppRouter {
   static final router = GoRouter(
     initialLocation: AppRoutes.splash.path,
+    refreshListenable: RoutingNotifier(),
     routes: [
       GoRoute(
         name: AppRoutes.splash.name,

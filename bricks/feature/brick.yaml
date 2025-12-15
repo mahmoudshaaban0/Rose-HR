@@ -1,0 +1,14 @@
+name: feature
+description: A new feature template with datasource, repository, bloc, state, and event
+
+version: 0.1.0+1
+
+environment:
+  mason: ">=0.1.0-dev.26 <2.0.0"
+
+vars:
+  name:
+    type: string
+    description: The name of the feature (e.g., auth, home, profile)
+    prompt: What is the feature name?
+

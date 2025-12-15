@@ -105,4 +105,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get difference => 'الفرق';
+
+  @override
+  String get youShouldOpenLocationPermission =>
+      'يجب عليك تفعيل تتبع الموقع حتى تتمكن من تسجيل الحضور/ الانصراف من خلال السياج الجغرافي';
+
+  @override
+  String get goToSettingsPage => 'انتقل إلى الإعدادات';
+
+  @override
+  String get currentRequests => 'الطلبات الحالية';
+
+  @override
+  String get completedRequests => 'الطلبات المكتملة';
+
+  @override
+  String get noCurrentRequestsUntilNow =>
+      'لا توجد لديك طلبات ساريه في الوقت الحالي';
+
+  @override
+  String get noCompletedRequestsUntilNow =>
+      'لا توجد لديك طلبات مكتمله في الوقت الحالي';
 }

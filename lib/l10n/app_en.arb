@@ -31,5 +31,11 @@
     "attendanceCalendar": "Attendance Calendar",
     "workHours": "Work Hours",
     "leave": "Leave",
-    "difference": "Difference"
+    "difference": "Difference",
+    "youShouldOpenLocationPermission": "You should open location permission to clock in/clock out",
+    "goToSettingsPage": "Go to settings page",
+    "currentRequests": "Current Requests",
+    "completedRequests": "Completed Requests",
+    "noCurrentRequestsUntilNow": "No current requests until now",
+    "noCompletedRequestsUntilNow": "No completed requests until now"
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
+import 'package:rose_hr/common/helpers/location_helper.dart';
 import 'package:rose_hr/common/widgets/bottom_sheet_wrapper.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/home/presentation/widgets/header_section.dart';
@@ -80,96 +82,201 @@ class HeaderAndShiftSection extends StatelessWidget {
                 PrimaryTextButton(
                   appButtonSize: AppButtonSize.xxLarge,
                   label: context.localizations.clockInClockOut,
-                  onTap: () {
-                    BottomSheetWrapper(
-                      initialSize: 0.35.h,
-                      maxChildSize: 0.35.h,
-                      removeAutoScroll: true,
-                      disableDrag: true,
-                      useRootNavigator: true,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r, vertical: AppSpacing.xl.r),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          spacing: AppSpacing.md.h,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  context.localizations.inRange,
-                                  style: context.typography.semiBold16.copyWith(
-                                    color: context.colors.error,
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: AppSpacing.xs.r,
-                                    vertical: AppSpacing.xxs.r,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: context.colors.surface,
-                                    borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
-                                    border: Border.all(color: context.colors.containerBorder),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const AppVectorGraphic(path: Assets.vectorsLocationIcon),
-                                      SizedBox(width: AppSpacing.xs.r),
-                                      Text(
-                                        'الرياض',
-                                        style: context.typography.medium14,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(bottom: AppSpacing.xxxl.r),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppSpacing.xxl.r,
-                                vertical: AppSpacing.xl.r,
-                              ),
-                              decoration: BoxDecoration(
-                                color: context.colors.containerBackground,
-                                borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
-                              ),
-                              child: Text(
-                                '08:00 AM - 05:00 PM',
-                                style: context.typography.regular16,
-                              ),
-                            ),
-                            Text(
-                              'الاربعاء 24 فبراير 2025',
-                              style: context.typography.regular14,
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              '06:22 مساءً',
-                              style: context.typography.semiBold36,
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              'آخر تسجيل حدث 09:23 صباحًا',
-                              style: context.typography.regular14,
-                              textAlign: TextAlign.center,
-                            ),
-                            PrimaryTextButton(
-                              appButtonSize: AppButtonSize.xxLarge,
-                              label: context.localizations.fingerPrintRegistration,
-                              onTap: () {},
-                            ),
-                          ],
-                        ),
-                      ),
-                    ).callSheet(context);
+                  onTap: () async {
+                    final data = await LocationHelper.checkPermission();
+                    if (data == LocationPermissionStatus.locationServiceDisabled ||
+                        data == LocationPermissionStatus.denied ||
+                        data == LocationPermissionStatus.deniedForever) {
+                      if (context.mounted) {
+                        await goToPermissionBottomSheet(context).callSheet(context);
+                        if (context.mounted && context.canPop()) {
+                          context.pop();
+                        }
+                      }
+                    } else {
+                      await LocationHelper.requestPermission();
+                      if (data == LocationPermissionStatus.granted) {
+                        if (context.mounted) {
+                          await ordinaryClockInClockOutBottomSheet(context).callSheet(context);
+                        }
+                      }
+                    }
                   },
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  BottomSheetWrapper goToPermissionBottomSheet(BuildContext context) {
+    return BottomSheetWrapper(
+      initialSize: 0.18.h,
+      maxChildSize: 0.18.h,
+      removeAutoScroll: true,
+      disableDrag: true,
+      useRootNavigator: true,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r, vertical: AppSpacing.xl.r),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: AppSpacing.md.h,
+          children: [
+            Text(
+              context.localizations.youShouldOpenLocationPermission,
+              style: context.typography.semiBold18,
+              textAlign: TextAlign.center,
+            ),
+            PrimaryTextButton(
+              appButtonSize: AppButtonSize.xxLarge,
+              label: context.localizations.goToSettingsPage,
+              onTap: () async {
+                await LocationHelper.openLocationSettings();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  BottomSheetWrapper ordinaryClockInClockOutBottomSheet(BuildContext context) {
+    return BottomSheetWrapper(
+      initialSize: 0.35.h,
+      maxChildSize: 0.35.h,
+      removeAutoScroll: true,
+      disableDrag: true,
+      useRootNavigator: true,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r, vertical: AppSpacing.xl.r),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: AppSpacing.md.h,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.localizations.inRange,
+                  style: context.typography.semiBold16.copyWith(
+                    color: context.colors.error,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xs.r,
+                    vertical: AppSpacing.xxs.r,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.colors.surface,
+                    borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                    border: Border.all(color: context.colors.containerBorder),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const AppVectorGraphic(path: Assets.vectorsLocationIcon),
+                      SizedBox(width: AppSpacing.xs.r),
+                      Text(
+                        'الرياض',
+                        style: context.typography.medium14,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: AppSpacing.xxxl.r),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.xxl.r,
+                vertical: AppSpacing.xl.r,
+              ),
+              decoration: BoxDecoration(
+                color: context.colors.containerBackground,
+                borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+              ),
+              child: Text(
+                '08:00 AM - 05:00 PM',
+                style: context.typography.regular16,
+              ),
+            ),
+            Text(
+              'الاربعاء 24 فبراير 2025',
+              style: context.typography.regular14,
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              '06:22 مساءً',
+              style: context.typography.semiBold36,
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'آخر تسجيل حدث 09:23 صباحًا',
+              style: context.typography.regular14,
+              textAlign: TextAlign.center,
+            ),
+            PrimaryTextButton(
+              appButtonSize: AppButtonSize.xxLarge,
+              label: context.localizations.fingerPrintRegistration,
+              onTap: () {
+                if (context.mounted) {
+                  if (context.canPop()) {
+                    context.pop();
+                  }
+                }
+                BottomSheetWrapper(
+                  initialSize: 0.35.h,
+                  maxChildSize: 0.35.h,
+                  removeAutoScroll: true,
+                  disableDrag: true,
+                  useRootNavigator: true,
+                  child: const ClockInClockOutBottomSheet(clockImage: Assets.rastersFingerPrintRegistered),
+                ).callSheet(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ClockInClockOutBottomSheet extends StatelessWidget {
+  const ClockInClockOutBottomSheet({
+    required this.clockImage,
+    super.key,
+  });
+
+  final String clockImage;
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: context.colors.containerBackground,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        spacing: AppSpacing.xs.h,
+        children: [
+          Text(
+            'شكرًا لك',
+            style: context.typography.regular16,
+          ),
+          Text(
+            'تم تسجيل بصمتك بنجاح!',
+            style: context.typography.semiBold28,
+          ),
+          Text(
+            'نتمنى لك يومًا مُثمرًا',
+            style: context.typography.regular16,
+          ),
+          SizedBox(height: 30.h),
+          Image.asset(
+            clockImage,
+            fit: BoxFit.cover,
           ),
         ],
       ),

@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       InkWell(
                         onTap: () {
-                          context.goNamed(AppRoutes.forgetPassword.name);
+                          context.pushNamed(AppRoutes.forgetPassword.name);
                         },
                         child: Text(
                           context.localizations.forgetPassword,
@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         label: context.localizations.login,
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
-                            //
+                            context.goNamed(AppRoutes.home.name);
                           }
                         },
                       ),

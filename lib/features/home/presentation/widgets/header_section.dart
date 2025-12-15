@@ -30,9 +30,11 @@ class HeaderSection extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          ThemeScopeWidget.of(context)?.changeTo(ThemeMode.light);
+          ThemeScopeWidget.of(context)?.changeTo(ThemeMode.dark);
         },
         icon: AppVectorGraphic(
+          width: 18.r,
+          height: 18.r,
           path: Assets.vectorsNotifications,
           color: ColorFilter.mode(context.colors.onSurface, BlendMode.srcIn),
         ),

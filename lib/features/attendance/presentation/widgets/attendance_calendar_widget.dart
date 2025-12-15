@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:rose_hr/theme/app_colors.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+/// Attendance Calendar Widget
+///
+/// Note: For actual attendance tracking (clock in/out), use TimezoneHelper:
+/// ```dart
+/// import 'package:rose_hr/common/helpers/timezone_helper.dart';
+///
+/// // For Egypt employees - clock in
+/// final clockInEgypt = TimezoneHelper.now(AppTimezone.egypt);
+/// final utcForStorage = TimezoneHelper.toUtc(clockInEgypt);
+/// // Store utcForStorage in database
+///
+/// // For Saudi Arabia employees - clock in
+/// final clockInSaudi = TimezoneHelper.now(AppTimezone.saudiArabia);
+/// ```
 class AttendanceCalendarWidget extends StatefulWidget {
   const AttendanceCalendarWidget({
     required this.focusedDay,
@@ -37,20 +50,24 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
   }
 
   bool _hasEvent(DateTime day) {
+    // Check if it's yesterday
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    if (_isSameDay(day, yesterday)) {
+      return true;
+    }
     return widget.eventMarkerDates.any((eventDate) => _isSameDay(eventDate, day));
   }
 
   @override
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context);
-    final colors = Theme.of(context).extension<AppColors>()!;
     final formatter = DateFormat('MMMM yyyy', locale.toString());
     // Initialize intl for the calendar
     Intl.defaultLocale = locale.toString();
 
     return Container(
       decoration: BoxDecoration(
-        color: colors.white,
+        color: context.colors.containerBackground,
         borderRadius: BorderRadius.circular(16),
       ),
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -94,33 +111,33 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
 
             daysOfWeekStyle: DaysOfWeekStyle(
               weekdayStyle: context.typography.regular14.copyWith(
-                color: colors.iconSubtle,
+                color: context.colors.iconSubtle,
               ),
               weekendStyle: context.typography.regular14.copyWith(
-                color: colors.onSurfaceVariant,
+                color: context.colors.onSurfaceVariant,
               ),
             ),
             calendarStyle: CalendarStyle(
               cellMargin: const EdgeInsets.all(4),
               defaultDecoration: BoxDecoration(
-                border: Border.all(color: colors.dividerColor),
+                border: Border.all(color: context.colors.dividerColor),
                 borderRadius: BorderRadius.circular(12),
               ),
               selectedDecoration: BoxDecoration(
-                color: colors.black,
+                color: context.colors.black,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: colors.dividerColor),
+                border: Border.all(color: context.colors.dividerColor),
               ),
               todayDecoration: BoxDecoration(
-                border: Border.all(color: colors.dividerColor),
+                border: Border.all(color: context.colors.dividerColor),
                 borderRadius: BorderRadius.circular(12),
               ),
               outsideDecoration: BoxDecoration(
-                border: Border.all(color: colors.dividerColor),
+                border: Border.all(color: context.colors.dividerColor),
                 borderRadius: BorderRadius.circular(12),
               ),
               weekendDecoration: BoxDecoration(
-                color: Color(0xffF5F5F5),
+                color: context.colors.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(12),
               ),
               disabledDecoration: BoxDecoration(
@@ -128,13 +145,13 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
                 borderRadius: BorderRadius.circular(12),
               ),
               defaultTextStyle: context.typography.medium16,
-              selectedTextStyle: context.typography.medium16.copyWith(color: colors.white),
-              todayTextStyle: context.typography.medium16.copyWith(color: colors.onSurface),
-              weekendTextStyle: context.typography.medium16.copyWith(color: Color(0xffDBCCBB)),
-              outsideTextStyle: context.typography.regular14.copyWith(color: colors.textDisabled),
-              disabledTextStyle: context.typography.regular14.copyWith(color: colors.textDisabled),
+              selectedTextStyle: context.typography.medium16.copyWith(color: context.colors.white),
+              todayTextStyle: context.typography.medium16.copyWith(color: context.colors.onSurface),
+              weekendTextStyle: context.typography.medium16.copyWith(color: context.colors.weekendColor),
+              outsideTextStyle: context.typography.regular14.copyWith(color: context.colors.textDisabled),
+              disabledTextStyle: context.typography.regular14.copyWith(color: context.colors.textDisabled),
               markerDecoration: BoxDecoration(
-                color: colors.error,
+                color: context.colors.error,
                 shape: BoxShape.circle,
               ),
               markerSize: 6,
@@ -150,10 +167,10 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
                   return Positioned(
                     bottom: 8,
                     child: Container(
-                      width: 6,
-                      height: 10,
+                      width: 6.w,
+                      height: 10.h,
                       decoration: BoxDecoration(
-                        color: colors.error,
+                        color: context.colors.error,
                         shape: BoxShape.circle,
                       ),
                     ),

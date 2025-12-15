@@ -32,5 +32,13 @@
      "attendanceCalendar": "تقويم الحضور",
      "workHours": "ساعات العمل",
      "leave" : "الأنصراف",
-     "difference": "الفرق"
+     "difference": "الفرق",
+     "youShouldOpenLocationPermission" : "يجب عليك تفعيل تتبع الموقع حتى تتمكن من تسجيل الحضور/ الانصراف من خلال السياج الجغرافي",
+     "goToSettingsPage" : "انتقل إلى الإعدادات",
+     "currentRequests" : "الطلبات الحالية",
+     "completedRequests" : "الطلبات المكتملة",
+     "noCurrentRequestsUntilNow" : "لا توجد لديك طلبات ساريه في الوقت الحالي",
+     "noCompletedRequestsUntilNow" : "لا توجد لديك طلبات مكتمله في الوقت الحالي"
+     
+     
 }

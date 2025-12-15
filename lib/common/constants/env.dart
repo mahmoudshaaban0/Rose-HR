@@ -8,4 +8,6 @@ final class Env {
 
   @EnviedField(varName: 'BASE_URL', obfuscate: true)
   static String baseUrl = _Env.baseUrl;
+  @EnviedField(varName: 'Authenticate', obfuscate: true)
+  static String authenticate = _Env.authenticate;
 }

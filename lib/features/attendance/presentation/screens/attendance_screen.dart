@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/features/attendance/presentation/widgets/attendance_calendar_container.dart';
 import 'package:rose_hr/features/attendance/presentation/widgets/work_hours_section.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
+import 'package:rose_hr/theme/theme_ext.dart';
 
 class AttendanceScreen extends StatelessWidget {
   const AttendanceScreen({super.key});
@@ -16,11 +18,11 @@ class AttendanceScreen extends StatelessWidget {
     ];
 
     return Scaffold(
+      appBar: PrimaryAppBar(title: context.localizations.attendance),
       body: SafeArea(
         child: Column(
           spacing: AppSpacing.md.h,
           children: [
-            SizedBox(height: AppSpacing.md.h),
             AttendanceCalendarContainer(
               eventMarkerDates: eventDates,
               onDaySelected: (selectedDay, focusedDay) {},

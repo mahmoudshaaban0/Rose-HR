@@ -289,6 +289,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Difference'**
   String get difference;
+
+  /// No description provided for @youShouldOpenLocationPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'You should open location permission to clock in/clock out'**
+  String get youShouldOpenLocationPermission;
+
+  /// No description provided for @goToSettingsPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to settings page'**
+  String get goToSettingsPage;
+
+  /// No description provided for @currentRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Requests'**
+  String get currentRequests;
+
+  /// No description provided for @completedRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Requests'**
+  String get completedRequests;
+
+  /// No description provided for @noCurrentRequestsUntilNow.
+  ///
+  /// In en, this message translates to:
+  /// **'No current requests until now'**
+  String get noCurrentRequestsUntilNow;
+
+  /// No description provided for @noCompletedRequestsUntilNow.
+  ///
+  /// In en, this message translates to:
+  /// **'No completed requests until now'**
+  String get noCompletedRequestsUntilNow;
 }
 
 class _AppLocalizationsDelegate
