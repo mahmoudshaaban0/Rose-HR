@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
+import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/auth_helper.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
+import 'package:rose_hr/common/widgets/loading.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
+import 'package:rose_hr/features/auth/data/models/login_request_model.dart';
+import 'package:rose_hr/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:rose_hr/theme/app_sizes.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/app_textfield.dart';
@@ -33,73 +38,110 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.end,
-          spacing: AppSpacing.md.h,
-          children: [
-            Expanded(child: Image.asset(Assets.rastersLoginBackgrooundImage)),
-            Container(
-              padding: EdgeInsets.all(AppSpacing.md.h),
-              decoration: BoxDecoration(
-                color: context.colors.containerBackground,
-                borderRadius: BorderRadius.circular(AppSpacing.xxxl.r),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.h),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: AppSpacing.lg.h,
-                    children: [
-                      Text(context.localizations.login, style: context.typography.bold22),
-                      AppTextField(
-                        prefixIcon: const AppVectorGraphic(path: Assets.vectorsEmailIcon),
-                        validator: (value) => AuthHelper.validateEmail(context, value),
-                        title: context.localizations.email,
-                        hintTextLabel: context.localizations.pleaseEnterYourEmail,
-                        required: true,
-                        controller: _emailController,
+    return BlocProvider(
+      create: (context) => sl<AuthBloc>(),
+      child: Builder(
+        builder: (context) {
+          return BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state.status == AuthStatus.loading) {
+                showDialog<void>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const LoadingWidget(),
+                );
+              } else if (state.status == AuthStatus.success) {
+                Navigator.pop(context);
+                context.goNamed(AppRoutes.home.name);
+              } else if (state.status == AuthStatus.error) {
+                Navigator.pop(context);
+                showDialog<void>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(state.errorMessage ?? ''),
+                    content: Text(state.errorMessage ?? ''),
+                  ),
+                );
+              }
+            },
+            child: Scaffold(
+              body: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  spacing: AppSpacing.md.h,
+                  children: [
+                    Expanded(child: Image.asset(Assets.rastersLoginBackgrooundImage)),
+                    Container(
+                      padding: EdgeInsets.all(AppSpacing.md.h),
+                      decoration: BoxDecoration(
+                        color: context.colors.containerBackground,
+                        borderRadius: BorderRadius.circular(AppSpacing.xxxl.r),
                       ),
-                      AppTextField(
-                        prefixIcon: const AppVectorGraphic(path: Assets.vectorsPasswordIcon),
-                        validator: (value) => AuthHelper.validatePassword(context, value),
-                        title: context.localizations.password,
-                        hintTextLabel: context.localizations.pleaseEnterYourPassword,
-                        required: true,
-                        suffixIcon: const AppVectorGraphic(path: Assets.vectorsPasswordVisible),
-                        obscureText: true,
-                        controller: _passwordController,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          context.pushNamed(AppRoutes.forgetPassword.name);
-                        },
-                        child: Text(
-                          context.localizations.forgetPassword,
-                          style: context.typography.medium16,
-                          textAlign: TextAlign.start,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.h),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            spacing: AppSpacing.lg.h,
+                            children: [
+                              Text(context.localizations.login, style: context.typography.bold22),
+                              AppTextField(
+                                prefixIcon: const AppVectorGraphic(path: Assets.vectorsEmailIcon),
+                                validator: (value) => AuthHelper.validateEmail(context, value),
+                                title: context.localizations.email,
+                                hintTextLabel: context.localizations.pleaseEnterYourEmail,
+                                required: true,
+                                controller: _emailController,
+                              ),
+                              AppTextField(
+                                prefixIcon: const AppVectorGraphic(path: Assets.vectorsPasswordIcon),
+                                // validator: (value) => AuthHelper.validatePassword(context, value),
+                                title: context.localizations.password,
+                                hintTextLabel: context.localizations.pleaseEnterYourPassword,
+                                required: true,
+                                suffixIcon: const AppVectorGraphic(path: Assets.vectorsPasswordVisible),
+                                obscureText: true,
+                                controller: _passwordController,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  context.pushNamed(AppRoutes.forgetPassword.name);
+                                },
+                                child: Text(
+                                  context.localizations.forgetPassword,
+                                  style: context.typography.medium16,
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              PrimaryTextButton(
+                                appButtonSize: AppButtonSize.xxLarge,
+                                label: context.localizations.login,
+                                onTap: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    context.read<AuthBloc>().add(
+                                      LoginEvent(
+                                        loginRequestModel: LoginRequestModel(
+                                          email: _emailController.text,
+                                          password: _passwordController.text,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      PrimaryTextButton(
-                        appButtonSize: AppButtonSize.xxLarge,
-                        label: context.localizations.login,
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            context.goNamed(AppRoutes.home.name);
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

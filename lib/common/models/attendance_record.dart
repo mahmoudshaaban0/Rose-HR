@@ -1,4 +1,4 @@
-import 'package:rose_hr/common/helpers/location_helper.dart';
+import 'package:rose_hr/common/helpers/location_provider.dart';
 import 'package:rose_hr/common/helpers/timezone_helper.dart';
 import 'package:timezone/timezone.dart' as tz;
 

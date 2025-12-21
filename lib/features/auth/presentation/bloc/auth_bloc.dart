@@ -20,6 +20,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(state.copyWith(status: AuthStatus.error, errorMessage: failure.message));
       }
     });
+    on<ResetPasswordEvent>((event, emit) async {
+      emit(state.copyWith(status: AuthStatus.resetPasswordLoading));
+      final result = await authRepository.resetPassword(event.email);
+      switch (result) {
+        case Success(:final data):
+          emit(state.copyWith(status: AuthStatus.resetPasswordSuccess, resetPasswordSuccess: data));
+        case Error(:final failure):
+          emit(state.copyWith(status: AuthStatus.resetPasswordError, resetPasswordErrorMessage: failure.message));
+      }
+    });
   }
 
   final AuthRepository authRepository;

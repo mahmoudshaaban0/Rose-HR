@@ -1,4 +1,6 @@
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:rose_hr/common/helpers/timezone_helper.dart';
 
 /// Result of a location permission request
 enum LocationPermissionStatus {
@@ -22,7 +24,6 @@ class LocationResult {
     required this.latitude,
     required this.longitude,
     required this.accuracy,
-    this.address,
   });
 
   /// The full Position object from geolocator
@@ -36,43 +37,6 @@ class LocationResult {
 
   /// Accuracy of the position in meters
   final double accuracy;
-
-  /// Optional address (if geocoding is implemented)
-  final String? address;
-
-  /// Format coordinates as a string
-  String get coordinates => '($latitude, $longitude)';
-
-  /// Check if position is within a certain radius of target location
-  /// [targetLat] Target latitude
-  /// [targetLng] Target longitude
-  /// [radiusInMeters] Radius in meters (default 100m)
-  bool isWithinRadius({
-    required double targetLat,
-    required double targetLng,
-    double radiusInMeters = 100,
-  }) {
-    final distance = Geolocator.distanceBetween(
-      latitude,
-      longitude,
-      targetLat,
-      targetLng,
-    );
-    return distance <= radiusInMeters;
-  }
-
-  /// Get distance in meters to another location
-  double distanceTo({
-    required double targetLat,
-    required double targetLng,
-  }) {
-    return Geolocator.distanceBetween(
-      latitude,
-      longitude,
-      targetLat,
-      targetLng,
-    );
-  }
 
   @override
   String toString() {
@@ -103,59 +67,36 @@ class OfficeLocation {
 
   /// Check if a location is within office radius
   bool isLocationInOffice(LocationResult location) {
-    return location.isWithinRadius(
-      targetLat: latitude,
-      targetLng: longitude,
-      radiusInMeters: allowedRadiusMeters,
+    final distance = Geolocator.distanceBetween(
+      location.latitude,
+      location.longitude,
+      latitude,
+      longitude,
     );
+    return distance <= allowedRadiusMeters;
   }
 
   /// Get distance from office in meters
   double distanceFromOffice(LocationResult location) {
-    return location.distanceTo(
-      targetLat: latitude,
-      targetLng: longitude,
+    return Geolocator.distanceBetween(
+      location.latitude,
+      location.longitude,
+      latitude,
+      longitude,
     );
   }
 }
 
 /// Centralized helper class for handling geolocation in the HR app
-///
-/// This class provides utilities for:
-/// - Checking and requesting location permissions
-/// - Getting current user location
-/// - Verifying user is at office location
-/// - Calculating distances
-///
-/// Usage:
-/// ```dart
-/// // Check permissions
-/// final permissionStatus = await LocationHelper.checkPermission();
-///
-/// if (permissionStatus == LocationPermissionStatus.granted) {
-///   // Get current location
-///   final location = await LocationHelper.getCurrentLocation();
-///   print('User at: ${location.coordinates}');
-///
-///   // Check if at office
-///   final isAtOffice = LocationHelper.cairoOffice.isLocationInOffice(location);
-/// }
-/// ```
-class LocationHelper {
-  LocationHelper._();
+class LocationProvider {
+  LocationProvider._();
 
-  // Office locations - Update these with your actual office coordinates
-
-  /// Cairo Office Location (Egypt)
-  /// TODO: Replace with actual Cairo office coordinates
   static const OfficeLocation cairoOffice = OfficeLocation(
     name: 'Cairo Office',
     latitude: 30.0444, // Example: Cairo coordinates
     longitude: 31.2357,
   );
 
-  /// Riyadh Office Location (Saudi Arabia)
-  /// TODO: Replace with actual Riyadh office coordinates
   static const OfficeLocation riyadhOffice = OfficeLocation(
     name: 'Riyadh Office',
     latitude: 24.7136, // Example: Riyadh coordinates
@@ -258,75 +199,11 @@ class LocationHelper {
     );
   }
 
-  /// Get last known location (faster but may be outdated)
-  ///
-  /// Returns null if no last known position is available
-  static Future<LocationResult?> getLastKnownLocation() async {
-    final position = await Geolocator.getLastKnownPosition();
-
-    if (position == null) {
-      return null;
-    }
-
-    return LocationResult(
-      position: position,
-      latitude: position.latitude,
-      longitude: position.longitude,
-      accuracy: position.accuracy,
-    );
-  }
-
-  /// Request permission and get location in one call
-  ///
-  /// Returns location if permission granted, null otherwise
-  static Future<LocationResult?> requestPermissionAndGetLocation() async {
-    final permissionStatus = await requestPermission();
-
-    if (permissionStatus == LocationPermissionStatus.granted) {
-      try {
-        return await getCurrentLocation();
-      } on Exception {
-        return null;
-      }
-    }
-
-    return null;
-  }
-
   /// Open device location settings
   ///
   /// Useful when permission is denied forever or location services are disabled
   static Future<bool> openLocationSettings() async {
     return Geolocator.openLocationSettings();
-  }
-
-  /// Open app settings (for when permission is denied forever)
-  static Future<bool> openAppSettings() async {
-    return Geolocator.openAppSettings();
-  }
-
-  /// Check if user is at a specific office location
-  ///
-  /// Returns true if user is within the office radius, false otherwise
-  static Future<bool> isUserAtOffice(OfficeLocation office) async {
-    try {
-      final location = await getCurrentLocation();
-      return office.isLocationInOffice(location);
-    } on Exception {
-      return false;
-    }
-  }
-
-  /// Get distance from user to office in meters
-  ///
-  /// Returns null if location cannot be obtained
-  static Future<double?> getDistanceToOffice(OfficeLocation office) async {
-    try {
-      final location = await getCurrentLocation();
-      return office.distanceFromOffice(location);
-    } on Exception {
-      return null;
-    }
   }
 
   /// Calculate distance between two coordinates in meters
@@ -339,29 +216,71 @@ class LocationHelper {
     return Geolocator.distanceBetween(startLat, startLng, endLat, endLng);
   }
 
-  /// Calculate distance between two coordinates in kilometers
-  static double calculateDistanceInKm({
-    required double startLat,
-    required double startLng,
-    required double endLat,
-    required double endLng,
-  }) {
-    final meters = calculateDistance(
-      startLat: startLat,
-      startLng: startLng,
-      endLat: endLat,
-      endLng: endLng,
-    );
-    return meters / 1000;
+  /// Get city name from coordinates using reverse geocoding
+  ///
+  /// Returns the city/locality name, trying multiple placemark fields
+  static Future<String?> _getCityFromCoordinates({
+    required double latitude,
+    required double longitude,
+  }) async {
+    try {
+      final placemarks = await placemarkFromCoordinates(latitude, longitude);
+
+      if (placemarks.isEmpty) return null;
+
+      final placemark = placemarks.first.administrativeArea;
+
+      if (placemark == null) return null;
+
+      return placemark;
+    } on Exception catch (_) {
+      throw Exception('Failed Geocoding Getting City Name');
+    }
   }
 
-  /// Get formatted distance string
-  static String formatDistance(double meters) {
-    if (meters < 1000) {
-      return '${meters.toStringAsFixed(0)}m';
-    } else {
-      final km = meters / 1000;
-      return '${km.toStringAsFixed(2)}km';
+  /// Determine timezone based on given coordinates
+  ///
+  /// Returns [AppTimezone] based on which office is closer to the coordinates.
+  /// Uses Cairo Office for Egypt timezone and Riyadh Office for Saudi Arabia timezone.
+  static AppTimezone getTimezoneFromCoordinates(double latitude, double longitude) {
+    final distanceToCairo = calculateDistance(
+      startLat: latitude,
+      startLng: longitude,
+      endLat: cairoOffice.latitude,
+      endLng: cairoOffice.longitude,
+    );
+
+    final distanceToRiyadh = calculateDistance(
+      startLat: latitude,
+      startLng: longitude,
+      endLat: riyadhOffice.latitude,
+      endLng: riyadhOffice.longitude,
+    );
+
+    return distanceToCairo < distanceToRiyadh ? AppTimezone.egypt : AppTimezone.saudiArabia;
+  }
+
+  /// Get timezone and location name based on current GPS location
+  ///
+  /// Returns a record with timezone and city name from geocoding
+  static Future<({AppTimezone timezone, String locationName})> getTimezoneWithLocationName() async {
+    try {
+      final location = await getCurrentLocation();
+      final timezone = getTimezoneFromCoordinates(location.latitude, location.longitude);
+
+      // Try to get real city name from geocoding
+      final cityName = await _getCityFromCoordinates(
+        latitude: location.latitude,
+        longitude: location.longitude,
+      );
+
+      // Use geocoded city name if available, otherwise fallback based on timezone
+      final locationName = cityName ?? 'No Location Name';
+
+      return (timezone: timezone, locationName: locationName);
+    } on Exception catch (_) {
+      // Default to Riyadh if location cannot be obtained
+      return (timezone: AppTimezone.saudiArabia, locationName: 'catch error');
     }
   }
 }

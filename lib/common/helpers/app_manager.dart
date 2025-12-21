@@ -1,14 +1,15 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppManager {
-  factory AppManager() => _internalInstance ??= AppManager._();
   AppManager._();
 
   static AppManager? _internalInstance;
   SharedPreferences? _prefs;
 
-  static Future<void> initialize(SharedPreferences prefs) async {
-    AppManager()._prefs = prefs;
+  static AppManager get instance => _internalInstance ??= AppManager._();
+
+  static void init(SharedPreferences prefs) {
+    instance._prefs = prefs;
   }
 
   SharedPreferences get _preferences {

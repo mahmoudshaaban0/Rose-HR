@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/routing/notifier.dart';
 import 'package:rose_hr/common/widgets/bottom_nav_bar.dart';
+import 'package:rose_hr/features/account/presentation/screens/update_account_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/forget_password_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/login_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/verification_screen.dart';
@@ -36,6 +37,11 @@ class AppRouter {
         name: AppRoutes.home.name,
         path: AppRoutes.home.path,
         builder: (context, state) => const BottomNavBar(),
+      ),
+      GoRoute(
+        name: AppRoutes.updateAccount.name,
+        path: AppRoutes.updateAccount.path,
+        builder: (context, state) => const UpdateAccountScreen(),
       ),
     ],
   );

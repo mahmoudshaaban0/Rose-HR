@@ -18,6 +18,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_screenutil: ^5.9.3
+  fluttertoast: ^9.0.0
+  geocoding: ^3.0.0
   geolocator: ^13.0.2
   get_it: ^8.2.0
   go_router: ^15.1.3
@@ -27,6 +29,7 @@ dependencies:
   json_annotation: ^4.9.0
   json_serializable: ^6.11.1
   logger: ^2.1.0
+  lottie: ^3.3.2
   meta: ^1.16.0
   persistent_bottom_nav_bar_v2: ^6.1.0
   pinput: ^5.0.2
@@ -55,6 +58,7 @@ flutter:
       transformers:
         - package: vector_graphics_compiler
     - assets/rasters/
+    - assets/lotties/
 
   fonts:
     - family: GraphikArabic
@@ -81,6 +85,7 @@ flutter_assets:
     - assets/vectors/
     - assets/rasters/
     - assets/fonts/
+    - assets/lotties/
   output_path: lib/common/constants
   filename: app_assets.dart
   field_prefix: null

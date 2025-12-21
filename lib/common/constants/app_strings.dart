@@ -12,4 +12,8 @@ class AppStrings {
   static const String sa = 'SA';
   static const String accept = 'Accept';
   static const String version = 'v1.0.0';
+  static const String uid = 'uid';
+  static const String email = 'email';
+  static const String name = 'name';
+  static const String apiKey = 'apiKey';
 }

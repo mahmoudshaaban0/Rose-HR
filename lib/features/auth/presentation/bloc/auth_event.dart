@@ -14,3 +14,11 @@ class LoginEvent extends AuthEvent {
   @override
   List<Object> get props => [loginRequestModel];
 }
+
+class ResetPasswordEvent extends AuthEvent {
+  const ResetPasswordEvent({required this.email});
+  final String email;
+
+  @override
+  List<Object> get props => [email];
+}

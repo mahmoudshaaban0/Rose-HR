@@ -1,6 +1,7 @@
+// ignore_for_file: prefer_single_quotes
 class Assets {
   Assets._();
-
+  
   /// Assets for fontsGraphikArabicBlack
   /// assets/fonts/GraphikArabic-Black.ttf
   static const String fontsGraphikArabicBlack = "assets/fonts/GraphikArabic-Black.ttf";
@@ -32,6 +33,14 @@ class Assets {
   /// Assets for fontsGraphikArabicThin
   /// assets/fonts/GraphikArabic-Thin.ttf
   static const String fontsGraphikArabicThin = "assets/fonts/GraphikArabic-Thin.ttf";
+
+  /// Assets for lottiesLoading
+  /// assets/lotties/loading.json
+  static const String lottiesLoading = "assets/lotties/loading.json";
+
+  /// Assets for lottiesLoadingAnimation
+  /// assets/lotties/loading_animation.json
+  static const String lottiesLoadingAnimation = "assets/lotties/loading_animation.json";
 
   /// Assets for rastersFingerPrintRegisterOut
   /// assets/rasters/finger_print_register_out.png
@@ -129,3 +138,4 @@ class Assets {
   /// assets/vectors/visibility_on.svg
   static const String vectorsVisibilityOn = "assets/vectors/visibility_on.svg";
 }
+

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
+import 'package:rose_hr/common/constants/app_strings.dart';
+import 'package:rose_hr/common/helpers/app_manager.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -13,12 +15,12 @@ class HeaderSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        context.localizations.home,
-        style: context.typography.regular14,
+        AppManager.instance.getString(AppStrings.name) ?? 'No Name',
+        style: context.typography.semiBold18,
       ),
       subtitle: Text(
-        context.localizations.home,
-        style: context.typography.semiBold18,
+        AppManager.instance.getString(AppStrings.email) ?? 'No Email',
+        style: context.typography.regular14,
       ),
       leading: const AppVectorGraphic(path: Assets.vectorsUserPlaceHolder),
       trailing: IconButton(

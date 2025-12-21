@@ -15,7 +15,7 @@ class LoginResponseModel {
   String? jsonrpc;
   @JsonKey(name: "id")
   dynamic id;
-  @JsonKey(name: "LoginResult")
+  @JsonKey(name: "result")
   LoginResult? loginResult;
 
   Map<String, dynamic> toJson() => _$LoginResponseModelToJson(this);

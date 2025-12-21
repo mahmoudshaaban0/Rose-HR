@@ -10,16 +10,16 @@ LoginResponseModel _$LoginResponseModelFromJson(Map<String, dynamic> json) =>
     LoginResponseModel(
       jsonrpc: json['jsonrpc'] as String?,
       id: json['id'],
-      loginResult: json['LoginResult'] == null
+      loginResult: json['result'] == null
           ? null
-          : LoginResult.fromJson(json['LoginResult'] as Map<String, dynamic>),
+          : LoginResult.fromJson(json['result'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
     <String, dynamic>{
       'jsonrpc': instance.jsonrpc,
       'id': instance.id,
-      'LoginResult': instance.loginResult,
+      'result': instance.loginResult,
     };
 
 LoginResult _$LoginResultFromJson(Map<String, dynamic> json) => LoginResult(

@@ -16,4 +16,18 @@ class AuthDataSource {
     );
     return LoginResponseModel.fromJson(response as Map<String, dynamic>);
   }
+
+  // reset password
+  Future<bool> resetPassword(String email) async {
+    final response = await apiConsumer.post(
+      Env.resetPassword,
+      body: {
+        "params": {
+          "email": email,
+        },
+      },
+    );
+    // ignore: avoid_dynamic_calls
+    return response['result']['success'] as bool;
+  }
 }
