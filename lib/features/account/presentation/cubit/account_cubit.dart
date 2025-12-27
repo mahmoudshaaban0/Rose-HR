@@ -11,12 +11,15 @@ class AccountCubit extends Cubit<AccountState> {
   final AccountRepository accountRepository;
 
   Future<void> getAccountInfo() async {
+    if (isClosed) return;
     emit(state.copyWith(status: AccountStatus.loading));
     final result = await accountRepository.getAccountInfo();
     switch (result) {
       case Success(:final data):
+        if (isClosed) return;
         emit(state.copyWith(status: AccountStatus.success, accountResponseModel: data));
       case Error(:final failure):
+        if (isClosed) return;
         emit(state.copyWith(status: AccountStatus.error, errorMessage: failure.message));
     }
   }

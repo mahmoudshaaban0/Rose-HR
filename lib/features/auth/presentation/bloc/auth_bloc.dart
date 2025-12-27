@@ -15,8 +15,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final result = await authRepository.login(event.loginRequestModel);
       switch (result) {
         case Success(:final data):
+          if (isClosed) return;
           emit(state.copyWith(status: AuthStatus.success, loginResponseModel: data));
         case Error(:final failure):
+          if (isClosed) return;
           emit(state.copyWith(status: AuthStatus.error, errorMessage: failure.message));
       }
     });
@@ -25,8 +27,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final result = await authRepository.resetPassword(event.email);
       switch (result) {
         case Success(:final data):
+          if (isClosed) return;
           emit(state.copyWith(status: AuthStatus.resetPasswordSuccess, resetPasswordSuccess: data));
         case Error(:final failure):
+          if (isClosed) return;
           emit(state.copyWith(status: AuthStatus.resetPasswordError, resetPasswordErrorMessage: failure.message));
       }
     });

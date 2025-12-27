@@ -32,7 +32,7 @@ class HeaderSection extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          ThemeScopeWidget.of(context)?.changeTo(ThemeMode.dark);
+          ThemeScopeWidget.of(context)?.changeTo(ThemeMode.light);
         },
         icon: AppVectorGraphic(
           width: 18.r,

@@ -9,12 +9,16 @@ import 'package:rose_hr/common/networking/network_info.dart';
 import 'package:rose_hr/features/account/data/datasources/account_datasource.dart';
 import 'package:rose_hr/features/account/data/repositories/account_repository.dart';
 import 'package:rose_hr/features/account/presentation/cubit/account_cubit.dart';
+import 'package:rose_hr/features/attendance/data/datasources/attendance_datasource.dart';
+import 'package:rose_hr/features/attendance/data/repositories/attendance_repository.dart';
+import 'package:rose_hr/features/attendance/presentation/cubit/attendance_cubit.dart';
 import 'package:rose_hr/features/auth/data/datasources/auth_datasource.dart';
 import 'package:rose_hr/features/auth/data/repositories/auth_repository.dart';
 import 'package:rose_hr/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:rose_hr/features/home/data/datasources/home_datasource.dart';
 import 'package:rose_hr/features/home/data/repositories/home_repository.dart';
 import 'package:rose_hr/features/home/presentation/cubit/home_cubit.dart';
+import 'package:rose_hr/features/home/presentation/cubit/shift_cubit.dart';
 import 'package:rose_hr/features/home/presentation/cubit/timezone_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,15 +29,19 @@ Future<void> init() async {
     ..registerLazySingleton<AuthDataSource>(() => AuthDataSource(sl<ApiConsumer>()))
     ..registerLazySingleton<HomeDataSource>(() => HomeDataSource(sl<ApiConsumer>()))
     ..registerLazySingleton<AccountDataSource>(() => AccountDataSource(sl<ApiConsumer>()))
+    ..registerLazySingleton<AttendanceDataSource>(() => AttendanceDataSource(sl<ApiConsumer>()))
     // Repositories
     ..registerLazySingleton<AuthRepository>(() => AuthRepository(sl<AuthDataSource>()))
     ..registerLazySingleton<HomeRepository>(() => HomeRepository(sl<HomeDataSource>()))
     ..registerLazySingleton<AccountRepository>(() => AccountRepository(sl<AccountDataSource>()))
+    ..registerLazySingleton<AttendanceRepository>(() => AttendanceRepository(sl<AttendanceDataSource>()))
     // Cubits/Blocs
     ..registerFactory<AuthBloc>(() => AuthBloc(sl<AuthRepository>()))
     ..registerFactory<HomeCubit>(() => HomeCubit(sl<HomeRepository>()))
     ..registerLazySingleton<TimezoneCubit>(TimezoneCubit.new)
     ..registerFactory<AccountCubit>(() => AccountCubit(sl<AccountRepository>()))
+    ..registerFactory<ShiftCubit>(() => ShiftCubit(sl<HomeRepository>()))
+    ..registerFactory<AttendanceCubit>(() => AttendanceCubit(sl<AttendanceRepository>()))
     ///! Core
     ..registerLazySingleton<NetworkInfo>(
       () => NetworkInfoImpl(connectivityChecker: sl()),

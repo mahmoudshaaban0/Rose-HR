@@ -18,4 +18,8 @@ final class Env {
   static String getAccountInfo = _Env.getAccountInfo;
   @EnviedField(varName: 'updateAccountInfo', obfuscate: true)
   static String updateAccountInfo = _Env.updateAccountInfo;
+  @EnviedField(varName: 'currentShift', obfuscate: true)
+  static String getCurrentShift = _Env.getCurrentShift;
+  @EnviedField(varName: 'shiftSummary', obfuscate: true)
+  static String shiftSummary = _Env.shiftSummary;
 }

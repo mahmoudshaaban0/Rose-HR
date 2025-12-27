@@ -216,6 +216,57 @@ class LocationProvider {
     return Geolocator.distanceBetween(startLat, startLng, endLat, endLng);
   }
 
+  /// Check if a given location is within the specified radius of a target point
+  ///
+  /// [userLat] - User's current latitude
+  /// [userLng] - User's current longitude
+  /// [targetLat] - Target location latitude (e.g., shift location)
+  /// [targetLng] - Target location longitude (e.g., shift location)
+  /// [radiusInMeters] - Allowed radius in meters
+  ///
+  /// Returns `true` if user is within radius, `false` otherwise
+  static bool isWithinRadius({
+    required double userLat,
+    required double userLng,
+    required double targetLat,
+    required double targetLng,
+    required double radiusInMeters,
+  }) {
+    final distance = calculateDistance(
+      startLat: userLat,
+      startLng: userLng,
+      endLat: targetLat,
+      endLng: targetLng,
+    );
+    return distance <= radiusInMeters;
+  }
+
+  /// Check if user's current location is within the specified radius of a target point
+  ///
+  /// [targetLat] - Target location latitude (e.g., shift location)
+  /// [targetLng] - Target location longitude (e.g., shift location)
+  /// [radiusInMeters] - Allowed radius in meters
+  ///
+  /// Returns a record with:
+  /// - `isWithin`: Whether user is within radius
+  /// - `distance`: Distance from target in meters
+  ///
+  /// Throws exceptions if location cannot be obtained
+  static Future<({bool isWithin, double distance})> isCurrentLocationWithinRadius({
+    required double targetLat,
+    required double targetLng,
+    required double radiusInMeters,
+  }) async {
+    final location = await getCurrentLocation();
+    final distance = calculateDistance(
+      startLat: location.latitude,
+      startLng: location.longitude,
+      endLat: targetLat,
+      endLng: targetLng,
+    );
+    return (isWithin: distance <= radiusInMeters, distance: distance);
+  }
+
   /// Get city name from coordinates using reverse geocoding
   ///
   /// Returns the city/locality name, trying multiple placemark fields
@@ -280,7 +331,7 @@ class LocationProvider {
       return (timezone: timezone, locationName: locationName);
     } on Exception catch (_) {
       // Default to Riyadh if location cannot be obtained
-      return (timezone: AppTimezone.saudiArabia, locationName: 'catch error');
+      return (timezone: AppTimezone.saudiArabia, locationName: 'No Location');
     }
   }
 }

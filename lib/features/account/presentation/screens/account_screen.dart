@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
+import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/common/widgets/loading.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
@@ -10,7 +12,6 @@ import 'package:rose_hr/features/account/presentation/cubit/account_cubit.dart';
 import 'package:rose_hr/features/account/presentation/widgets/row_item.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
-import 'package:rose_hr/theme/theme_mode_handler.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -48,11 +49,9 @@ class _AccountScreenState extends State<AccountScreen> {
                 actions: [
                   InkWell(
                     borderRadius: BorderRadius.circular(25.r),
-                    onDoubleTap: () {
-                      ThemeScopeWidget.of(context)?.changeTo(ThemeMode.light);
-                    },
+
                     onTap: () {
-                      ThemeScopeWidget.of(context)?.changeTo(ThemeMode.dark);
+                      context.pushNamed(AppRoutes.updateAccount.name);
                     },
                     child: Container(
                       margin: EdgeInsets.only(left: 4.w, right: 4.w),

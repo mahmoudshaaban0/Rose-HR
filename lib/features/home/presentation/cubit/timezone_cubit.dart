@@ -24,6 +24,7 @@ class TimezoneCubit extends Cubit<TimezoneState> {
 
   /// Detect timezone based on user's GPS location
   Future<void> _detectTimezone() async {
+    if (isClosed) return;
     emit(const TimezoneLoading());
 
     try {
@@ -31,6 +32,7 @@ class TimezoneCubit extends Cubit<TimezoneState> {
       final result = await LocationProvider.getTimezoneWithLocationName();
       final now = TimezoneHelper.now(result.timezone);
 
+      if (isClosed) return;
       emit(
         TimezoneLoaded(
           timezone: result.timezone,
@@ -42,6 +44,7 @@ class TimezoneCubit extends Cubit<TimezoneState> {
     } on Exception catch (_) {
       // Fallback to default timezone if location detection fails
       final now = TimezoneHelper.now(AppTimezone.saudiArabia);
+      if (isClosed) return;
       emit(
         TimezoneLoaded(
           timezone: AppTimezone.saudiArabia,

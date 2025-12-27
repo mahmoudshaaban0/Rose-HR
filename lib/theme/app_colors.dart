@@ -52,6 +52,8 @@ interface class AppColors extends ThemeExtension<AppColors> {
     required this.fadedLight,
     required this.disabledColor,
     required this.dividerColor,
+    required this.leaveColor,
+    required this.publicOffColor,
   });
 
   factory AppColors.light() {
@@ -116,6 +118,10 @@ interface class AppColors extends ThemeExtension<AppColors> {
 
   // weekend color
   final Color weekendColor;
+
+  // Calendar marker colors
+  final Color leaveColor;
+  final Color publicOffColor;
   @override
   ThemeExtension<AppColors> copyWith({
     Color? surface,
@@ -155,6 +161,8 @@ interface class AppColors extends ThemeExtension<AppColors> {
     Color? containerBackground,
     Color? dividerColor,
     Color? weekendColor,
+    Color? leaveColor,
+    Color? publicOffColor,
   }) {
     return AppColors(
       surface: surface ?? this.surface,
@@ -195,6 +203,8 @@ interface class AppColors extends ThemeExtension<AppColors> {
       disabledColor: disabledColor ?? this.disabledColor,
       dividerColor: dividerColor ?? this.dividerColor,
       weekendColor: weekendColor ?? this.weekendColor,
+      leaveColor: leaveColor ?? this.leaveColor,
+      publicOffColor: publicOffColor ?? this.publicOffColor,
     );
   }
 
@@ -246,6 +256,8 @@ interface class AppColors extends ThemeExtension<AppColors> {
       disabledColor: Color.lerp(disabledColor, other.disabledColor, t)!,
       dividerColor: Color.lerp(dividerColor, other.dividerColor, t)!,
       weekendColor: Color.lerp(weekendColor, other.weekendColor, t)!,
+      leaveColor: Color.lerp(leaveColor, other.leaveColor, t)!,
+      publicOffColor: Color.lerp(publicOffColor, other.publicOffColor, t)!,
     );
   }
 }
@@ -296,6 +308,8 @@ class AppLightColors extends AppColors {
     super.containerBackground = const Color(0xffFFFDFA),
     super.containerBorder = const Color(0xff525866),
     super.weekendColor = const Color(0xffDBCCBB),
+    super.leaveColor = const Color(0xFF335CFF), // Blue for leave days
+    super.publicOffColor = const Color(0xFF9C27B0), // Purple for public holidays
   });
 }
 
@@ -350,5 +364,7 @@ class AppDarkColors extends AppColors {
     super.containerBackground = const Color(0xff000205),
     super.containerBorder = const Color(0xffA7A19A),
     super.weekendColor = const Color(0xffDBCCBB),
+    super.leaveColor = const Color(0xFF5C8AFF), // Blue for leave days
+    super.publicOffColor = const Color(0xFFBA68C8), // Purple for public holidays
   });
 }

@@ -5,19 +5,35 @@ import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/location_provider.dart';
+import 'package:rose_hr/common/helpers/toast_service.dart';
 import 'package:rose_hr/common/widgets/bottom_sheet_wrapper.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/home/data/models/create_attendance_punch_request.dart';
 import 'package:rose_hr/features/home/presentation/cubit/home_cubit.dart';
+import 'package:rose_hr/features/home/presentation/cubit/shift_cubit.dart';
 import 'package:rose_hr/features/home/presentation/cubit/timezone_cubit.dart';
 import 'package:rose_hr/features/home/presentation/widgets/header_section.dart';
 import 'package:rose_hr/theme/app_sizes.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/primary_text_button.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HeaderAndShiftSection extends StatelessWidget {
   const HeaderAndShiftSection({super.key});
+
+  /// Formats a 24-hour time value to 12-hour format with AM/PM
+  String _formatHourTo12Hour(int? hour) {
+    if (hour == null) return '--:--';
+    final period = hour >= 12 ? 'مساءً' : 'صباحًا';
+    final hour12 = hour % 12 == 0 ? 12 : hour % 12;
+    return '$hour12:00 $period ';
+  }
+
+  /// Formats shift hours range from 24-hour to 12-hour format
+  String _formatShiftHours(int? shiftHourFrom, int? shiftHourTo) {
+    return '${_formatHourTo12Hour(shiftHourFrom)} - ${_formatHourTo12Hour(shiftHourTo)}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,6 +202,9 @@ class HeaderAndShiftSection extends StatelessWidget {
           providers: [
             BlocProvider(create: (context) => sl<TimezoneCubit>()),
             BlocProvider(create: (context) => sl<HomeCubit>()),
+            BlocProvider(
+              create: (context) => sl<ShiftCubit>()..checkIfWithinShiftRadius(),
+            ),
           ],
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -194,11 +213,44 @@ class HeaderAndShiftSection extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    context.localizations.inRange,
-                    style: context.typography.semiBold16.copyWith(
-                      color: context.colors.error,
-                    ),
+                  BlocBuilder<ShiftCubit, ShiftState>(
+                    builder: (context, state) {
+                      if (state.locationCheckStatus == LocationCheckStatus.checkingBetweenRadiusLoading) {
+                        return Shimmer.fromColors(
+                          baseColor: context.colors.surfaceVariant,
+                          highlightColor: context.colors.surface,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: context.colors.surfaceVariant,
+                              borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                            ),
+                            width: 100.w,
+                            height: 18.h,
+                          ),
+                        );
+                      }
+                      if (state.locationCheckStatus == LocationCheckStatus.checkedBetweenRadiusSuccessfully &&
+                          state.isWithinRadius != null &&
+                          state.isWithinRadius!) {
+                        return Text(
+                          context.localizations.inRange,
+                          style: context.typography.semiBold16.copyWith(
+                            color: context.colors.error,
+                          ),
+                        );
+                      } else if (state.locationCheckStatus == LocationCheckStatus.checkedBetweenRadiusSuccessfully &&
+                          state.isWithinRadius != null &&
+                          !state.isWithinRadius!) {
+                        return Text(
+                          'خارج النطاق',
+                          style: context.typography.semiBold16.copyWith(
+                            color: context.colors.error,
+                          ),
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(
@@ -230,20 +282,43 @@ class HeaderAndShiftSection extends StatelessWidget {
                   ),
                 ],
               ),
-              Container(
-                margin: EdgeInsets.only(bottom: AppSpacing.xxxl.r),
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSpacing.xxl.r,
-                  vertical: AppSpacing.xl.r,
-                ),
-                decoration: BoxDecoration(
-                  color: context.colors.containerBackground,
-                  borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
-                ),
-                child: Text(
-                  '08:00 AM - 05:00 PM',
-                  style: context.typography.regular16,
-                ),
+              BlocBuilder<ShiftCubit, ShiftState>(
+                builder: (context, state) {
+                  if (state.status == ShiftStatus.success) {
+                    final shiftData = state.currentShiftResponse?.result?.data;
+                    return Container(
+                      margin: EdgeInsets.only(bottom: AppSpacing.xxxl.r),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xxl.r,
+                        vertical: AppSpacing.xl.r,
+                      ),
+                      decoration: BoxDecoration(
+                        color: context.colors.containerBackground,
+                        borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                      ),
+                      child: Text(
+                        _formatShiftHours(shiftData?.shiftHourFrom, shiftData?.shiftHourTo),
+                        style: context.typography.regular16,
+                      ),
+                    );
+                  } else {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: AppSpacing.xxxl.r),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xxl.r,
+                        vertical: AppSpacing.xl.r,
+                      ),
+                      decoration: BoxDecoration(
+                        color: context.colors.containerBackground,
+                        borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                      ),
+                      child: Text(
+                        _formatShiftHours(null, null),
+                        style: context.typography.regular16,
+                      ),
+                    );
+                  }
+                },
               ),
               BlocBuilder<TimezoneCubit, TimezoneState>(
                 builder: (context, state) {
@@ -270,33 +345,83 @@ class HeaderAndShiftSection extends StatelessWidget {
                 style: context.typography.regular14,
                 textAlign: TextAlign.center,
               ),
-              PrimaryTextButton(
-                appButtonSize: AppButtonSize.xxLarge,
-                label: context.localizations.fingerPrintRegistration,
-                onTap: () async {
-                  // Get current location
-                  final location = await LocationProvider.getCurrentLocation();
+              BlocBuilder<ShiftCubit, ShiftState>(
+                builder: (context, shiftState) {
+                  final isLocationLoading = shiftState.locationCheckStatus == LocationCheckStatus.checkingBetweenRadiusLoading;
+                  final isOutOfRange =
+                      shiftState.locationCheckStatus == LocationCheckStatus.checkedBetweenRadiusSuccessfully &&
+                      shiftState.isWithinRadius == false;
+                  final isLocationDisabled =
+                      isLocationLoading || isOutOfRange || shiftState.locationCheckStatus == LocationCheckStatus.initial;
 
-                  // Get current datetime in the required format
-                  final now = DateTime.now();
-                  final actionDatetime =
-                      '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
+                  return BlocConsumer<HomeCubit, HomeState>(
+                    listener: (context, homeState) {
+                      if (homeState.status == HomeStatus.success) {
+                        // final response = homeState.createAttendancePunchResponse?.result;
+                        if (context.mounted) {
+                          context.pop();
+                          BottomSheetWrapper(
+                            initialSize: 0.35.h,
+                            maxChildSize: 0.35.h,
+                            removeAutoScroll: true,
+                            disableDrag: true,
+                            useRootNavigator: true,
+                            child: const ClockInClockOutBottomSheet(clockImage: Assets.rastersFingerPrintRegistered),
+                          ).callSheet(context);
+                        }
+                      } else if (homeState.status == HomeStatus.error) {
+                        if (context.mounted) {
+                          context.pop();
+                          ToastService.showError(homeState.error ?? 'Something went wrong');
+                        }
+                      }
+                    },
+                    builder: (context, homeState) {
+                      final isPunchLoading = homeState.status == HomeStatus.loading;
+                      final isDisabled = isLocationDisabled || isPunchLoading;
 
-                  const deviceInfo = 'Device Info'; // Replace with actual device info
+                      return PrimaryTextButton(
+                        appButtonSize: AppButtonSize.xxLarge,
+                        label: context.localizations.fingerPrintRegistration,
+                        leading: isPunchLoading
+                            ? (color) => SizedBox(
+                                width: 20.r,
+                                height: 20.r,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.r,
+                                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                                ),
+                              )
+                            : null,
+                        onTap: isDisabled
+                            ? null
+                            : () async {
+                                // Get current location
+                                final location = await LocationProvider.getCurrentLocation();
 
-                  if (context.mounted) {
-                    await context.read<HomeCubit>().createAttendancePunchIn(
-                      CreateAttendancePunchRequest(
-                        geoInformation: GeoInformation(
-                          latitude: location.latitude,
-                          longitude: location.longitude,
-                        ),
-                        deviceInfo: deviceInfo,
-                        actionDatetime: actionDatetime,
-                      ),
-                    );
-                  }
-                  // BlocListener will handle navigation
+                                // Get current datetime in the required format
+                                final now = DateTime.now();
+                                final actionDatetime =
+                                    '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
+
+                                const deviceInfo = 'Device Info'; // Replace with actual device info
+
+                                if (context.mounted) {
+                                  await context.read<HomeCubit>().createAttendancePunchIn(
+                                    CreateAttendancePunchRequest(
+                                      geoInformation: GeoInformation(
+                                        latitude: location.latitude,
+                                        longitude: location.longitude,
+                                      ),
+                                      deviceInfo: deviceInfo,
+                                      actionDatetime: actionDatetime,
+                                    ),
+                                  );
+                                }
+                              },
+                      );
+                    },
+                  );
                 },
               ),
             ],

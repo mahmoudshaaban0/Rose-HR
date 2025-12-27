@@ -12,12 +12,15 @@ class HomeCubit extends Cubit<HomeState> {
   final HomeRepository homeRepository;
 
   Future<void> createAttendancePunchIn(CreateAttendancePunchRequest request) async {
+    if (isClosed) return;
     emit(state.copyWith(status: HomeStatus.loading));
     final result = await homeRepository.createAttendancePunchIn(request);
     switch (result) {
       case Success(:final data):
+        if (isClosed) return;
         emit(state.copyWith(status: HomeStatus.success, createAttendancePunchResponse: data));
       case Error(:final failure):
+        if (isClosed) return;
         emit(state.copyWith(status: HomeStatus.error, error: failure.message));
     }
   }

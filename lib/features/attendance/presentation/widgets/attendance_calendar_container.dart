@@ -4,12 +4,12 @@ import 'package:rose_hr/features/attendance/presentation/widgets/attendance_cale
 class AttendanceCalendarContainer extends StatefulWidget {
   const AttendanceCalendarContainer({
     this.onDaySelected,
-    this.eventMarkerDates = const [],
+    this.onMonthChanged,
     super.key,
   });
 
   final void Function(DateTime selectedDay, DateTime focusedDay)? onDaySelected;
-  final List<DateTime> eventMarkerDates;
+  final void Function(DateTime focusedDay)? onMonthChanged;
 
   @override
   State<AttendanceCalendarContainer> createState() => _AttendanceCalendarContainerState();
@@ -33,7 +33,7 @@ class _AttendanceCalendarContainerState extends State<AttendanceCalendarContaine
           focusedDay: _focusedDay,
           key: ValueKey(_focusedDay),
           onDaySelected: widget.onDaySelected,
-          eventMarkerDates: widget.eventMarkerDates,
+          onMonthChanged: widget.onMonthChanged,
         ),
       ],
     );

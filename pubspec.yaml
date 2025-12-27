@@ -35,6 +35,7 @@ dependencies:
   pinput: ^5.0.2
   pretty_dio_logger: ^1.4.0
   shared_preferences: ^2.5.3
+  shimmer: ^3.0.0
   table_calendar: ^3.1.2
   timezone: ^0.9.4
   vector_graphics: ^1.1.19

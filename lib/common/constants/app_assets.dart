@@ -98,6 +98,10 @@ class Assets {
   /// assets/vectors/location_icon.svg
   static const String vectorsLocationIcon = "assets/vectors/location_icon.svg";
 
+  /// Assets for vectorsLockLine
+  /// assets/vectors/lock-line.svg
+  static const String vectorsLockLine = "assets/vectors/lock-line.svg";
+
   /// Assets for vectorsNoRequests
   /// assets/vectors/no_requests.svg
   static const String vectorsNoRequests = "assets/vectors/no_requests.svg";
