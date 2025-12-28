@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         if (AppManager.instance.getString(AppStrings.apiKey) != null) {
-          context.goNamed(AppRoutes.login.name);
+          context.goNamed(AppRoutes.home.name);
         } else {
           context.goNamed(AppRoutes.login.name);
         }

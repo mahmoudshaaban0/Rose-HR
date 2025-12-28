@@ -16,21 +16,40 @@ class TimezoneCubit extends Cubit<TimezoneState> {
 
   Timer? _timer;
 
-  /// Initialize timezone detection and start the clock
+  /// Track the detected timezone for clock updates before detection completes
+  AppTimezone _currentTimezone = AppTimezone.saudiArabia;
+
+  /// Initialize timezone detection and start the clock immediately
   Future<void> _initialize() async {
-    await _detectTimezone();
+    // Start the clock immediately with default timezone
+    // This ensures time is always updating, even during detection
     _startClock();
+
+    // Emit an initial loaded state with default timezone so clock shows immediately
+    final now = TimezoneHelper.now(_currentTimezone);
+    emit(
+      TimezoneLoaded(
+        timezone: _currentTimezone,
+        locationName: '...',
+        currentTime: now,
+        cityName: null,
+        isDetecting: true, // Flag to indicate we're still detecting
+      ),
+    );
+
+    // Then detect actual timezone in background
+    await _detectTimezone();
   }
 
   /// Detect timezone based on user's GPS location
   Future<void> _detectTimezone() async {
     if (isClosed) return;
-    emit(const TimezoneLoading());
 
     try {
       // Get timezone with city name from geocoding
       final result = await LocationProvider.getTimezoneWithLocationName();
-      final now = TimezoneHelper.now(result.timezone);
+      _currentTimezone = result.timezone;
+      final now = TimezoneHelper.now(_currentTimezone);
 
       if (isClosed) return;
       emit(
@@ -38,12 +57,14 @@ class TimezoneCubit extends Cubit<TimezoneState> {
           timezone: result.timezone,
           locationName: result.locationName,
           currentTime: now,
-          cityName: result.locationName, // Use the geocoded city name
+          cityName: result.locationName,
+          isDetecting: false,
         ),
       );
     } on Exception catch (_) {
       // Fallback to default timezone if location detection fails
-      final now = TimezoneHelper.now(AppTimezone.saudiArabia);
+      _currentTimezone = AppTimezone.saudiArabia;
+      final now = TimezoneHelper.now(_currentTimezone);
       if (isClosed) return;
       emit(
         TimezoneLoaded(
@@ -51,6 +72,7 @@ class TimezoneCubit extends Cubit<TimezoneState> {
           locationName: 'الرياض',
           currentTime: now,
           cityName: 'الرياض',
+          isDetecting: false,
         ),
       );
     }
@@ -66,10 +88,24 @@ class TimezoneCubit extends Cubit<TimezoneState> {
 
   /// Update the current time
   void _updateTime() {
+    if (isClosed) return;
+
     final currentState = state;
     if (currentState is TimezoneLoaded) {
       final now = TimezoneHelper.now(currentState.timezone);
       emit(currentState.copyWith(currentTime: now));
+    } else {
+      // Even in loading/initial state, emit time updates with current timezone
+      final now = TimezoneHelper.now(_currentTimezone);
+      emit(
+        TimezoneLoaded(
+          timezone: _currentTimezone,
+          locationName: '...',
+          currentTime: now,
+          cityName: null,
+          isDetecting: true,
+        ),
+      );
     }
   }
 
@@ -81,6 +117,7 @@ class TimezoneCubit extends Cubit<TimezoneState> {
   @override
   Future<void> close() {
     _timer?.cancel();
+    _timer = null;
     return super.close();
   }
 }

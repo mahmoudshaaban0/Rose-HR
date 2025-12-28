@@ -38,7 +38,7 @@ Future<void> init() async {
     // Cubits/Blocs
     ..registerFactory<AuthBloc>(() => AuthBloc(sl<AuthRepository>()))
     ..registerFactory<HomeCubit>(() => HomeCubit(sl<HomeRepository>()))
-    ..registerLazySingleton<TimezoneCubit>(TimezoneCubit.new)
+    ..registerFactory<TimezoneCubit>(TimezoneCubit.new)
     ..registerFactory<AccountCubit>(() => AccountCubit(sl<AccountRepository>()))
     ..registerFactory<ShiftCubit>(() => ShiftCubit(sl<HomeRepository>()))
     ..registerFactory<AttendanceCubit>(() => AttendanceCubit(sl<AttendanceRepository>()))

@@ -25,6 +25,7 @@ class TimezoneLoaded extends TimezoneState {
     required this.locationName,
     required this.currentTime,
     this.cityName,
+    this.isDetecting = false,
   });
 
   /// The detected timezone (Egypt or Saudi Arabia)
@@ -38,9 +39,20 @@ class TimezoneLoaded extends TimezoneState {
 
   /// City name from geocoding (e.g., "Cairo", "Riyadh")
   final String? cityName;
+  
+  /// Whether timezone detection is still in progress
+  final bool isDetecting;
 
   @override
-  List<Object?> get props => [timezone, locationName, currentTime, cityName];
+  // Note: We use millisecondsSinceEpoch to ensure time changes are always detected
+  // even when TZDateTime objects might be considered equal by Equatable
+  List<Object?> get props => [
+        timezone,
+        locationName,
+        currentTime.millisecondsSinceEpoch,
+        cityName,
+        isDetecting,
+      ];
 
   /// Create a copy with updated fields
   TimezoneLoaded copyWith({
@@ -48,12 +60,14 @@ class TimezoneLoaded extends TimezoneState {
     String? locationName,
     tz.TZDateTime? currentTime,
     String? cityName,
+    bool? isDetecting,
   }) {
     return TimezoneLoaded(
       timezone: timezone ?? this.timezone,
       locationName: locationName ?? this.locationName,
       currentTime: currentTime ?? this.currentTime,
       cityName: cityName ?? this.cityName,
+      isDetecting: isDetecting ?? this.isDetecting,
     );
   }
 
