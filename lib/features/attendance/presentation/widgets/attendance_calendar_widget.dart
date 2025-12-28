@@ -285,6 +285,9 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
     } else if (isToday) {
       borderColor = context.colors.info;
       textStyle = textStyle.copyWith(color: context.colors.onSurface);
+    } else if (isLeave) {
+      backgroundColor = context.colors.surfaceContainerLow;
+      textStyle = textStyle.copyWith(color: context.colors.weekendColor);
     }
 
     return Container(
@@ -312,15 +315,15 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
             child: Text('${day.day}', style: textStyle),
           ),
           // Leave marker - blue dot at bottom
-          if (isLeave)
-            Positioned(
-              bottom: 6.h,
-              child: Container(
-                width: 6.w,
-                height: 6.w,
-                decoration: BoxDecoration(color: context.colors.leaveColor, shape: BoxShape.circle),
-              ),
-            ),
+          // if (isLeave)
+          //   Positioned(
+          //     bottom: 6.h,
+          //     child: Container(
+          //       width: 6.w,
+          //       height: 6.w,
+          //       decoration: BoxDecoration(color: context.colors.leaveColor, shape: BoxShape.circle),
+          //     ),
+          //   ),
           // Incomplete attendance marker - red dot at bottom (if leave is not shown)
           if (hasIncomplete && !isLeave)
             Positioned(

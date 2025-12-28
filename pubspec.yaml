@@ -90,5 +90,7 @@ flutter_assets:
   output_path: lib/common/constants
   filename: app_assets.dart
   field_prefix: null
+  ignore_comments: true
+  ignore_for_file: false
 flutter_intl:
   enabled: true
