@@ -22,4 +22,6 @@ final class Env {
   static String getCurrentShift = _Env.getCurrentShift;
   @EnviedField(varName: 'shiftSummary', obfuscate: true)
   static String shiftSummary = _Env.shiftSummary;
+  @EnviedField(varName: 'shiftSummaryDetails', obfuscate: true)
+  static String shiftSummaryDetails = _Env.shiftSummaryDetails;
 }

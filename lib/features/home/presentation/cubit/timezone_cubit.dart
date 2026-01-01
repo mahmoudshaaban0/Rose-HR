@@ -32,7 +32,6 @@ class TimezoneCubit extends Cubit<TimezoneState> {
         timezone: _currentTimezone,
         locationName: '...',
         currentTime: now,
-        cityName: null,
         isDetecting: true, // Flag to indicate we're still detecting
       ),
     );
@@ -58,7 +57,6 @@ class TimezoneCubit extends Cubit<TimezoneState> {
           locationName: result.locationName,
           currentTime: now,
           cityName: result.locationName,
-          isDetecting: false,
         ),
       );
     } on Exception catch (_) {
@@ -72,7 +70,6 @@ class TimezoneCubit extends Cubit<TimezoneState> {
           locationName: 'الرياض',
           currentTime: now,
           cityName: 'الرياض',
-          isDetecting: false,
         ),
       );
     }
@@ -102,7 +99,6 @@ class TimezoneCubit extends Cubit<TimezoneState> {
           timezone: _currentTimezone,
           locationName: '...',
           currentTime: now,
-          cityName: null,
           isDetecting: true,
         ),
       );

@@ -1,5 +1,6 @@
 import 'package:rose_hr/common/constants/env.dart';
 import 'package:rose_hr/common/networking/api_consumer.dart';
+import 'package:rose_hr/features/attendance/data/models/attendance_summary_details_response_model.dart';
 import 'package:rose_hr/features/attendance/data/models/attendance_summary_response_model.dart';
 
 class AttendanceDataSource {
@@ -17,5 +18,17 @@ class AttendanceDataSource {
       },
     );
     return AttendanceSummary.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<AttendanceSummaryDetailsResponseModel> getAttendanceSummaryByDate(String date) async {
+    final response = await apiConsumer.post(
+      Env.shiftSummaryDetails,
+      body: {
+        "params": {
+          "date": date,
+        },
+      },
+    );
+    return AttendanceSummaryDetailsResponseModel.fromJson(response as Map<String, dynamic>);
   }
 }

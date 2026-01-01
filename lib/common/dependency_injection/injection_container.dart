@@ -12,6 +12,7 @@ import 'package:rose_hr/features/account/presentation/cubit/account_cubit.dart';
 import 'package:rose_hr/features/attendance/data/datasources/attendance_datasource.dart';
 import 'package:rose_hr/features/attendance/data/repositories/attendance_repository.dart';
 import 'package:rose_hr/features/attendance/presentation/cubit/attendance_cubit.dart';
+import 'package:rose_hr/features/attendance/presentation/cubit/attendance_details_cubit.dart';
 import 'package:rose_hr/features/auth/data/datasources/auth_datasource.dart';
 import 'package:rose_hr/features/auth/data/repositories/auth_repository.dart';
 import 'package:rose_hr/features/auth/presentation/bloc/auth_bloc.dart';
@@ -42,6 +43,7 @@ Future<void> init() async {
     ..registerFactory<AccountCubit>(() => AccountCubit(sl<AccountRepository>()))
     ..registerFactory<ShiftCubit>(() => ShiftCubit(sl<HomeRepository>()))
     ..registerFactory<AttendanceCubit>(() => AttendanceCubit(sl<AttendanceRepository>()))
+    ..registerFactory<AttendanceDetailsCubit>(() => AttendanceDetailsCubit(sl<AttendanceRepository>()))
     ///! Core
     ..registerLazySingleton<NetworkInfo>(
       () => NetworkInfoImpl(connectivityChecker: sl()),

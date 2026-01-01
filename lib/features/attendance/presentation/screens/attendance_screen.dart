@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
+import 'package:rose_hr/common/helpers/date_helper.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/features/attendance/presentation/cubit/attendance_cubit.dart';
+import 'package:rose_hr/features/attendance/presentation/cubit/attendance_details_cubit.dart';
 import 'package:rose_hr/features/attendance/presentation/widgets/attendance_calendar_container.dart';
 import 'package:rose_hr/features/attendance/presentation/widgets/work_hours_section.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
@@ -14,8 +16,11 @@ class AttendanceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<AttendanceCubit>()..init(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => sl<AttendanceCubit>()..init()),
+        BlocProvider(create: (context) => sl<AttendanceDetailsCubit>()),
+      ],
       child: Builder(
         builder: (context) {
           return Scaffold(
@@ -35,6 +40,8 @@ class AttendanceScreen extends StatelessWidget {
                           return AttendanceCalendarContainer(
                             onDaySelected: (selectedDay, focusedDay) {
                               context.read<AttendanceCubit>().onDaySelected(selectedDay, focusedDay);
+                              final dateString = dateTimeToString(selectedDay);
+                              context.read<AttendanceDetailsCubit>().getAttendanceSummaryByDate(dateString);
                             },
                             onMonthChanged: (focusedDay) {
                               context.read<AttendanceCubit>().onMonthChanged(focusedDay);
