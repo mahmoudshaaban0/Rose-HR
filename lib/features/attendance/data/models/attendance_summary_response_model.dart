@@ -51,6 +51,7 @@ class Datum {
     this.publicOff,
     this.leave,
     this.incompAttend,
+    this.absence,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
@@ -62,8 +63,10 @@ class Datum {
   bool? publicOff;
   @JsonKey(name: "leave")
   bool? leave;
-  @JsonKey(name: "incomp_attend")
+  @JsonKey(name: "incomp_attendance")
   bool? incompAttend;
+  @JsonKey(name: "absence")
+  bool? absence;
 
   Map<String, dynamic> toJson() => _$DatumToJson(this);
 }

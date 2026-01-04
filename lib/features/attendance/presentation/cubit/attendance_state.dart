@@ -69,6 +69,18 @@ class AttendanceState extends Equatable {
     );
   }
 
+  /// Check if a specific date is a absence day
+  bool isAbsenceDay(DateTime date) {
+    return attendanceData.any(
+      (datum) =>
+          datum.date != null &&
+          datum.date!.year == date.year &&
+          datum.date!.month == date.month &&
+          datum.date!.day == date.day &&
+          (datum.absence ?? false),
+    );
+  }
+
   /// Get the Datum for a specific date
   Datum? getDatumForDate(DateTime date) {
     final matchingData = attendanceData.where(

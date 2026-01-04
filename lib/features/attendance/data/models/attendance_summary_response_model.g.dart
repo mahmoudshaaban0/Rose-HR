@@ -45,7 +45,8 @@ Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
   offDay: json['off_day'] as bool?,
   publicOff: json['public_off'] as bool?,
   leave: json['leave'] as bool?,
-  incompAttend: json['incomp_attend'] as bool?,
+  incompAttend: json['incomp_attendance'] as bool?,
+  absence: json['absence'] as bool?,
 );
 
 Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
@@ -53,5 +54,6 @@ Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
   'off_day': instance.offDay,
   'public_off': instance.publicOff,
   'leave': instance.leave,
-  'incomp_attend': instance.incompAttend,
+  'incomp_attendance': instance.incompAttend,
+  'absence': instance.absence,
 };

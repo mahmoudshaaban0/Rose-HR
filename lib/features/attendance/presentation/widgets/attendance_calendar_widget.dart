@@ -254,30 +254,20 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
     final isOffDay = state.isOffDay(day);
     final isPublicOff = state.isPublicOff(day);
     final isLeave = state.isLeaveDay(day);
-
+    final isAbsenceDay = state.isAbsenceDay(day);
     // Determine cell background color based on attendance status
     Color? backgroundColor;
     var borderColor = context.colors.dividerColor;
     var textStyle = context.typography.medium16;
 
-    if (isSelected && hasIncomplete) {
-      // Selected day with incomplete attendance - red background
+    if (isSelected && (hasIncomplete || isAbsenceDay)) {
+      // Selected day with incomplete attendance or absence - red background
       backgroundColor = context.colors.error;
       textStyle = textStyle.copyWith(color: context.colors.white);
       borderColor = context.colors.error;
     } else if (isSelected) {
       backgroundColor = context.colors.black;
       textStyle = textStyle.copyWith(color: context.colors.white);
-    } else if (hasIncomplete) {
-      // Incomplete attendance - red background
-      // backgroundColor = context.colors.error.withValues(alpha: 0.15);
-      // borderColor = context.colors.error;
-      // textStyle = textStyle.copyWith(color: context.colors.error);
-    } else if (isPublicOff) {
-      // Public holiday - purple/info tint
-      // backgroundColor = context.colors.publicOffColor.withValues(alpha: 0.15);
-      // borderColor = context.colors.publicOffColor;
-      // textStyle = textStyle.copyWith(color: context.colors.publicOffColor);
     } else if (isOffDay || isWeekend) {
       // Weekend/off day - subtle background
       backgroundColor = context.colors.surfaceContainerLow;
@@ -324,8 +314,8 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
           //       decoration: BoxDecoration(color: context.colors.leaveColor, shape: BoxShape.circle),
           //     ),
           //   ),
-          // Incomplete attendance marker - red dot at bottom (if leave is not shown)
-          if (hasIncomplete && !isLeave)
+          // Incomplete attendance or absence marker - red dot at bottom (if leave is not shown)
+          if ((hasIncomplete || isAbsenceDay) && !isLeave)
             Positioned(
               bottom: 6.h,
               child: Container(
