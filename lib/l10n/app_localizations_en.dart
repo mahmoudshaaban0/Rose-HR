@@ -123,4 +123,185 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noCompletedRequestsUntilNow => 'No completed requests until now';
+
+  @override
+  String get permissionDayAndType => 'Permission Day and Type';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get choosePermissionReason => 'Choose Permission Reason';
+
+  @override
+  String get reason => 'Reason';
+
+  @override
+  String get attachments => 'Attachments';
+
+  @override
+  String get clickToUpload => 'Click to Upload';
+
+  @override
+  String get fileFormatsHint => 'JPEG, PNG, PDF, and MP4 formats, up to 50 MB.';
+
+  @override
+  String get submitRequest => 'Submit Request';
+
+  @override
+  String get punchCorrection => 'Punch Correction';
+
+  @override
+  String get suggestedCorrectionTime => 'Suggested Correction Time';
+
+  @override
+  String get shift => 'Shift (Work Time)';
+
+  @override
+  String get recordedCheckInTime => 'Recorded Check-In Time';
+
+  @override
+  String get recordedCheckOutTime => 'Recorded Check-Out Time';
+
+  @override
+  String get forgotFingerprint => 'Forgot Fingerprint';
+
+  @override
+  String get enterDetailsHere => 'Enter details here';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get enterTimeManually => 'Enter time manually';
+
+  @override
+  String get selectFromRecordedFingerprints =>
+      'Select from recorded fingerprints';
+
+  @override
+  String get personalData => 'Personal Data';
+
+  @override
+  String get editPersonalData => 'Edit Personal Data';
+
+  @override
+  String get fullNameInArabic => 'Full Name in Arabic';
+
+  @override
+  String get emailAddress => 'Email Address';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get maritalStatus => 'Marital Status';
+
+  @override
+  String get dateOfBirth => 'Date of Birth';
+
+  @override
+  String get mobileNumber => 'Mobile Number';
+
+  @override
+  String get identityDetails => 'Identity Details';
+
+  @override
+  String get nationality => 'Nationality';
+
+  @override
+  String get religion => 'Religion';
+
+  @override
+  String get muslim => 'Muslim';
+
+  @override
+  String get identityType => 'Identity Type';
+
+  @override
+  String get identityNumber => 'Identity Number';
+
+  @override
+  String get identityExpiryDate => 'Identity Expiry Date';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get buildingNumber => 'Building Number';
+
+  @override
+  String get streetName => 'Street Name';
+
+  @override
+  String get district => 'District';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get postalCode => 'Postal Code';
+
+  @override
+  String get bankAccountDetails => 'Bank Account Details';
+
+  @override
+  String get bankName => 'Bank Name';
+
+  @override
+  String get ibanNumber => 'IBAN Number';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
+  String get requestNumber => 'Request Number';
+
+  @override
+  String get requestStatus => 'Request Status';
+
+  @override
+  String get cancelRequest => 'Cancel Request';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get lateArrival => 'Late Arrival';
+
+  @override
+  String get fingerprintDevice => 'Fingerprint Device';
+
+  @override
+  String get clickToSuggestCorrection => 'Click to suggest correction';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get noData => 'No data';
+
+  @override
+  String get generalInformation => 'General Information';
+
+  @override
+  String get egyptian => 'Egyptian';
 }

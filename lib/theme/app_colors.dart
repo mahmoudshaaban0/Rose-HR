@@ -54,6 +54,7 @@ interface class AppColors extends ThemeExtension<AppColors> {
     required this.dividerColor,
     required this.leaveColor,
     required this.publicOffColor,
+    required this.errorBadgeBackground,
   });
 
   factory AppColors.light() {
@@ -122,6 +123,9 @@ interface class AppColors extends ThemeExtension<AppColors> {
   // Calendar marker colors
   final Color leaveColor;
   final Color publicOffColor;
+
+  // Badge colors
+  final Color errorBadgeBackground;
   @override
   ThemeExtension<AppColors> copyWith({
     Color? surface,
@@ -163,6 +167,7 @@ interface class AppColors extends ThemeExtension<AppColors> {
     Color? weekendColor,
     Color? leaveColor,
     Color? publicOffColor,
+    Color? errorBadgeBackground,
   }) {
     return AppColors(
       surface: surface ?? this.surface,
@@ -205,6 +210,7 @@ interface class AppColors extends ThemeExtension<AppColors> {
       weekendColor: weekendColor ?? this.weekendColor,
       leaveColor: leaveColor ?? this.leaveColor,
       publicOffColor: publicOffColor ?? this.publicOffColor,
+      errorBadgeBackground: errorBadgeBackground ?? this.errorBadgeBackground,
     );
   }
 
@@ -258,6 +264,7 @@ interface class AppColors extends ThemeExtension<AppColors> {
       weekendColor: Color.lerp(weekendColor, other.weekendColor, t)!,
       leaveColor: Color.lerp(leaveColor, other.leaveColor, t)!,
       publicOffColor: Color.lerp(publicOffColor, other.publicOffColor, t)!,
+      errorBadgeBackground: Color.lerp(errorBadgeBackground, other.errorBadgeBackground, t)!,
     );
   }
 }
@@ -310,6 +317,7 @@ class AppLightColors extends AppColors {
     super.weekendColor = const Color(0xffDBCCBB),
     super.leaveColor = const Color(0xFF335CFF), // Blue for leave days
     super.publicOffColor = const Color(0xFF9C27B0), // Purple for public holidays
+    super.errorBadgeBackground = const Color(0xffFFF3F1), // Light pink background for error badges
   });
 }
 
@@ -366,5 +374,6 @@ class AppDarkColors extends AppColors {
     super.weekendColor = const Color(0xffDBCCBB),
     super.leaveColor = const Color(0xFF5C8AFF), // Blue for leave days
     super.publicOffColor = const Color(0xFFBA68C8), // Purple for public holidays
+    super.errorBadgeBackground = const Color(0xFF3D1F1F), // Dark reddish background for error badges in dark mode
   });
 }

@@ -31,7 +31,7 @@ class AppTextField extends StatelessWidget {
     this.title,
     this.hintTextLabel,
     this.textInputAction,
-    this.contentPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    this.contentPadding,
   });
 
   /// The controller for the text field.
@@ -91,7 +91,10 @@ class AppTextField extends StatelessWidget {
   final String? title;
   final String? hintText;
   final TextInputAction? textInputAction;
-  // content padding
+
+  /// Content padding for the text field.
+  /// If null, uses default padding of EdgeInsets.symmetric(horizontal: 16, vertical: 16).
+  /// Pass EdgeInsets.zero to remove padding completely.
   final EdgeInsets? contentPadding;
 
   @override
@@ -99,12 +102,13 @@ class AppTextField extends StatelessWidget {
     return Column(
       children: [
         // i want this to add a star if this filed is required or not K
-        Row(
-          children: [
-            Text(title ?? '', style: context.typography.medium16),
-            if (required) Text('*', style: context.typography.medium16.copyWith(color: context.colors.error)),
-          ],
-        ),
+        if (title != null)
+          Row(
+            children: [
+              Text(title ?? '', style: context.typography.medium16),
+              if (required) Text('*', style: context.typography.medium16.copyWith(color: context.colors.error)),
+            ],
+          ),
         const SizedBox(height: 4),
         TextFormField(
           textInputAction: textInputAction,
@@ -145,7 +149,7 @@ class AppTextField extends StatelessWidget {
             FocusScope.of(context).unfocus();
           },
           decoration: InputDecoration(
-            contentPadding: contentPadding,
+            contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             hintText: hintTextLabel,
             hintStyle: WidgetStateTextStyle.resolveWith((states) {
               late final Color textColor;

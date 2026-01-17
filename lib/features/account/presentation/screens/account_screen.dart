@@ -32,20 +32,20 @@ class _AccountScreenState extends State<AccountScreen> {
             return const Center(child: LoadingWidget());
           }
           if (state.status == AccountStatus.error) {
-            return Center(child: Text(state.errorMessage ?? 'حدث خطأ ما'));
+            return Center(child: Text(state.errorMessage ?? context.localizations.somethingWentWrong));
           } else if (state.status == AccountStatus.success) {
             final accountResponseModel = state.accountResponseModel;
             if (accountResponseModel == null) {
-              return const Center(child: Text('لا يوجد بيانات'));
+              return Center(child: Text(context.localizations.noData));
             }
             final data = accountResponseModel.result?.data;
             if (data == null) {
-              return const Center(child: Text('لا يوجد بيانات'));
+              return Center(child: Text(context.localizations.noData));
             }
             return Scaffold(
               backgroundColor: context.colors.containerBackground,
               appBar: PrimaryAppBar(
-                title: 'البيانات الشخصية',
+                title: context.localizations.personalData,
                 actions: [
                   InkWell(
                     borderRadius: BorderRadius.circular(25.r),
@@ -69,7 +69,7 @@ class _AccountScreenState extends State<AccountScreen> {
                           ),
                           SizedBox(width: 2.w),
                           Text(
-                            'تعديل',
+                            context.localizations.edit,
                             style: context.typography.medium14,
                           ),
                         ],
@@ -90,32 +90,38 @@ class _AccountScreenState extends State<AccountScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 8.h,
                         children: [
-                          Text('البيانات الشخصية', style: context.typography.semiBold18),
-                          RowItem(title: 'الاسم الأول', value: data.name.toString()),
-                          RowItem(title: 'الاسم الأخير', value: data.name.toString().split(' ').last),
-                          RowItem(title: 'الجنس', value: data.gender.toString() == 'male' ? 'ذكر' : 'أنثى'),
-                          RowItem(title: 'البريد الإلكتروني', value: data.privateEmail.toString()),
-                          RowItem(title: 'الحالة الإجتماعية', value: data.marital.toString()),
-                          RowItem(title: 'تاريخ الميلاد', value: data.birthday.toString()),
-                          RowItem(title: 'رقم الجوال', value: data.phone.toString(), hasDivider: false),
+                          Text(context.localizations.personalData, style: context.typography.semiBold18),
+                          RowItem(title: context.localizations.firstName, value: data.name.toString()),
+                          RowItem(title: context.localizations.lastName, value: data.name.toString().split(' ').last),
+                          RowItem(
+                            title: context.localizations.gender,
+                            value: data.gender.toString() == 'male' ? context.localizations.male : context.localizations.female,
+                          ),
+                          RowItem(title: context.localizations.emailAddress, value: data.privateEmail.toString()),
+                          RowItem(title: context.localizations.maritalStatus, value: data.marital.toString()),
+                          RowItem(title: context.localizations.dateOfBirth, value: data.birthday.toString()),
+                          RowItem(title: context.localizations.mobileNumber, value: data.phone.toString(), hasDivider: false),
                           SizedBox(height: AppSpacing.sm.h),
-                          Text('تفاصيل الهوية', style: context.typography.semiBold18),
-                          RowItem(title: 'الجنسية', value: data.country.toString()),
-                          const RowItem(title: 'الديانة', value: 'مسلم'),
-                          const RowItem(title: 'نوع الهوية', value: '12345678901234'),
-                          const RowItem(title: 'رقم الهوية', value: 'مصري'),
-                          const RowItem(title: 'تاريخ إنتهاء الهوية', value: '1999-01-01'),
+                          Text(context.localizations.identityDetails, style: context.typography.semiBold18),
+                          RowItem(title: context.localizations.nationality, value: data.country.toString()),
+                          RowItem(title: context.localizations.religion, value: context.localizations.muslim),
+                          RowItem(title: context.localizations.identityType, value: '12345678901234'),
+                          RowItem(title: context.localizations.identityNumber, value: context.localizations.egyptian),
+                          RowItem(title: context.localizations.identityExpiryDate, value: '1999-01-01'),
                           SizedBox(height: AppSpacing.sm.h),
-                          Text('العنوان', style: context.typography.semiBold18),
-                          const RowItem(title: 'رقم المبني', value: '1234567890'),
-                          const RowItem(title: 'اسم الشارع', value: 'محمد علي'),
-                          const RowItem(title: 'المنطقه', value: 'المنطقة الشرقية'),
-                          const RowItem(title: 'المدينه', value: 'الرياض'),
-                          const RowItem(title: 'الرمز البريدي', value: '123456'),
+                          Text(context.localizations.address, style: context.typography.semiBold18),
+                          RowItem(title: context.localizations.buildingNumber, value: '1234567890'),
+                          RowItem(title: context.localizations.streetName, value: 'محمد علي'),
+                          RowItem(title: context.localizations.district, value: 'المنطقة الشرقية'),
+                          RowItem(title: context.localizations.city, value: 'الرياض'),
+                          RowItem(title: context.localizations.postalCode, value: '123456'),
                           SizedBox(height: AppSpacing.sm.h),
-                          Text('تفاصيل الحساب البنكي', style: context.typography.semiBold18),
-                          RowItem(title: 'اسم البنك', value: data.bankAccount?.bankName.toString() ?? ''),
-                          RowItem(title: 'رقم الأيبان IBAN', value: data.bankAccount?.accountNumber.toString() ?? ''),
+                          Text(context.localizations.bankAccountDetails, style: context.typography.semiBold18),
+                          RowItem(title: context.localizations.bankName, value: data.bankAccount?.bankName.toString() ?? ''),
+                          RowItem(
+                            title: context.localizations.ibanNumber,
+                            value: data.bankAccount?.accountNumber.toString() ?? '',
+                          ),
                         ],
                       ),
                     ),

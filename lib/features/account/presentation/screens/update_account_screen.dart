@@ -20,7 +20,7 @@ class UpdateAccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.containerBackground,
-      appBar: const PrimaryAppBar(title: 'تعديل البيانات الشخصية'),
+      appBar: PrimaryAppBar(title: context.localizations.editPersonalData),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.r),
@@ -30,68 +30,68 @@ class UpdateAccountScreen extends StatelessWidget {
               spacing: AppSpacing.md.h,
               children: [
                 Text(
-                  'المعلومات العامة',
+                  context.localizations.generalInformation,
                   style: context.typography.semiBold18,
                 ),
                 const AppDivider(),
                 AppTextField(
-                  title: 'الاسم كامل باللغة العربية',
-                  hintTextLabel: 'الاسم كامل باللغة العربية',
+                  title: context.localizations.fullNameInArabic,
+                  hintTextLabel: context.localizations.fullNameInArabic,
                   enabled: false,
                   suffixIcon: const AppVectorGraphic(path: Assets.vectorsLockLine),
                   controller: TextEditingController(),
                 ),
                 AppTextField(
-                  title: 'البريد الإلكتروني',
-                  hintTextLabel: 'البريد الإلكتروني',
+                  title: context.localizations.emailAddress,
+                  hintTextLabel: context.localizations.emailAddress,
                   controller: TextEditingController(),
                 ),
                 InfoCard(
-                  title: 'الجنس',
-                  subtitle: 'الجنس',
-                  value: 'الجنس',
+                  title: context.localizations.gender,
+                  subtitle: context.localizations.gender,
+                  value: context.localizations.gender,
                   onTap: () {},
                 ),
                 InfoCard(
-                  title: 'الحالة الإجتماعية',
-                  subtitle: 'الحالة الإجتماعية',
-                  value: 'الحالة الإجتماعية',
+                  title: context.localizations.maritalStatus,
+                  subtitle: context.localizations.maritalStatus,
+                  value: context.localizations.maritalStatus,
                   onTap: () {},
                 ),
                 // تاريخ الميلاد
                 InfoCard(
-                  title: 'تاريخ الميلاد',
-                  subtitle: 'تاريخ الميلاد',
-                  value: 'تاريخ الميلاد',
+                  title: context.localizations.dateOfBirth,
+                  subtitle: context.localizations.dateOfBirth,
+                  value: context.localizations.dateOfBirth,
                   onTap: () {},
                 ),
                 // رقم الجوال
                 InfoCard(
-                  title: 'رقم الجوال',
-                  subtitle: 'رقم الجوال',
-                  value: 'رقم الجوال',
+                  title: context.localizations.mobileNumber,
+                  subtitle: context.localizations.mobileNumber,
+                  value: context.localizations.mobileNumber,
                   onTap: () {},
                 ),
                 Text(
-                  'تفاصيل الحساب البنكي',
+                  context.localizations.bankAccountDetails,
                   style: context.typography.semiBold18,
                 ),
                 const AppDivider(),
-                const AppTextField(
-                  title: 'اسم البنك',
-                  hintTextLabel: 'اسم البنك',
+                AppTextField(
+                  title: context.localizations.bankName,
+                  hintTextLabel: context.localizations.bankName,
                   enabled: false,
-                  suffixIcon: AppVectorGraphic(path: Assets.vectorsLockLine),
+                  suffixIcon: const AppVectorGraphic(path: Assets.vectorsLockLine),
                 ),
-                const AppTextField(
-                  title: 'رقم الأيبان IBAN',
-                  hintTextLabel: 'رقم الأيبان IBAN',
+                AppTextField(
+                  title: context.localizations.ibanNumber,
+                  hintTextLabel: context.localizations.ibanNumber,
                   enabled: false,
-                  suffixIcon: AppVectorGraphic(path: Assets.vectorsLockLine),
+                  suffixIcon: const AppVectorGraphic(path: Assets.vectorsLockLine),
                 ),
                 PrimaryTextButton(
                   appButtonSize: AppButtonSize.xxLarge,
-                  label: 'حفظ',
+                  label: context.localizations.save,
                   onTap: () {
                     context.goNamed(AppRoutes.login.name);
                   },

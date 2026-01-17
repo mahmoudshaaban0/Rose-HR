@@ -18,7 +18,6 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       backgroundColor: context.colors.surface,
       titleSpacing: 0,
-      automaticallyImplyLeading: false,
       actions: actions,
     );
   }

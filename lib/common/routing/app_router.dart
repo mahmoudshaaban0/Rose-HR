@@ -6,6 +6,9 @@ import 'package:rose_hr/features/account/presentation/screens/update_account_scr
 import 'package:rose_hr/features/auth/presentation/screens/forget_password_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/login_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/verification_screen.dart';
+import 'package:rose_hr/features/permission_request/presentation/screens/permission_request_screen.dart';
+import 'package:rose_hr/features/punch_correction/presentation/screens/correction_time_screen.dart';
+import 'package:rose_hr/features/punch_correction/presentation/screens/punch_correction_screen.dart';
 import 'package:rose_hr/features/splash/presentation/screens/splash_screen.dart';
 
 class AppRouter {
@@ -42,6 +45,21 @@ class AppRouter {
         name: AppRoutes.updateAccount.name,
         path: AppRoutes.updateAccount.path,
         builder: (context, state) => const UpdateAccountScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.punchCorrection.name,
+        path: AppRoutes.punchCorrection.path,
+        builder: (context, state) => const PunchCorrectionScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.correctionTime.name,
+        path: AppRoutes.correctionTime.path,
+        builder: (context, state) => const CorrectionTimeScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.permissionRequest.name,
+        path: AppRoutes.permissionRequest.path,
+        builder: (context, state) => const PermissionRequestScreen(),
       ),
     ],
   );

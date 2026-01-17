@@ -191,7 +191,7 @@ class WorkHoursSection extends StatelessWidget {
                                   child: Container(
                                     padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs.r),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xffFFF3F1),
+                                      color: context.colors.errorBadgeBackground,
                                       borderRadius: BorderRadius.circular(AppSpacing.xs.r),
                                       border: Border.all(color: context.colors.error),
                                     ),
@@ -206,7 +206,7 @@ class WorkHoursSection extends StatelessWidget {
                                   child: Container(
                                     padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs.r, vertical: AppSpacing.xxs.r),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xffFFF3F1),
+                                      color: context.colors.errorBadgeBackground,
                                       borderRadius: BorderRadius.circular(AppSpacing.xs.r),
                                       border: Border.all(color: context.colors.error),
                                     ),
@@ -290,7 +290,7 @@ class WorkHoursSection extends StatelessWidget {
                                   child: Container(
                                     padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs.r, vertical: AppSpacing.xxs.r),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xffFFF3F1),
+                                      color: context.colors.errorBadgeBackground,
                                       borderRadius: BorderRadius.circular(AppSpacing.xs.r),
                                       border: Border.all(color: context.colors.error),
                                     ),

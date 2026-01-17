@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Hours Section - Technical Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .code-block .keyword {
+            color: #569cd6;
+        }
+
+        .code-block .string {
+            color: #ce9178;
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .code-block .function {
+            color: #dcdcaa;
+        }
+
+        .code-block .number {
+            color: #b5cea8;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .example-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .example-card .label {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .example-card .input {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+
+        .example-card .output {
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .example-card .arrow {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+
+        .logic-flow {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .flow-step {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            position: relative;
+        }
+
+        .flow-step::before {
+            content: "→";
+            position: absolute;
+            left: -30px;
+            color: #667eea;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .flow-step:first-child::before {
+            content: "●";
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .note {
+            background: #e7f3ff;
+            border-left: 5px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .note strong {
+            color: #2196F3;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .warning strong {
+            color: #856404;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .toc h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            padding: 8px 0;
+        }
+
+        .toc a {
+            color: #764ba2;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .toc a:hover {
+            color: #667eea;
+            padding-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⏰ Work Hours Section</h1>
+            <p>Technical Documentation & Implementation Guide</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Rose HR - Attendance Module</p>
+        </header>
+
+        <div class="content">
+            <div class="toc">
+                <h3>📋 Table of Contents</h3>
+                <ul>
+                    <li><a href="#overview">1. Overview</a></li>
+                    <li><a href="#functions">2. Helper Functions</a></li>
+                    <li><a href="#time-format">3. Time Formatting (formatTimeToArabic)</a></li>
+                    <li><a href="#hours-format">4. Hours Formatting (formatHoursToArabic)</a></li>
+                    <li><a href="#badges">5. Badge Visibility Logic</a></li>
+                    <li><a href="#difference">6. Difference Calculation Logic</a></li>
+                    <li><a href="#data-structure">7. API Data Structure</a></li>
+                    <li><a href="#implementation">8. Complete Implementation</a></li>
+                </ul>
+            </div>
+
+            <section id="overview">
+                <h2>1. 📊 Overview</h2>
+                <div class="section">
+                    <p>The Work Hours Section displays comprehensive attendance information for employees, including check-in/check-out times, work duration, and time differences. All data is presented in Arabic format with proper localization.</p>
+                    
+                    <h4>Key Features:</h4>
+                    <ul>
+                        <li>✅ Check-in and check-out time display in Arabic format</li>
+                        <li>✅ Total work hours calculation with hours and minutes breakdown</li>
+                        <li>✅ Difference calculation (overtime vs deficit)</li>
+                        <li>✅ Late arrival and early departure badge indicators</li>
+                        <li>✅ Special day handling (day off, leave, public holiday, absence)</li>
+                        <li>✅ Dynamic loading states with shimmer effects</li>
+                        <li>✅ Arabic numerals and proper grammar rules</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="functions">
+                <h2>2. 🔧 Helper Functions</h2>
+                
+                <h3>Location: <code>lib/common/helpers/date_helper.dart</code></h3>
+                
+                <div class="section">
+                    <h4>Available Functions:</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Function</th>
+                                <th>Purpose</th>
+                                <th>Input</th>
+                                <th>Output</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>formatTimeToArabic</strong></td>
+                                <td>Convert time to Arabic format</td>
+                                <td>[05:00:00] or "14:00:00"</td>
+                                <td>٥ صباحاً or ٢ مساءاً</td>
+                            </tr>
+                            <tr>
+                                <td><strong>formatHoursToArabic</strong></td>
+                                <td>Convert decimal hours to Arabic</td>
+                                <td>[7.9] or 1.1</td>
+                                <td>٧ ساعات ٥٤ دقيقة</td>
+                            </tr>
+                            <tr>
+                                <td><strong>_convertToArabicNumerals</strong></td>
+                                <td>Convert English to Arabic numbers</td>
+                                <td>"123"</td>
+                                <td>١٢٣</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="time-format">
+                <h2>3. ⏰ Time Formatting (formatTimeToArabic)</h2>
+                
+                <div class="section">
+                    <h3>Function Purpose</h3>
+                    <p>Converts time from API format (list or string) to Arabic 12-hour format with proper Arabic numerals and period indicators (صباحاً/مساءاً).</p>
+
+                    <div class="code-block">
+<span class="keyword">String</span> <span class="function">formatTimeToArabic</span>(<span class="keyword">dynamic</span> timeData) {
+  <span class="keyword">try</span> {
+    <span class="comment">// Extract time string from list or use directly if string</span>
+    <span class="keyword">final</span> timeString = timeData <span class="keyword">is</span> List && timeData.isNotEmpty
+        ? timeData.first.toString()
+        : timeData <span class="keyword">is</span> String
+        ? timeData
+        : <span class="keyword">null</span>;
+
+    <span class="keyword">if</span> (timeString == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">'--:--'</span>;
+
+    <span class="comment">// Parse the time string (format: HH:mm:ss)</span>
+    <span class="keyword">final</span> parts = timeString.split(<span class="string">':'</span>);
+    <span class="keyword">final</span> hour = <span class="keyword">int</span>.parse(parts[<span class="number">0</span>]);
+    <span class="keyword">final</span> minute = <span class="keyword">int</span>.parse(parts[<span class="number">1</span>]);
+
+    <span class="comment">// Convert to 12-hour format and determine period</span>
+    <span class="keyword">final</span> String period;
+    <span class="keyword">final</span> <span class="keyword">int</span> displayHour;
+
+    <span class="keyword">if</span> (hour == <span class="number">0</span>) {
+      displayHour = <span class="number">12</span>;
+      period = <span class="string">'صباحاً'</span>;
+    } <span class="keyword">else if</span> (hour < <span class="number">12</span>) {
+      displayHour = hour;
+      period = <span class="string">'صباحاً'</span>;
+    } <span class="keyword">else if</span> (hour == <span class="number">12</span>) {
+      displayHour = <span class="number">12</span>;
+      period = <span class="string">'مساءاً'</span>;
+    } <span class="keyword">else</span> {
+      displayHour = hour - <span class="number">12</span>;
+      period = <span class="string">'مساءاً'</span>;
+    }
+
+    <span class="keyword">final</span> arabicHour = _convertToArabicNumerals(displayHour.toString());
+    
+    <span class="keyword">if</span> (minute == <span class="number">0</span>) {
+      <span class="keyword">return</span> <span class="string">'$arabicHour $period'</span>;
+    } <span class="keyword">else</span> {
+      <span class="keyword">final</span> arabicMinute = _convertToArabicNumerals(minute.toString().padLeft(<span class="number">2</span>, <span class="string">'0'</span>));
+      <span class="keyword">return</span> <span class="string">'$arabicHour:$arabicMinute $period'</span>;
+    }
+  } <span class="keyword">on</span> FormatException {
+    <span class="keyword">return</span> <span class="string">'--:--'</span>;
+  }
+}
+                    </div>
+
+                    <h3>Examples</h3>
+                    <div class="example-grid">
+                        <div class="example-card">
+                            <div class="label">Morning Time</div>
+                            <div class="input">Input: ["05:00:00"]</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">٥ صباحاً</div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">Afternoon Time</div>
+                            <div class="input">Input: ["14:00:00"]</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">٢ مساءاً</div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">With Minutes</div>
+                            <div class="input">Input: "09:30:00"</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">٩:٣٠ صباحاً</div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">Midnight</div>
+                            <div class="input">Input: ["00:00:00"]</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">١٢ صباحاً</div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">Noon</div>
+                            <div class="input">Input: ["12:00:00"]</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">١٢ مساءاً</div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">Invalid/Null</div>
+                            <div class="input">Input: null</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">--:--</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="hours-format">
+                <h2>4. 📏 Hours Formatting (formatHoursToArabic)</h2>
+                
+                <div class="section">
+                    <h3>Function Purpose</h3>
+                    <p>Converts decimal hours (e.g., 7.9 hours) to a human-readable Arabic format with hours and minutes, including proper Arabic grammar for singular, dual, and plural forms.</p>
+
+                    <div class="code-block">
+<span class="keyword">String</span> <span class="function">formatHoursToArabic</span>(<span class="keyword">dynamic</span> hoursData) {
+  <span class="keyword">try</span> {
+    <span class="comment">// Extract hours value from list or use directly if number</span>
+    <span class="keyword">final</span> hoursValue = hoursData <span class="keyword">is</span> List && hoursData.isNotEmpty
+        ? hoursData.first
+        : hoursData <span class="keyword">is</span> num
+        ? hoursData
+        : <span class="keyword">null</span>;
+
+    <span class="keyword">if</span> (hoursValue == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">'--'</span>;
+
+    <span class="comment">// Convert to double</span>
+    <span class="keyword">final</span> totalHours = (hoursValue <span class="keyword">is</span> num) 
+        ? hoursValue.toDouble() 
+        : <span class="keyword">double</span>.parse(hoursValue.toString());
+    
+    <span class="comment">// Handle negative values</span>
+    <span class="keyword">final</span> isNegative = totalHours < <span class="number">0</span>;
+    <span class="keyword">final</span> absoluteHours = totalHours.abs();
+    
+    <span class="comment">// Calculate hours and minutes</span>
+    <span class="keyword">final</span> hours = absoluteHours.floor();
+    <span class="keyword">final</span> minutes = ((absoluteHours - hours) * <span class="number">60</span>).round();
+    
+    <span class="comment">// Build the result string with proper Arabic grammar</span>
+    <span class="keyword">final</span> parts = &lt;String&gt;[];
+    
+    <span class="keyword">if</span> (hours > <span class="number">0</span>) {
+      <span class="keyword">final</span> arabicHours = _convertToArabicNumerals(hours.toString());
+      <span class="keyword">final</span> hourWord = hours == <span class="number">1</span> 
+          ? <span class="string">'ساعة'</span>      <span class="comment">// singular</span>
+          : hours == <span class="number">2</span> 
+          ? <span class="string">'ساعتان'</span>    <span class="comment">// dual</span>
+          : <span class="string">'ساعات'</span>;    <span class="comment">// plural</span>
+      parts.add(<span class="string">'$arabicHours $hourWord'</span>);
+    }
+    
+    <span class="keyword">if</span> (minutes > <span class="number">0</span>) {
+      <span class="keyword">final</span> arabicMinutes = _convertToArabicNumerals(minutes.toString());
+      <span class="keyword">final</span> minuteWord = minutes == <span class="number">1</span> 
+          ? <span class="string">'دقيقة'</span>     <span class="comment">// singular</span>
+          : minutes == <span class="number">2</span> 
+          ? <span class="string">'دقيقتان'</span>   <span class="comment">// dual</span>
+          : <span class="string">'دقائق'</span>;    <span class="comment">// plural</span>
+      parts.add(<span class="string">'$arabicMinutes $minuteWord'</span>);
+    }
+    
+    <span class="keyword">if</span> (parts.isEmpty) <span class="keyword">return</span> <span class="string">'--:--'</span>;
+    
+    <span class="keyword">final</span> result = parts.join(<span class="string">' '</span>);
+    <span class="keyword">return</span> isNegative ? <span class="string">'- $result'</span> : result;
+  } <span class="keyword">on</span> FormatException {
+    <span class="keyword">return</span> <span class="string">'--'</span>;
+  }
+}
+                    </div>
+
+                    <div class="note">
+                        <strong>⚙️ Conversion Logic:</strong> The decimal part is multiplied by 60 to convert to minutes. For example: 7.9 hours = 7 hours + (0.9 × 60) = 7 hours 54 minutes.
+                    </div>
+
+                    <h3>Examples</h3>
+                    <div class="example-grid">
+                        <div class="example-card">
+                            <div class="label">Work Duration</div>
+                            <div class="input">Input: [7.9]</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">٧ ساعات ٥٤ دقيقة</div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">Short Duration</div>
+                            <div class="input">Input: [1.1]</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">١ ساعة ٦ دقائق</div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">Half Hour</div>
+                            <div class="input">Input: 0.5</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">٣٠ دقيقة</div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">Negative (Deficit)</div>
+                            <div class="input">Input: -1.5</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">- ١ ساعة ٣٠ دقيقة</div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">Dual Form (2)</div>
+                            <div class="input">Input: [2.0]</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">٢ ساعتان</div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">Minutes Only</div>
+                            <div class="input">Input: [0.25]</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">١٥ دقيقة</div>
+                        </div>
+                    </div>
+
+                    <h3>Arabic Grammar Rules</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Number</th>
+                                <th>Hours (ساعة)</th>
+                                <th>Minutes (دقيقة)</th>
+                                <th>Grammar Form</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>ساعة</td>
+                                <td>دقيقة</td>
+                                <td>Singular (مفرد)</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>ساعتان</td>
+                                <td>دقيقتان</td>
+                                <td>Dual (مثنى)</td>
+                            </tr>
+                            <tr>
+                                <td>3+</td>
+                                <td>ساعات</td>
+                                <td>دقائق</td>
+                                <td>Plural (جمع)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="badges">
+                <h2>5. 🏷️ Badge Visibility Logic</h2>
+                
+                <div class="section">
+                    <h3>Badge Types</h3>
+                    
+                    <h4>1. Late In Badge (حضور متأخر)</h4>
+                    <span class="badge badge-error">حضور متأخر</span>
+                    <p>Shows when the employee arrives late. The badge appears based on the <code>lateInTime</code> field.</p>
+
+                    <h4>2. Early Out Badge (إنصراف مبكر)</h4>
+                    <span class="badge badge-error">إنصراف مبكر</span>
+                    <p>Shows when the employee leaves early. The badge appears based on the <code>earlyOutTime</code> field.</p>
+
+                    <h4>3. Absence Badge (غائب)</h4>
+                    <span class="badge badge-error">غائب</span>
+                    <p>Shows when the employee is absent. Replaces check-in time display.</p>
+
+                    <div class="code-block">
+<span class="keyword">bool</span> <span class="function">_shouldShowLateInBadge</span>(<span class="keyword">dynamic</span> lateInTime) {
+  <span class="comment">// Handle null case</span>
+  <span class="keyword">if</span> (lateInTime == <span class="keyword">null</span>) <span class="keyword">return false</span>;
+  
+  <span class="comment">// Handle boolean false case</span>
+  <span class="keyword">if</span> (lateInTime == <span class="keyword">false</span>) <span class="keyword">return false</span>;
+  
+  <span class="comment">// Handle numeric zero case</span>
+  <span class="keyword">if</span> (lateInTime <span class="keyword">is</span> num && lateInTime == <span class="number">0.0</span>) <span class="keyword">return false</span>;
+  
+  <span class="comment">// Handle list case (e.g., [0.0])</span>
+  <span class="keyword">if</span> (lateInTime <span class="keyword">is</span> List) {
+    <span class="keyword">if</span> (lateInTime.isEmpty) <span class="keyword">return false</span>;
+    <span class="comment">// Check if all elements are zero</span>
+    <span class="keyword">return</span> lateInTime.any((element) => element != <span class="number">0.0</span> && element != <span class="number">0</span>);
+  }
+  
+  <span class="comment">// If we get here, it's a non-zero value, so show the badge</span>
+  <span class="keyword">return true</span>;
+}
+                    </div>
+
+                    <h3>Visibility Decision Table</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Input Value</th>
+                                <th>Show Badge?</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>null</code></td>
+                                <td>❌ No</td>
+                                <td>No data available</td>
+                            </tr>
+                            <tr>
+                                <td><code>false</code></td>
+                                <td>❌ No</td>
+                                <td>Explicitly false (boolean)</td>
+                            </tr>
+                            <tr>
+                                <td><code>0.0</code></td>
+                                <td>❌ No</td>
+                                <td>Zero value (no late time)</td>
+                            </tr>
+                            <tr>
+                                <td><code>[0.0]</code></td>
+                                <td>❌ No</td>
+                                <td>List with zero value</td>
+                            </tr>
+                            <tr>
+                                <td><code>[]</code></td>
+                                <td>❌ No</td>
+                                <td>Empty list</td>
+                            </tr>
+                            <tr>
+                                <td><code>[1.5]</code></td>
+                                <td>✅ Yes</td>
+                                <td>Non-zero value indicates late time</td>
+                            </tr>
+                            <tr>
+                                <td><code>0.5</code></td>
+                                <td>✅ Yes</td>
+                                <td>Non-zero numeric value</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="difference">
+                <h2>6. ➕➖ Difference Calculation Logic</h2>
+                
+                <div class="section">
+                    <h3>Understanding the Difference Field</h3>
+                    <p>The <code>totalLateTime</code> field represents the difference between actual work time and required work time:</p>
+                    
+                    <ul>
+                        <li><strong>Positive value:</strong> Employee worked <span class="highlight">LESS</span> than required → Deficit/Late → Display with <span class="badge badge-error">- prefix</span></li>
+                        <li><strong>Negative value:</strong> Employee worked <span class="highlight">MORE</span> than required → Overtime → Display with <span class="badge badge-success">+ prefix</span></li>
+                        <li><strong>Zero:</strong> Exact match → No prefix needed</li>
+                    </ul>
+
+                    <div class="logic-flow">
+                        <h4>Processing Flow:</h4>
+                        <div class="flow-step">
+                            <strong>Step 1:</strong> Extract numeric value from API data (list or direct number)
+                        </div>
+                        <div class="flow-step">
+                            <strong>Step 2:</strong> Format the time using <code>formatHoursToArabic()</code>
+                        </div>
+                        <div class="flow-step">
+                            <strong>Step 3:</strong> Determine sign based on numeric value
+                        </div>
+                        <div class="flow-step">
+                            <strong>Step 4:</strong> Apply appropriate prefix and color
+                        </div>
+                        <div class="flow-step">
+                            <strong>Step 5:</strong> Display result to user
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+<span class="comment">// Extract numeric value to determine sign</span>
+<span class="keyword">final</span> numericValue = _extractNumericValue(totalLateTime);
+<span class="keyword">final</span> formattedTime = formatHoursToArabic(totalLateTime);
+
+<span class="comment">// Determine display based on numeric value</span>
+<span class="keyword">final</span> String displayTime;
+<span class="keyword">if</span> (numericValue == <span class="keyword">null</span> || numericValue == <span class="number">0</span>) {
+  displayTime = formattedTime;  <span class="comment">// No prefix</span>
+} <span class="keyword">else if</span> (numericValue < <span class="number">0</span>) {
+  <span class="comment">// Negative value = overtime, remove - and add +</span>
+  displayTime = <span class="string">'+ ${formattedTime.replaceFirst('- ', '')}'</span>;
+} <span class="keyword">else</span> {
+  <span class="comment">// Positive value = deficit/late, add - prefix</span>
+  displayTime = <span class="string">'- $formattedTime'</span>;
+}
+
+<span class="comment">// Apply color based on value</span>
+<span class="keyword">final</span> color = numericValue != <span class="keyword">null</span> && numericValue < <span class="number">0</span> 
+    ? context.colors.success  <span class="comment">// Green for overtime</span>
+    : context.colors.error;   <span class="comment">// Red for deficit</span>
+                    </div>
+
+                    <h3>Examples</h3>
+                    <div class="example-grid">
+                        <div class="example-card">
+                            <div class="label">Deficit (Worked Less)</div>
+                            <div class="input">API: [1.1]</div>
+                            <div class="arrow">↓</div>
+                            <div class="input">Numeric: 1.1 (positive)</div>
+                            <div class="arrow">↓</div>
+                            <div class="output" style="color: #721c24;">- ١ ساعة ٦ دقائق</div>
+                            <div style="margin-top: 10px; font-size: 0.9em; color: #856404;">
+                                <strong>Color:</strong> Red (Error)
+                            </div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">Overtime (Worked More)</div>
+                            <div class="input">API: [-1.5]</div>
+                            <div class="arrow">↓</div>
+                            <div class="input">Numeric: -1.5 (negative)</div>
+                            <div class="arrow">↓</div>
+                            <div class="output" style="color: #155724;">+ ١ ساعة ٣٠ دقيقة</div>
+                            <div style="margin-top: 10px; font-size: 0.9em; color: #0c5460;">
+                                <strong>Color:</strong> Green (Success)
+                            </div>
+                        </div>
+
+                        <div class="example-card">
+                            <div class="label">Exact Time</div>
+                            <div class="input">API: [0.0]</div>
+                            <div class="arrow">↓</div>
+                            <div class="input">Numeric: 0.0 (zero)</div>
+                            <div class="arrow">↓</div>
+                            <div class="output">--:--</div>
+                            <div style="margin-top: 10px; font-size: 0.9em; color: #333;">
+                                <strong>Color:</strong> Default
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="note">
+                        <strong>💡 Helper Function:</strong> The <code>_extractNumericValue()</code> function handles extracting the numeric value from various API formats (list, direct number, string) to properly determine the sign.
+                    </div>
+                </div>
+            </section>
+
+            <section id="data-structure">
+                <h2>7. 📦 API Data Structure</h2>
+                
+                <div class="section">
+                    <h3>Expected API Response Format</h3>
+                    
+                    <div class="code-block">
+{
+  <span class="string">"jsonrpc"</span>: <span class="string">"2.0"</span>,
+  <span class="string">"id"</span>: <span class="keyword">null</span>,
+  <span class="string">"result"</span>: {
+    <span class="string">"success"</span>: <span class="keyword">true</span>,
+    <span class="string">"status_code"</span>: <span class="number">200</span>,
+    <span class="string">"message"</span>: <span class="string">"Success"</span>,
+    <span class="string">"data"</span>: {
+      <span class="string">"date"</span>: <span class="string">"2024-01-04"</span>,
+      <span class="string">"off_day"</span>: <span class="keyword">false</span>,
+      <span class="string">"public_off"</span>: <span class="keyword">false</span>,
+      <span class="string">"leave"</span>: <span class="keyword">false</span>,
+      <span class="string">"absence"</span>: <span class="keyword">false</span>,
+      <span class="string">"description"</span>: <span class="keyword">null</span>,
+      <span class="string">"2_shifts"</span>: <span class="keyword">false</span>,
+      <span class="string">"check_in_time"</span>: [<span class="string">"09:00:00"</span>],
+      <span class="string">"late_in_time"</span>: [<span class="number">0.5</span>],
+      <span class="string">"check_out_time"</span>: [<span class="string">"17:00:00"</span>],
+      <span class="string">"early_out_time"</span>: [<span class="number">0.0</span>],
+      <span class="string">"total_late_time"</span>: [<span class="number">1.1</span>],
+      <span class="string">"total_work_time"</span>: [<span class="number">7.9</span>]
+    }
+  }
+}
+                    </div>
+
+                    <h3>Field Descriptions</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>date</code></td>
+                                <td>DateTime</td>
+                                <td>The date of the attendance record</td>
+                                <td>"2024-01-04"</td>
+                            </tr>
+                            <tr>
+                                <td><code>off_day</code></td>
+                                <td>bool</td>
+                                <td>Whether it's an off day (weekend)</td>
+                                <td>true/false</td>
+                            </tr>
+                            <tr>
+                                <td><code>public_off</code></td>
+                                <td>bool</td>
+                                <td>Whether it's a public holiday</td>
+                                <td>true/false</td>
+                            </tr>
+                            <tr>
+                                <td><code>leave</code></td>
+                                <td>bool</td>
+                                <td>Whether the employee is on leave</td>
+                                <td>true/false</td>
+                            </tr>
+                            <tr>
+                                <td><code>absence</code></td>
+                                <td>bool</td>
+                                <td>Whether the employee is absent</td>
+                                <td>true/false</td>
+                            </tr>
+                            <tr>
+                                <td><code>description</code></td>
+                                <td>String?</td>
+                                <td>Description for special days</td>
+                                <td>"عطلة نهاية الأسبوع"</td>
+                            </tr>
+                            <tr>
+                                <td><code>check_in_time</code></td>
+                                <td>List/String</td>
+                                <td>Check-in time in HH:mm:ss format</td>
+                                <td>["09:00:00"]</td>
+                            </tr>
+                            <tr>
+                                <td><code>late_in_time</code></td>
+                                <td>dynamic</td>
+                                <td>Late arrival duration in hours</td>
+                                <td>[0.5], [0.0], false</td>
+                            </tr>
+                            <tr>
+                                <td><code>check_out_time</code></td>
+                                <td>List/String</td>
+                                <td>Check-out time in HH:mm:ss format</td>
+                                <td>["17:00:00"]</td>
+                            </tr>
+                            <tr>
+                                <td><code>early_out_time</code></td>
+                                <td>dynamic</td>
+                                <td>Early departure duration in hours</td>
+                                <td>[0.0], [0.5], false</td>
+                            </tr>
+                            <tr>
+                                <td><code>total_late_time</code></td>
+                                <td>List/Number</td>
+                                <td>Total time difference (deficit/overtime)</td>
+                                <td>[1.1], [-1.5]</td>
+                            </tr>
+                            <tr>
+                                <td><code>total_work_time</code></td>
+                                <td>List/Number</td>
+                                <td>Total hours worked</td>
+                                <td>[7.9], [8.5]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="warning">
+                        <strong>⚠️ Important:</strong> Fields like <code>late_in_time</code>, <code>early_out_time</code> can have multiple formats:
+                        <ul style="margin-top: 10px;">
+                            <li><code>null</code> - No data</li>
+                            <li><code>false</code> - Boolean indicator</li>
+                            <li><code>0.0</code> - Direct numeric zero</li>
+                            <li><code>[0.0]</code> - List with zero</li>
+                            <li><code>[1.5]</code> - List with actual value</li>
+                        </ul>
+                        All helper functions handle these variations automatically.
+                    </div>
+                </div>
+            </section>
+
+            <section id="implementation">
+                <h2>8. 🚀 Complete Implementation</h2>
+                
+                <div class="section">
+                    <h3>UI Components</h3>
+                    
+                    <h4>1. Check-in Section</h4>
+                    <ul>
+                        <li>Displays formatted check-in time using <code>formatTimeToArabic()</code></li>
+                        <li>Shows "حضور متأخر" badge if <code>late_in_time</code> is non-zero</li>
+                        <li>Shows "غائب" badge if <code>absence</code> is true (replaces check-in time)</li>
+                        <li>Loading state with shimmer effect</li>
+                    </ul>
+
+                    <h4>2. Check-out Section</h4>
+                    <ul>
+                        <li>Displays formatted check-out time using <code>formatTimeToArabic()</code></li>
+                        <li>Shows "إنصراف مبكر" badge if <code>early_out_time</code> is non-zero</li>
+                        <li>Loading state with shimmer effect</li>
+                    </ul>
+
+                    <h4>3. Work Hours Section</h4>
+                    <ul>
+                        <li>Displays total work time using <code>formatHoursToArabic()</code></li>
+                        <li>Converts decimal hours to hours and minutes</li>
+                        <li>Loading state with shimmer effect</li>
+                    </ul>
+
+                    <h4>4. Difference Section</h4>
+                    <ul>
+                        <li>Displays time difference using <code>formatHoursToArabic()</code></li>
+                        <li>Adds <span class="badge badge-success">+</span> prefix for overtime (green color)</li>
+                        <li>Adds <span class="badge badge-error">-</span> prefix for deficit (red color)</li>
+                        <li>Dynamic color based on positive/negative value</li>
+                        <li>Loading state with shimmer effect</li>
+                    </ul>
+
+                    <h4>5. Special Days Section</h4>
+                    <ul>
+                        <li>Shows dotted border container for off days, leaves, and public holidays</li>
+                        <li>Displays custom description or default message</li>
+                        <li>Visible when <code>off_day</code>, <code>leave</code>, or <code>public_off</code> is true</li>
+                    </ul>
+
+                    <div class="note">
+                        <strong>🎨 UI States:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>Loading:</strong> Shimmer effect placeholders</li>
+                            <li><strong>Success:</strong> Formatted data with proper styling</li>
+                            <li><strong>Error:</strong> Fallback values (--:--, --)</li>
+                            <li><strong>Empty:</strong> Appropriate empty state messages</li>
+                        </ul>
+                    </div>
+
+                    <h3>State Management</h3>
+                    <p>The component uses <code>BlocBuilder</code> to reactively update based on <code>AttendanceDetailsState</code>:</p>
+                    
+                    <div class="code-block">
+BlocBuilder&lt;AttendanceDetailsCubit, AttendanceDetailsState&gt;(
+  builder: (context, state) {
+    <span class="keyword">if</span> (state.status == AttendanceDetailsStatus.loading) {
+      <span class="comment">// Show shimmer loading effect</span>
+      <span class="keyword">return</span> Shimmer.fromColors(...);
+    } <span class="keyword">else if</span> (state.status == AttendanceDetailsStatus.success) {
+      <span class="comment">// Display formatted data</span>
+      <span class="keyword">final</span> data = state.attendanceSummaryDetailsResponse?.result?.data;
+      <span class="keyword">return</span> Text(formatTimeToArabic(data?.checkInTime));
+    } <span class="keyword">else</span> {
+      <span class="comment">// Show error/empty state</span>
+      <span class="keyword">return</span> Text(<span class="string">'--:--'</span>);
+    }
+  },
+)
+                    </div>
+
+                    <h3>File Structure</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>lib/common/helpers/date_helper.dart</code></td>
+                                <td>Time and hours formatting functions</td>
+                            </tr>
+                            <tr>
+                                <td><code>lib/features/attendance/presentation/widgets/work_hours_section.dart</code></td>
+                                <td>Main UI component with badge logic</td>
+                            </tr>
+                            <tr>
+                                <td><code>lib/features/attendance/data/models/attendance_summary_details_response_model.dart</code></td>
+                                <td>API response data model</td>
+                            </tr>
+                            <tr>
+                                <td><code>lib/features/attendance/presentation/cubit/attendance_details_cubit.dart</code></td>
+                                <td>State management (Cubit)</td>
+                            </tr>
+                            <tr>
+                                <td><code>lib/features/attendance/presentation/cubit/attendance_details_state.dart</code></td>
+                                <td>State definitions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-top: 40px;">
+                <h3 style="color: white;">✨ Key Features Summary</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                        <strong>⏰ Time Formatting</strong>
+                        <p style="margin-top: 10px;">Convert 24-hour to 12-hour Arabic format with proper numerals</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                        <strong>📏 Duration Formatting</strong>
+                        <p style="margin-top: 10px;">Convert decimal hours to hours and minutes with Arabic grammar</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                        <strong>🏷️ Smart Badges</strong>
+                        <p style="margin-top: 10px;">Conditional badge display based on multiple data formats</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                        <strong>➕➖ Difference Logic</strong>
+                        <p style="margin-top: 10px;">Automatic sign determination with color coding</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                        <strong>🎭 Dynamic States</strong>
+                        <p style="margin-top: 10px;">Loading, success, error states with shimmer effects</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                        <strong>🌍 Full Localization</strong>
+                        <p style="margin-top: 10px;">Arabic numerals, proper grammar, RTL support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Rose HR - Attendance Module</strong></p>
+            <p style="margin-top: 10px;">Technical Documentation v1.0</p>
+            <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.8;">
+                Generated: January 2026 | Flutter/Dart Implementation
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
+

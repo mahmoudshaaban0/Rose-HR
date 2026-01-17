@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -27,10 +29,26 @@ class NewRequestSection extends StatelessWidget {
           Row(
             spacing: AppSpacing.md.w,
             children: [
-              RequestItem(title: context.localizations.attendanceCorrection),
-              RequestItem(title: context.localizations.workAssignment),
-              RequestItem(title: context.localizations.leaveRequest),
-              RequestItem(title: context.localizations.permissionRequest),
+              RequestItem(
+                title: context.localizations.attendanceCorrection,
+                onTap: () {
+                  context.pushNamed(AppRoutes.punchCorrection.name);
+                },
+              ),
+              RequestItem(
+                title: context.localizations.workAssignment,
+                onTap: () {},
+              ),
+              RequestItem(
+                title: context.localizations.leaveRequest,
+                onTap: () {},
+              ),
+              RequestItem(
+                title: context.localizations.permissionRequest,
+                onTap: () {
+                  context.pushNamed(AppRoutes.permissionRequest.name);
+                },
+              ),
             ],
           ),
         ],
@@ -42,10 +60,12 @@ class NewRequestSection extends StatelessWidget {
 class RequestItem extends StatelessWidget {
   const RequestItem({
     required this.title,
+    required this.onTap,
     super.key,
   });
 
   final String title;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +77,7 @@ class RequestItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
           ),
         ),
-        onPressed: () {},
+        onPressed: onTap,
         child: Ink(
           decoration: BoxDecoration(
             color: context.colors.surface,

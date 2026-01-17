@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
 class InfoCard extends StatelessWidget {
-  const InfoCard({required this.title, required this.subtitle, required this.value, required this.onTap, super.key});
+  const InfoCard({
+    required this.title,
+    required this.subtitle,
+    required this.value,
+    required this.onTap,
+    this.prefixIcon,
+    this.showArrow = true,
+    super.key,
+  });
   final String title;
   final String subtitle;
   final String value;
-  final VoidCallback onTap;
-
+  final VoidCallback? onTap;
+  final String? prefixIcon;
+  final bool showArrow;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,7 +30,7 @@ class InfoCard extends StatelessWidget {
         Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: onTap,
+            onTap: onTap ?? () {},
             borderRadius: BorderRadius.circular(AppSpacing.lg),
             child: Ink(
               padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.h),
@@ -30,10 +40,13 @@ class InfoCard extends StatelessWidget {
                 border: Border.all(color: context.colors.dividerColor),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: prefixIcon != null ? MainAxisAlignment.start : MainAxisAlignment.spaceBetween,
+                spacing: AppSpacing.md.w,
                 children: [
+                  if (prefixIcon != null) AppVectorGraphic(path: prefixIcon!, width: 24.r, height: 24.r),
                   Text(subtitle, style: context.typography.regular16.copyWith(color: context.colors.onSurfaceVariant)),
-                  Icon(Icons.keyboard_arrow_down_outlined, size: 16, color: context.colors.iconSubtle),
+                  if (prefixIcon != null) const Spacer(),
+                  if (showArrow) Icon(Icons.keyboard_arrow_down_outlined, size: 16, color: context.colors.iconSubtle),
                 ],
               ),
             ),

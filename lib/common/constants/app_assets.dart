@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_single_quotes
 class Assets {
   Assets._();
-
+  
   static const String fontsGraphikArabicBlack = "assets/fonts/GraphikArabic-Black.ttf";
 
   static const String fontsGraphikArabicBold = "assets/fonts/GraphikArabic-Bold.ttf";
@@ -36,11 +36,15 @@ class Assets {
 
   static const String vectorsAttendanceInActive = "assets/vectors/attendanceInActive.svg";
 
+  static const String vectorsCalendarFill = "assets/vectors/calendar-fill.svg";
+
   static const String vectorsDot = "assets/vectors/dot.svg";
 
   static const String vectorsEdit = "assets/vectors/edit.svg";
 
   static const String vectorsEmailIcon = "assets/vectors/email_icon.svg";
+
+  static const String vectorsFingerprint = "assets/vectors/fingerprint.svg";
 
   static const String vectorsHashtag = "assets/vectors/hashtag.svg";
 
@@ -66,9 +70,12 @@ class Assets {
 
   static const String vectorsRequestsInActive = "assets/vectors/requestsInActive.svg";
 
+  static const String vectorsUploadCloud = "assets/vectors/upload_cloud.svg";
+
   static const String vectorsUserPlaceHolder = "assets/vectors/userPlaceHolder.svg";
 
   static const String vectorsVisibilityOff = "assets/vectors/visibility_off.svg";
 
   static const String vectorsVisibilityOn = "assets/vectors/visibility_on.svg";
 }
+

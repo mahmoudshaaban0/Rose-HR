@@ -60,7 +60,7 @@ class CurrentRequestItem extends StatelessWidget {
                       children: [
                         PrimaryTextButton(
                           appButtonSize: AppButtonSize.xxLarge,
-                          label: 'الغاء الطلب',
+                          label: context.localizations.cancelRequest,
                           onTap: () {},
                         ),
                       ],
@@ -81,7 +81,7 @@ class CurrentRequestItem extends StatelessWidget {
           lineItem(
             context: context,
             icon: Assets.vectorsHashtag,
-            title: 'رقم الطلــــب',
+            title: context.localizations.requestNumber,
             trailingTitleColor: context.colors.onSurface,
             trailingTitle: requestNumber,
           ),
@@ -89,7 +89,7 @@ class CurrentRequestItem extends StatelessWidget {
           lineItem(
             context: context,
             icon: Assets.vectorsPulseLine,
-            title: 'حالة الطلـــب',
+            title: context.localizations.requestStatus,
             trailing: Container(
               padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm.w, vertical: AppSpacing.xs.h),
               decoration: BoxDecoration(
