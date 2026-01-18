@@ -304,4 +304,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get egyptian => 'Egyptian';
+
+  @override
+  String get startTime => 'Start Time';
+
+  @override
+  String get endTime => 'End Time';
+
+  @override
+  String get partialExcuse => 'Partial Excuse';
 }

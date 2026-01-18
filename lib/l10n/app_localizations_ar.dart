@@ -306,4 +306,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get egyptian => 'مصري';
+
+  @override
+  String get startTime => 'بداية الوقت';
+
+  @override
+  String get endTime => 'نهاية الوقت';
+
+  @override
+  String get partialExcuse => 'استئذان جزئي';
 }

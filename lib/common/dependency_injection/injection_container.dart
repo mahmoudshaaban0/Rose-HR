@@ -21,6 +21,10 @@ import 'package:rose_hr/features/home/data/repositories/home_repository.dart';
 import 'package:rose_hr/features/home/presentation/cubit/home_cubit.dart';
 import 'package:rose_hr/features/home/presentation/cubit/shift_cubit.dart';
 import 'package:rose_hr/features/home/presentation/cubit/timezone_cubit.dart';
+import 'package:rose_hr/features/permission_request/data/datasources/permission_request_datasource.dart';
+import 'package:rose_hr/features/permission_request/data/repositories/permission_request_repository.dart';
+import 'package:rose_hr/features/permission_request/presentation/cubit/permission_request_cubit.dart';
+import 'package:rose_hr/features/permission_request/presentation/cubit/shift_id_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt sl = GetIt.instance;
@@ -31,11 +35,13 @@ Future<void> init() async {
     ..registerLazySingleton<HomeDataSource>(() => HomeDataSource(sl<ApiConsumer>()))
     ..registerLazySingleton<AccountDataSource>(() => AccountDataSource(sl<ApiConsumer>()))
     ..registerLazySingleton<AttendanceDataSource>(() => AttendanceDataSource(sl<ApiConsumer>()))
+    ..registerLazySingleton<PermissionRequestDataSource>(() => PermissionRequestDataSource(sl<ApiConsumer>()))
     // Repositories
     ..registerLazySingleton<AuthRepository>(() => AuthRepository(sl<AuthDataSource>()))
     ..registerLazySingleton<HomeRepository>(() => HomeRepository(sl<HomeDataSource>()))
     ..registerLazySingleton<AccountRepository>(() => AccountRepository(sl<AccountDataSource>()))
     ..registerLazySingleton<AttendanceRepository>(() => AttendanceRepository(sl<AttendanceDataSource>()))
+    ..registerLazySingleton<PermissionRequestRepository>(() => PermissionRequestRepository(sl<PermissionRequestDataSource>()))
     // Cubits/Blocs
     ..registerFactory<AuthBloc>(() => AuthBloc(sl<AuthRepository>()))
     ..registerFactory<HomeCubit>(() => HomeCubit(sl<HomeRepository>()))
@@ -44,6 +50,8 @@ Future<void> init() async {
     ..registerFactory<ShiftCubit>(() => ShiftCubit(sl<HomeRepository>()))
     ..registerFactory<AttendanceCubit>(() => AttendanceCubit(sl<AttendanceRepository>()))
     ..registerFactory<AttendanceDetailsCubit>(() => AttendanceDetailsCubit(sl<AttendanceRepository>()))
+    ..registerFactory<PermissionRequestCubit>(() => PermissionRequestCubit(sl<PermissionRequestRepository>()))
+    ..registerFactory<ShiftIdCubit>(() => ShiftIdCubit(sl<PermissionRequestRepository>()))
     ///! Core
     ..registerLazySingleton<NetworkInfo>(
       () => NetworkInfoImpl(connectivityChecker: sl()),

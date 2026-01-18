@@ -38,6 +38,8 @@ class Assets {
 
   static const String vectorsCalendarFill = "assets/vectors/calendar-fill.svg";
 
+  static const String vectorsCheckline = "assets/vectors/checkline.svg";
+
   static const String vectorsDot = "assets/vectors/dot.svg";
 
   static const String vectorsEdit = "assets/vectors/edit.svg";
@@ -64,11 +66,15 @@ class Assets {
 
   static const String vectorsPasswordVisible = "assets/vectors/password_visible.svg";
 
+  static const String vectorsPermissionReqeuestSuccessIcon = "assets/vectors/permission_reqeuest_success_icon.svg";
+
   static const String vectorsPulseLine = "assets/vectors/pulse_line.svg";
 
   static const String vectorsRequestsActive = "assets/vectors/requestsActive.svg";
 
   static const String vectorsRequestsInActive = "assets/vectors/requestsInActive.svg";
+
+  static const String vectorsTime = "assets/vectors/time.svg";
 
   static const String vectorsUploadCloud = "assets/vectors/upload_cloud.svg";
 

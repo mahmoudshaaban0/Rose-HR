@@ -24,4 +24,8 @@ final class Env {
   static String shiftSummary = _Env.shiftSummary;
   @EnviedField(varName: 'shiftSummaryDetails', obfuscate: true)
   static String shiftSummaryDetails = _Env.shiftSummaryDetails;
+  @EnviedField(varName: 'shiftID', obfuscate: true)
+  static String getShiftId = _Env.getShiftId;
+  @EnviedField(varName: 'createPermission', obfuscate: true)
+  static String createPermissionRequest = _Env.createPermissionRequest;
 }

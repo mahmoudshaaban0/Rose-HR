@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
@@ -180,8 +179,9 @@ extension AppDatePickerExtension on BuildContext {
     DateTime? maximumDate,
     CupertinoDatePickerMode mode = CupertinoDatePickerMode.date,
   }) {
-    return showModalBottomSheet<void>(
+    return showCupertinoModalPopup<void>(
       context: this,
+
       builder: (BuildContext context) {
         return AppDatePicker(
           onDateSelected: onDateSelected,

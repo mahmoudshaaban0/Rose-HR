@@ -13,6 +13,7 @@ class InfoCard extends StatelessWidget {
     this.prefixIcon,
     this.showArrow = true,
     super.key,
+    this.subTitlestyle,
   });
   final String title;
   final String subtitle;
@@ -20,6 +21,7 @@ class InfoCard extends StatelessWidget {
   final VoidCallback? onTap;
   final String? prefixIcon;
   final bool showArrow;
+  final TextStyle? subTitlestyle;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -43,8 +45,11 @@ class InfoCard extends StatelessWidget {
                 mainAxisAlignment: prefixIcon != null ? MainAxisAlignment.start : MainAxisAlignment.spaceBetween,
                 spacing: AppSpacing.md.w,
                 children: [
-                  if (prefixIcon != null) AppVectorGraphic(path: prefixIcon!, width: 24.r, height: 24.r),
-                  Text(subtitle, style: context.typography.regular16.copyWith(color: context.colors.onSurfaceVariant)),
+                  if (prefixIcon != null) AppVectorGraphic(path: prefixIcon!, width: 18.r, height: 18.r),
+                  Text(
+                    subtitle,
+                    style: subTitlestyle ?? context.typography.regular16.copyWith(color: context.colors.onSurfaceVariant),
+                  ),
                   if (prefixIcon != null) const Spacer(),
                   if (showArrow) Icon(Icons.keyboard_arrow_down_outlined, size: 16, color: context.colors.iconSubtle),
                 ],

@@ -98,5 +98,8 @@
      "somethingWentWrong": "حدث خطأ ما",
      "noData": "لا يوجد بيانات",
      "generalInformation": "المعلومات العامة",
-     "egyptian": "مصري"
+     "egyptian": "مصري",
+     "startTime": "بداية الوقت",
+     "endTime": "نهاية الوقت",
+     "partialExcuse": "استئذان جزئي"
 }

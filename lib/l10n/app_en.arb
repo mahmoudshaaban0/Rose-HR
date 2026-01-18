@@ -97,5 +97,8 @@
     "somethingWentWrong": "Something went wrong",
     "noData": "No data",
     "generalInformation": "General Information",
-    "egyptian": "Egyptian"
+    "egyptian": "Egyptian",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "partialExcuse": "Partial Excuse"
 }
