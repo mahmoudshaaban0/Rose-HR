@@ -2,6 +2,8 @@ import 'package:intl/intl.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
+import 'package:rose_hr/common/helpers/timezone_manager.dart';
+
 /// Enum representing supported timezones in the application
 enum AppTimezone {
   /// Egypt timezone (Africa/Cairo)
@@ -81,6 +83,20 @@ class TimezoneHelper {
   static tz.TZDateTime now(AppTimezone timezone) {
     final location = _getLocation(timezone);
     return tz.TZDateTime.now(location);
+  }
+
+  /// Get the current date and time using the app's detected timezone
+  ///
+  /// This uses [TimezoneManager] to get the automatically detected timezone
+  /// based on the user's GPS location.
+  ///
+  /// Example:
+  /// ```dart
+  /// // Uses the app's current timezone (auto-detected from GPS)
+  /// final now = TimezoneHelper.nowLocal();
+  /// ```
+  static tz.TZDateTime nowLocal() {
+    return TimezoneManager.now();
   }
 
   /// Convert a timezone-aware datetime to UTC for storage

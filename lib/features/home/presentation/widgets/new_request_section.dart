@@ -36,12 +36,16 @@ class NewRequestSection extends StatelessWidget {
                 },
               ),
               RequestItem(
-                title: context.localizations.workAssignment,
-                onTap: () {},
+                title: context.localizations.workMission,
+                onTap: () {
+                  context.pushNamed(AppRoutes.workMission.name);
+                },
               ),
               RequestItem(
                 title: context.localizations.leaveRequest,
-                onTap: () {},
+                onTap: () {
+                  context.pushNamed(AppRoutes.holidayRequest.name);
+                },
               ),
               RequestItem(
                 title: context.localizations.permissionRequest,

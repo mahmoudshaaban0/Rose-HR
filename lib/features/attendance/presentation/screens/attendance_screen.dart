@@ -24,6 +24,12 @@ class AttendanceScreen extends StatelessWidget {
       child: Builder(
         builder: (context) {
           return Scaffold(
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: () {
+            //     context.pushNamed(AppRoutes.holidayRequest.name);
+            //   },
+            //   child: const Icon(Icons.add),
+            // ),
             appBar: PrimaryAppBar(title: context.localizations.attendance),
             body: SafeArea(
               child: RefreshIndicator.adaptive(

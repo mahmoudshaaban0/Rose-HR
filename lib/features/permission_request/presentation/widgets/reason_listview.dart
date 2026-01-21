@@ -29,7 +29,7 @@ class _ReasonListViewState extends State<ReasonListView> {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  context.read<PermissionRequestCubit>().sendReasonType(
+                  context.read<PermissionRequestCubit>().selecteReasonType(
                     reasonTypes[index].name,
                     reasonTypes[index].id,
                   );

@@ -54,6 +54,8 @@ class Assets {
 
   static const String vectorsHomeInActive = "assets/vectors/homeInActive.svg";
 
+  static const String vectorsImage = "assets/vectors/image.svg";
+
   static const String vectorsLocationIcon = "assets/vectors/location_icon.svg";
 
   static const String vectorsLockLine = "assets/vectors/lock-line.svg";
@@ -66,6 +68,8 @@ class Assets {
 
   static const String vectorsPasswordVisible = "assets/vectors/password_visible.svg";
 
+  static const String vectorsPdf = "assets/vectors/pdf.svg";
+
   static const String vectorsPermissionReqeuestSuccessIcon = "assets/vectors/permission_reqeuest_success_icon.svg";
 
   static const String vectorsPulseLine = "assets/vectors/pulse_line.svg";
@@ -74,7 +78,11 @@ class Assets {
 
   static const String vectorsRequestsInActive = "assets/vectors/requestsInActive.svg";
 
+  static const String vectorsSelectBoxRight = "assets/vectors/select_box_right.svg";
+
   static const String vectorsTime = "assets/vectors/time.svg";
+
+  static const String vectorsTrash = "assets/vectors/trash.svg";
 
   static const String vectorsUploadCloud = "assets/vectors/upload_cloud.svg";
 

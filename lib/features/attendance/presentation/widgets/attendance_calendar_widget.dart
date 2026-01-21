@@ -81,7 +81,7 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
     return BlocConsumer<AttendanceCubit, AttendanceState>(
       listener: (context, state) {
         if (state.status == AttendanceStatus.error) {
-          ToastService.showError(state.error ?? 'An error occurred');
+          ToastService.showError(state.error ?? context.localizations.anErrorOccurred);
         }
       },
       builder: (context, state) {
@@ -195,7 +195,7 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     disabledDecoration: BoxDecoration(
-                      color: Colors.transparent,
+                      color: context.colors.surface.withValues(alpha: 0),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     defaultTextStyle: context.typography.medium16,

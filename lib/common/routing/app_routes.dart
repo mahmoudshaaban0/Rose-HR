@@ -7,9 +7,9 @@ enum AppRoutes {
   updateAccount('/update-account', 'Update Account'),
   punchCorrection('/attendance-correction', 'Attendance Correction'),
   correctionTime('/correction-time', 'Correction Time'),
-  permissionRequest('/permission-request', 'Permission Request');
-  // workAssignment('/work-assignment', 'Work Assignment'),
-  // leaveRequest('/leave-request', 'Leave Request'),
+  permissionRequest('/permission-request', 'Permission Request'),
+  workMission('/work-mission', 'Work Mission'),
+  holidayRequest('/holiday-request', 'Holiday Request');
 
   const AppRoutes(this.path, this.name);
   final String path;

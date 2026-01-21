@@ -47,6 +47,7 @@ class ShiftCubit extends Cubit<ShiftState> {
 
       if (isClosed) return;
       if (shiftData.latitude == 0.0 && shiftData.longitude == 0.0) {
+        if (isClosed) return;
         emit(
           state.copyWith(
             locationCheckStatus: LocationCheckStatus.checkedBetweenRadiusSuccessfully,
@@ -55,6 +56,7 @@ class ShiftCubit extends Cubit<ShiftState> {
           ),
         );
       } else {
+        if (isClosed) return;
         emit(
           state.copyWith(
             locationCheckStatus: LocationCheckStatus.checkedBetweenRadiusSuccessfully,

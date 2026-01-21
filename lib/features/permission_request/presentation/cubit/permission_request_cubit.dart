@@ -28,6 +28,7 @@ class PermissionRequestCubit extends Cubit<PermissionRequestState> {
   void sendPermsissionType(String permissionTypeName, String permissionTypeId) {
     // Reset startTime and endTime if the new permission type is not 'mid_day'
     if (permissionTypeId != 'mid_day') {
+      if (isClosed) return;
       emit(
         state.copyWith(
           permissionTypeName: permissionTypeName,
@@ -37,19 +38,23 @@ class PermissionRequestCubit extends Cubit<PermissionRequestState> {
         ),
       );
     } else {
+      if (isClosed) return;
       emit(state.copyWith(permissionTypeName: permissionTypeName, permissionTypeId: permissionTypeId));
     }
   }
 
-  void sendDate(DateTime date) {
+  void selectDate(DateTime date) {
+    if (isClosed) return;
     emit(state.copyWith(date: date.toIso8601String()));
   }
 
-  void sendReasonType(String reasonTypeName, String reasonTypeId) {
+  void selecteReasonType(String reasonTypeName, String reasonTypeId) {
+    if (isClosed) return;
     emit(state.copyWith(reasonTypeName: reasonTypeName, reasonTypeId: reasonTypeId));
   }
 
-  void sendStartTimeAndEndTime({String? startTime, String? endTime}) {
+  void selectStartTimeAndEndTime({String? startTime, String? endTime}) {
+    if (isClosed) return;
     if (state.permissionTypeId != 'mid_day') {
       emit(state.copyWith(clearStartTime: true, clearEndTime: true));
       return;
@@ -57,15 +62,28 @@ class PermissionRequestCubit extends Cubit<PermissionRequestState> {
     emit(state.copyWith(startTime: startTime, endTime: endTime));
   }
 
-  void sendShiftId(int shiftId) {
+  void selectShiftId(int shiftId) {
+    if (isClosed) return;
     emit(state.copyWith(shiftId: shiftId));
   }
 
   void togglePartialExcuse(bool value) {
+    if (isClosed) return;
     emit(state.copyWith(partialExcuse: value));
   }
 
-  void sendRequestedDuration(double? duration) {
+  void selectRequestedDuration(double? duration) {
+    if (isClosed) return;
     emit(state.copyWith(requestedDuration: duration));
+  }
+
+  void clearAllFields() {
+    emit(
+      state.copyWith(
+        clearStartTime: true,
+        clearEndTime: true,
+        partialExcuse: false,
+      ),
+    );
   }
 }

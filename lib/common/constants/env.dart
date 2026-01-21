@@ -28,4 +28,12 @@ final class Env {
   static String getShiftId = _Env.getShiftId;
   @EnviedField(varName: 'createPermission', obfuscate: true)
   static String createPermissionRequest = _Env.createPermissionRequest;
+  @EnviedField(varName: 'punchCorrection', obfuscate: true)
+  static String punchCorrection = _Env.punchCorrection;
+  @EnviedField(varName: 'workMissionReqeust', obfuscate: true)
+  static String workMissionReqeust = _Env.workMissionReqeust;
+  @EnviedField(varName: 'getLeaveTypes', obfuscate: true)
+  static String getLeaveTypes = _Env.getLeaveTypes;
+  @EnviedField(varName: 'createHolidayRequest', obfuscate: true)
+  static String createHolidayRequest = _Env.createHolidayRequest;
 }

@@ -71,7 +71,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get attendanceCorrection => 'تصحيح الحضور';
 
   @override
-  String get workAssignment => 'مهمة عمل';
+  String get workMission => 'مهمة عمل';
 
   @override
   String get leaveRequest => 'طلب إجازة';
@@ -315,4 +315,100 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get partialExcuse => 'استئذان جزئي';
+
+  @override
+  String get earlyOut => 'إنصراف مبكر';
+
+  @override
+  String get b => 'K';
+
+  @override
+  String get kb => 'كيلو بايت';
+
+  @override
+  String get mb => 'ميجا بايت';
+
+  @override
+  String get pleaseSelectPermissionType => 'الرجاء اختيار نوع الإستئذان';
+
+  @override
+  String get pleaseSelectDate => 'الرجاء اختيار التاريخ';
+
+  @override
+  String get pleaseSelectShift => 'الرجاء اختيار الدوام';
+
+  @override
+  String get pleaseSelectStartAndEndTime =>
+      'الرجاء اختيار وقت البداية والنهاية';
+
+  @override
+  String get endTimeMustBeAfterStartTime =>
+      'يجب أن يكون وقت النهاية بعد وقت البداية';
+
+  @override
+  String get pleaseSpecifyRequestedDuration => 'الرجاء تحديد المدة المطلوبة';
+
+  @override
+  String get invalidPermissionRequestData => 'بيانات طلب الإستئذان غير صحيحة';
+
+  @override
+  String get failedToFetchShiftInformation => 'فشل في جلب معلومات الدوام';
+
+  @override
+  String get failedToSubmitPermissionRequest => 'فشل في إرسال طلب الإستئذان';
+
+  @override
+  String get permissionType => 'نوع الإستئذان';
+
+  @override
+  String get selectShift => 'اختار الدوام';
+
+  @override
+  String get hour => 'ساعة';
+
+  @override
+  String get enterPermissionReasonHere => 'أكتب سبب الإستئذان إن وجد...';
+
+  @override
+  String get uploading => 'جاري التحميل...';
+
+  @override
+  String get uploadFailed => 'فشل التحميل';
+
+  @override
+  String get uploadedSuccessfully => 'تم التحميل بنجاح';
+
+  @override
+  String get pleaseSelectCorrectionType =>
+      'الرجاء اختيار نوع التصحيح (دخول أو خروج)';
+
+  @override
+  String get pleaseSelectAttendanceMethod => 'الرجاء اختيار طريقة الحضور';
+
+  @override
+  String get pleaseSelectReason => 'الرجاء اختيار السبب';
+
+  @override
+  String get pleaseSelectCorrectionTime => 'الرجاء اختيار وقت التصحيح';
+
+  @override
+  String get failedToSubmitPunchCorrection => 'فشل في إرسال طلب تصحيح البصمة';
+
+  @override
+  String get selectCorrectionReason => 'أختر سبب تصحيح البصمة';
+
+  @override
+  String get anErrorOccurred => 'حدث خطأ ما';
+
+  @override
+  String get defaultTime => '08:00 ص';
+
+  @override
+  String get defaultDate => '08 ابريل 2026';
+
+  @override
+  String get late => 'متأخر';
+
+  @override
+  String get notes => 'الملاحظات';
 }

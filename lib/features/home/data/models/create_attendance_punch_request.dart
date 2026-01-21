@@ -22,6 +22,12 @@ class CreateAttendancePunchRequest {
   final String actionDatetime;
 
   Map<String, dynamic> toJson() => _$CreateAttendancePunchRequestToJson(this);
+
+  // to string
+  @override
+  String toString() {
+    return 'CreateAttendancePunchRequest(geoInformation: $geoInformation, deviceInfo: $deviceInfo, actionDatetime: $actionDatetime)';
+  }
 }
 
 @JsonSerializable()
@@ -38,6 +44,12 @@ class GeoInformation {
 
   @JsonKey(name: 'longitude')
   final double longitude;
+
+  // to string
+  @override
+  String toString() {
+    return 'GeoInformation(latitude: $latitude, longitude: $longitude)';
+  }
 
   Map<String, dynamic> toJson() => _$GeoInformationToJson(this);
 }

@@ -93,11 +93,11 @@ class CurrentRequestItem extends StatelessWidget {
             trailing: Container(
               padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm.w, vertical: AppSpacing.xs.h),
               decoration: BoxDecoration(
-                color: const Color(0xffFFF8F5),
+                color: context.colors.statusPendingBackground,
                 borderRadius: BorderRadius.circular(AppSpacing.sm.r),
-                border: Border.all(color: const Color(0xffF3651D)),
+                border: Border.all(color: context.colors.statusPendingBorder),
               ),
-              child: Text(requestStatus, style: context.typography.medium12.copyWith(color: const Color(0xffF3651D))),
+              child: Text(requestStatus, style: context.typography.medium12.copyWith(color: context.colors.statusPendingText)),
             ),
           ),
           SizedBox(height: AppSpacing.sm.h),

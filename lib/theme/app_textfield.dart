@@ -32,6 +32,7 @@ class AppTextField extends StatelessWidget {
     this.hintTextLabel,
     this.textInputAction,
     this.contentPadding,
+    this.textDirection,
   });
 
   /// The controller for the text field.
@@ -97,6 +98,10 @@ class AppTextField extends StatelessWidget {
   /// Pass EdgeInsets.zero to remove padding completely.
   final EdgeInsets? contentPadding;
 
+  /// Text direction for the text field.
+  /// Useful for numeric fields in RTL languages to ensure proper cursor behavior.
+  final TextDirection? textDirection;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -123,6 +128,7 @@ class AppTextField extends StatelessWidget {
           autovalidateMode: autovalidateMode,
           validator: validator,
           maxLines: maxLines,
+          textDirection: textDirection,
           style: WidgetStateTextStyle.resolveWith((states) {
             late final Color textColor;
 

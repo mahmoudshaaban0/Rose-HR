@@ -218,11 +218,11 @@ abstract class AppLocalizations {
   /// **'Attendance Correction'**
   String get attendanceCorrection;
 
-  /// No description provided for @workAssignment.
+  /// No description provided for @workMission.
   ///
   /// In en, this message translates to:
-  /// **'Work Assignment'**
-  String get workAssignment;
+  /// **'Work Mission'**
+  String get workMission;
 
   /// No description provided for @leaveRequest.
   ///
@@ -703,6 +703,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Partial Excuse'**
   String get partialExcuse;
+
+  /// No description provided for @earlyOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Early Out'**
+  String get earlyOut;
+
+  /// No description provided for @b.
+  ///
+  /// In en, this message translates to:
+  /// **'B'**
+  String get b;
+
+  /// No description provided for @kb.
+  ///
+  /// In en, this message translates to:
+  /// **'KB'**
+  String get kb;
+
+  /// No description provided for @mb.
+  ///
+  /// In en, this message translates to:
+  /// **'MB'**
+  String get mb;
+
+  /// No description provided for @pleaseSelectPermissionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select permission type'**
+  String get pleaseSelectPermissionType;
+
+  /// No description provided for @pleaseSelectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a date'**
+  String get pleaseSelectDate;
+
+  /// No description provided for @pleaseSelectShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a shift'**
+  String get pleaseSelectShift;
+
+  /// No description provided for @pleaseSelectStartAndEndTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select start and end time'**
+  String get pleaseSelectStartAndEndTime;
+
+  /// No description provided for @endTimeMustBeAfterStartTime.
+  ///
+  /// In en, this message translates to:
+  /// **'End time must be after start time'**
+  String get endTimeMustBeAfterStartTime;
+
+  /// No description provided for @pleaseSpecifyRequestedDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Please specify the requested duration'**
+  String get pleaseSpecifyRequestedDuration;
+
+  /// No description provided for @invalidPermissionRequestData.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid permission request data'**
+  String get invalidPermissionRequestData;
+
+  /// No description provided for @failedToFetchShiftInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to fetch shift information'**
+  String get failedToFetchShiftInformation;
+
+  /// No description provided for @failedToSubmitPermissionRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit permission request'**
+  String get failedToSubmitPermissionRequest;
+
+  /// No description provided for @permissionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Type'**
+  String get permissionType;
+
+  /// No description provided for @selectShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Shift'**
+  String get selectShift;
+
+  /// No description provided for @hour.
+  ///
+  /// In en, this message translates to:
+  /// **'hour'**
+  String get hour;
+
+  /// No description provided for @enterPermissionReasonHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter permission reason here if any...'**
+  String get enterPermissionReasonHere;
+
+  /// No description provided for @uploading.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading...'**
+  String get uploading;
+
+  /// No description provided for @uploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload failed'**
+  String get uploadFailed;
+
+  /// No description provided for @uploadedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploaded successfully'**
+  String get uploadedSuccessfully;
+
+  /// No description provided for @pleaseSelectCorrectionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select correction type (In or Out)'**
+  String get pleaseSelectCorrectionType;
+
+  /// No description provided for @pleaseSelectAttendanceMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select attendance method'**
+  String get pleaseSelectAttendanceMethod;
+
+  /// No description provided for @pleaseSelectReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select reason'**
+  String get pleaseSelectReason;
+
+  /// No description provided for @pleaseSelectCorrectionTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select correction time'**
+  String get pleaseSelectCorrectionTime;
+
+  /// No description provided for @failedToSubmitPunchCorrection.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit punch correction'**
+  String get failedToSubmitPunchCorrection;
+
+  /// No description provided for @selectCorrectionReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Select correction reason'**
+  String get selectCorrectionReason;
+
+  /// No description provided for @anErrorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get anErrorOccurred;
+
+  /// No description provided for @defaultTime.
+  ///
+  /// In en, this message translates to:
+  /// **'08:00 AM'**
+  String get defaultTime;
+
+  /// No description provided for @defaultDate.
+  ///
+  /// In en, this message translates to:
+  /// **'April 08, 2026'**
+  String get defaultDate;
+
+  /// No description provided for @late.
+  ///
+  /// In en, this message translates to:
+  /// **'Late'**
+  String get late;
+
+  /// No description provided for @notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
 }
 
 class _AppLocalizationsDelegate

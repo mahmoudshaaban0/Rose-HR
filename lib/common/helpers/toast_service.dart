@@ -87,7 +87,7 @@ class ToastService {
       msg: message,
       toastLength: duration,
       gravity: gravity,
-      fontAsset: 'assets/fonts/itfMirsalC-Medium.otf',
+      fontAsset: 'assets/fonts/GraphikArabic-Medium.ttf',
     );
   }
 
@@ -106,7 +106,7 @@ class ToastService {
       backgroundColor: backgroundColor,
       textColor: textColor,
       fontSize: fontSize,
-      fontAsset: 'assets/fonts/itfMirsalC-Medium.otf',
+      fontAsset: 'assets/fonts/GraphikArabic-Medium.ttf',
     );
   }
 

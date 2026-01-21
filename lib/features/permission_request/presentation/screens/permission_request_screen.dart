@@ -1,6 +1,6 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,6 +15,9 @@ import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/common/widgets/bottom_sheet_wrapper.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/common/widgets/info_card.dart';
+import 'package:rose_hr/common/widgets/success_request_bottomsheet.dart';
+import 'package:rose_hr/common/cubits/file_upload/file_upload_cubit.dart';
+import 'package:rose_hr/common/widgets/file_upload_widget.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/permission_request/data/models/permission_request_model.dart';
 import 'package:rose_hr/features/permission_request/data/models/permission_type_model.dart';
@@ -28,6 +31,7 @@ import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/app_textfield.dart';
 import 'package:rose_hr/theme/primary_text_button.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PermissionRequestScreen extends StatefulWidget {
   const PermissionRequestScreen({super.key});
@@ -38,16 +42,22 @@ class PermissionRequestScreen extends StatefulWidget {
 
 class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
   late final TextEditingController _reasonController;
+  late final TextEditingController _durationController;
+  late final FileUploadCubit _fileUploadCubit;
 
   @override
   void initState() {
     super.initState();
     _reasonController = TextEditingController();
+    _durationController = TextEditingController();
+    _fileUploadCubit = sl<FileUploadCubit>();
   }
 
   @override
   void dispose() {
     _reasonController.dispose();
+    _durationController.dispose();
+    _fileUploadCubit.close();
     super.dispose();
   }
 
@@ -55,24 +65,24 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
   void _submitPermissionRequest(BuildContext context, PermissionRequestState state) {
     // Validate required fields
     if (state.permissionTypeId == null) {
-      ToastService.showError('Please select permission type');
+      ToastService.showError(context.localizations.pleaseSelectPermissionType, gravity: ToastGravity.CENTER);
       return;
     }
 
     if (state.date == null) {
-      ToastService.showError('Please select a date');
+      ToastService.showError(context.localizations.pleaseSelectDate, gravity: ToastGravity.CENTER);
       return;
     }
 
     if (state.shiftId == null) {
-      ToastService.showError('Please select a shift');
+      ToastService.showError(context.localizations.pleaseSelectShift, gravity: ToastGravity.CENTER);
       return;
     }
 
     // Type-specific validation
     if (state.permissionTypeId == 'mid_day') {
       if (state.startTime == null || state.endTime == null) {
-        ToastService.showError('Please select start and end time');
+        ToastService.showError(context.localizations.pleaseSelectStartAndEndTime);
         return;
       }
 
@@ -83,7 +93,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
       final timeTo = endDateTime.hour + (endDateTime.minute / 60.0);
 
       if (timeTo <= timeFrom) {
-        ToastService.showError('End time must be after start time');
+        ToastService.showError(context.localizations.endTimeMustBeAfterStartTime);
         return;
       }
     }
@@ -91,7 +101,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
     if ((state.permissionTypeId == 'late_in' || state.permissionTypeId == 'early_out') &&
         state.partialExcuse &&
         state.requestedDuration == null) {
-      ToastService.showError('Please specify the requested duration');
+      ToastService.showError(context.localizations.pleaseSpecifyRequestedDuration);
       return;
     }
 
@@ -99,7 +109,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
     final request = _buildPermissionRequest(state);
 
     if (request == null) {
-      ToastService.showError('Invalid permission request data');
+      ToastService.showError(context.localizations.invalidPermissionRequestData);
       return;
     }
 
@@ -115,7 +125,20 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
     final formattedDate = TimezoneHelper.format(
       TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.parse(state.date!)),
       pattern: 'yyyy-MM-dd',
+      locale: 'en',
     );
+
+    // Get attachments from file upload cubit if available
+    List<AttachmentData>? attachments;
+    if (_fileUploadCubit.state.hasFiles && _fileUploadCubit.state.allFilesUploaded) {
+      attachments = _fileUploadCubit.state.uploadedFiles.map((file) {
+        return AttachmentData(
+          name: file.name,
+          data: file.base64Data ?? '',
+          mimetype: file.mimeType,
+        );
+      }).toList();
+    }
 
     switch (state.permissionTypeId) {
       case 'mid_day':
@@ -142,6 +165,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
           timeFrom: timeFrom,
           timeTo: timeTo,
           reason: reason,
+          attachmentIds: attachments,
         );
 
       case 'late_in':
@@ -156,6 +180,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
           partialExcuse: state.partialExcuse,
           requestedDuration: state.requestedDuration ?? 0.0,
           reason: reason,
+          attachmentIds: attachments,
         );
 
       case 'early_out':
@@ -170,6 +195,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
           partialExcuse: state.partialExcuse,
           requestedDuration: state.requestedDuration ?? 0.0,
           reason: reason,
+          attachmentIds: attachments,
         );
 
       default:
@@ -195,13 +221,13 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
             listener: (context, state) {
               if (state.status == ShiftIdStatus.error) {
                 ToastService.showError(
-                  state.errorMessage ?? 'Failed to fetch shift information',
+                  state.errorMessage ?? context.localizations.failedToFetchShiftInformation,
                 );
               } else if (state.status == ShiftIdStatus.success) {
                 // Automatically select the first shift when data is loaded
                 final firstShift = state.shiftIdResponseModel?.result?.data?.firstOrNull;
                 if (firstShift != null && firstShift.id != null) {
-                  context.read<PermissionRequestCubit>().sendShiftId(firstShift.id!);
+                  context.read<PermissionRequestCubit>().selectShiftId(firstShift.id!);
                   AppLogger.instance.logDebug('Auto-selected first shift: ${firstShift.name} (ID: ${firstShift.id})');
                 }
               }
@@ -215,40 +241,39 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                 final result = state.permissionRequestResponseModel?.result;
 
                 if (result?.statusCode == 200) {
+                  context.pop();
                   // Show success bottom sheet
                   BottomSheetWrapper(
-                    initialSize: .34.h,
-                    maxChildSize: .34.h,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.r),
-                      child: Column(
-                        spacing: AppSpacing.md.h,
-                        children: [
-                          const AppVectorGraphic(path: Assets.vectorsPermissionReqeuestSuccessIcon),
-                          Text(
-                            'شكرًا لك',
-                            style: context.typography.regular16,
-                          ),
-                          Text(
-                            'تم تقديم طلبك بنجاح!',
-                            style: context.typography.semiBold28.copyWith(color: context.colors.success),
-                          ),
-                        ],
-                      ),
-                    ),
+                    closeBottomSheetOnDrag: false,
+                    initialSize: .4.h,
+                    maxChildSize: .4.h,
+                    removeAutoScroll: true,
+                    disableDrag: true,
+                    useRootNavigator: true,
+                    child: const SuccessRequestBottomsheet(),
                   ).callSheet(context);
+                  context.read<PermissionRequestCubit>().clearAllFields();
+                  _reasonController.clear();
+                  _durationController.clear();
+                  _fileUploadCubit.clearAllFiles();
                 } else {
                   // Business logic error (e.g., 400 with success: false)
                   ToastService.showError(
                     gravity: ToastGravity.CENTER,
-                    result?.message ?? 'Failed to submit permission request',
+                    result?.message ?? context.localizations.failedToSubmitPermissionRequest,
                   );
                 }
+              } else if (state.status == PermissionRequestStatus.loading) {
+                showDialog<void>(
+                  context: context,
+                  builder: (context) => const Center(child: CircularProgressIndicator.adaptive()),
+                );
               } else if (state.status == PermissionRequestStatus.error) {
                 // Network or other errors
+                context.pop();
                 ToastService.showError(
                   gravity: ToastGravity.CENTER,
-                  state.errorMessage ?? 'Failed to submit permission request',
+                  state.errorMessage ?? context.localizations.failedToSubmitPermissionRequest,
                 );
               }
             },
@@ -298,7 +323,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               spacing: AppSpacing.md.h,
                                               children: [
-                                                Text('نوع الإستئذان', style: context.typography.semiBold18),
+                                                Text(context.localizations.permissionType, style: context.typography.semiBold18),
                                                 PaymentTypeListview(
                                                   onSelected: (id) {
                                                     AppLogger.instance.logDebug('selected id: ');
@@ -335,7 +360,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                                     locale: 'en',
                                                     pattern: 'hh:mm a',
                                                   )
-                                                : '08:00 AM',
+                                                : context.localizations.defaultTime,
                                             value: state.startTime != null
                                                 ? TimezoneHelper.format(
                                                     TimezoneHelper.createTimestamp(
@@ -345,7 +370,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                                     locale: 'en',
                                                     pattern: 'hh:mm a',
                                                   )
-                                                : '08:00 AM',
+                                                : context.localizations.defaultTime,
                                             showArrow: false,
                                             onTap: () {
                                               // Default start time: 8:00 AM
@@ -362,7 +387,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                                     cancelButton: CupertinoButton(
                                                       onPressed: () {
                                                         // Set the time when user confirms
-                                                        context.read<PermissionRequestCubit>().sendStartTimeAndEndTime(
+                                                        context.read<PermissionRequestCubit>().selectStartTimeAndEndTime(
                                                           startTime: selectedStartTime.toIso8601String(),
                                                         );
                                                         Navigator.of(modalContext).pop();
@@ -394,6 +419,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                             },
                                           ),
                                         ),
+
                                         SizedBox(width: AppSpacing.md.w),
                                         Expanded(
                                           child: InfoCard(
@@ -408,7 +434,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                                     locale: 'en',
                                                     pattern: 'a hh:mm',
                                                   )
-                                                : '08:00 AM',
+                                                : context.localizations.defaultTime,
                                             subTitlestyle: state.endTime != null
                                                 ? context.typography.regular16.copyWith(color: context.colors.onSurface)
                                                 : null,
@@ -429,7 +455,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                                     cancelButton: CupertinoButton(
                                                       onPressed: () {
                                                         // Set the time when user confirms
-                                                        context.read<PermissionRequestCubit>().sendStartTimeAndEndTime(
+                                                        context.read<PermissionRequestCubit>().selectStartTimeAndEndTime(
                                                           endTime: selectedEndTime.toIso8601String(),
                                                         );
                                                         Navigator.of(modalContext).pop();
@@ -467,6 +493,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                   return const SizedBox.shrink();
                                 },
                               ),
+
                               BlocBuilder<PermissionRequestCubit, PermissionRequestState>(
                                 builder: (context, state) {
                                   final cubit = context.read<PermissionRequestCubit>();
@@ -480,14 +507,14 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                             locale: 'en',
                                             pattern: 'yyyy-MM-dd',
                                           )
-                                        : '08 ابريل 2026',
+                                        : context.localizations.defaultDate,
                                     value: state.date != null
                                         ? TimezoneHelper.format(
                                             TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.parse(state.date!)),
                                             locale: 'en',
                                             pattern: 'yyyy-MM-dd',
                                           )
-                                        : '08 ابريل 2026',
+                                        : context.localizations.defaultDate,
                                     showArrow: false,
                                     subTitlestyle: state.date != null
                                         ? context.typography.regular16.copyWith(color: context.colors.onSurface)
@@ -504,8 +531,10 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                                   context: modalContext,
                                                   locale: const Locale('en', 'US'),
                                                   child: CupertinoDatePicker(
+                                                    maximumYear: DateTime.now().year,
+                                                    minimumYear: DateTime.now().year - 100,
                                                     onDateTimeChanged: (DateTime date) {
-                                                      context.read<PermissionRequestCubit>().sendDate(date);
+                                                      context.read<PermissionRequestCubit>().selectDate(date);
                                                     },
                                                     initialDateTime: TimezoneHelper.now(AppTimezone.egypt),
                                                     mode: CupertinoDatePickerMode.date,
@@ -519,12 +548,13 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                                     ? DateTime.parse(cubit.state.date!)
                                                     : DateTime.now();
 
-                                                context.read<PermissionRequestCubit>().sendDate(selectedDate);
+                                                context.read<PermissionRequestCubit>().selectDate(selectedDate);
 
                                                 // Format date as yyyy-MM-dd for API
                                                 final formattedDate = TimezoneHelper.format(
                                                   TimezoneHelper.createTimestamp(AppTimezone.egypt, selectedDate),
                                                   pattern: 'yyyy-MM-dd',
+                                                  locale: 'en',
                                                 );
 
                                                 // Call getShiftId with formatted date
@@ -561,6 +591,21 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                           // If not found, default to first shift
                                           selectedShift = shifts.firstOrNull;
                                         }
+                                      } else if (shiftState.status == ShiftIdStatus.loading) {
+                                        // create loading shimmer effect
+                                        return Shimmer.fromColors(
+                                          baseColor: context.colors.surfaceVariant,
+                                          highlightColor: context.colors.containerBackground,
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(vertical: AppSpacing.md.r),
+                                            decoration: BoxDecoration(
+                                              color: context.colors.containerBackground,
+                                              borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                                            ),
+                                            width: double.infinity,
+                                            height: 40.h,
+                                          ),
+                                        );
                                       }
 
                                       return Visibility(
@@ -585,7 +630,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   spacing: AppSpacing.md.h,
                                                   children: [
-                                                    Text('اختار الدوام', style: context.typography.semiBold18),
+                                                    Text(context.localizations.selectShift, style: context.typography.semiBold18),
                                                     ListView.separated(
                                                       separatorBuilder: (context, index) => const AppDivider(),
                                                       itemCount: shiftState.shiftIdResponseModel?.result?.data?.length ?? 0,
@@ -600,7 +645,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                                             AppLogger.instance.logDebug(
                                                               'selected shift id: ${shift?.id}',
                                                             );
-                                                            cubit.sendShiftId(shift?.id ?? 0);
+                                                            cubit.selectShiftId(shift?.id ?? 0);
                                                             context.pop();
                                                           },
                                                           child: Padding(
@@ -633,6 +678,56 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                           },
                                         ),
                                       );
+                                    },
+                                  );
+                                },
+                              ),
+                              BlocBuilder<PermissionRequestCubit, PermissionRequestState>(
+                                builder: (context, permissionState) {
+                                  return BlocBuilder<ShiftIdCubit, ShiftIdState>(
+                                    builder: (context, shiftState) {
+                                      if (shiftState.status == ShiftIdStatus.success) {
+                                        final shifts = shiftState.shiftIdResponseModel?.result?.data;
+                                        if (shifts != null && shifts.isNotEmpty) {
+                                          final shift = shifts.firstWhere(
+                                            (shift) => shift.id == shiftState.shiftIdResponseModel?.result?.data?.firstOrNull?.id,
+                                          );
+
+                                          // Show late arrival time if permission type is late_in
+                                          if (permissionState.permissionTypeId == PermissionType.lateIn.id) {
+                                            final lateInHours = shift.timeLateIn ?? 0.0;
+                                            if (lateInHours > 0) {
+                                              return Align(
+                                                alignment: Alignment.topRight,
+                                                child: Text(
+                                                  '${context.localizations.late} : ${lateInHours.toStringAsFixed(2)} ${context.localizations.hours}',
+                                                  style: context.typography.medium16.copyWith(color: context.colors.error),
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                              );
+                                            }
+                                            return const SizedBox.shrink();
+                                          }
+
+                                          // Show early out time if permission type is early_out
+                                          if (permissionState.permissionTypeId == PermissionType.earlyOut.id) {
+                                            final earlyOutHours = shift.timeEarlyOut ?? 0.0;
+                                            if (earlyOutHours > 0) {
+                                              return Align(
+                                                alignment: Alignment.topRight,
+                                                child: Text(
+                                                  '${context.localizations.late} : ${earlyOutHours.toStringAsFixed(2)} ${context.localizations.hours}',
+                                                  style: context.typography.medium16.copyWith(color: context.colors.error),
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                              );
+                                            }
+                                            return const SizedBox.shrink();
+                                          }
+                                        }
+                                        return const SizedBox.shrink();
+                                      }
+                                      return const SizedBox.shrink();
                                     },
                                   );
                                 },
@@ -697,7 +792,14 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                     // Checkbox for partial excuse
                                     InkWell(
                                       onTap: () {
-                                        cubit.togglePartialExcuse(!state.partialExcuse);
+                                        final newValue = !state.partialExcuse;
+                                        cubit.togglePartialExcuse(newValue);
+                                        if (newValue) {
+                                          cubit.selectRequestedDuration(0.5);
+                                        } else {
+                                          _durationController.clear();
+                                          cubit.selectRequestedDuration(null);
+                                        }
                                       },
                                       child: Row(
                                         children: [
@@ -708,9 +810,11 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                               onChanged: (value) {
                                                 cubit.togglePartialExcuse(value ?? false);
                                                 if (value ?? false) {
-                                                  cubit.sendRequestedDuration(0.5);
+                                                  _durationController.text = '0.5';
+                                                  cubit.selectRequestedDuration(0.5);
                                                 } else {
-                                                  cubit.sendRequestedDuration(null);
+                                                  _durationController.clear();
+                                                  cubit.selectRequestedDuration(null);
                                                 }
                                               },
                                               activeColor: context.colors.onSurface,
@@ -729,57 +833,26 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                       ),
                                     ),
 
-                                    // Show time card only if partial excuse is checked
+                                    // Show time field only if partial excuse is checked
                                     if (state.partialExcuse)
-                                      InfoCard(
-                                        prefixIcon: Assets.vectorsTime,
+                                      AppTextField(
+                                        controller: _durationController,
                                         title: context.localizations.enterTimeManually,
-                                        subtitle: state.requestedDuration != null
-                                            ? '${state.requestedDuration} ${state.requestedDuration == 1 ? 'hour' : 'hours'}'
-                                            : '0.5 hours',
-                                        value: state.requestedDuration != null
-                                            ? '${state.requestedDuration} ${state.requestedDuration == 1 ? 'hour' : 'hours'}'
-                                            : '0.5 ${context.localizations.hours}',
-                                        showArrow: false,
-                                        subTitlestyle: state.requestedDuration != null
-                                            ? context.typography.regular16.copyWith(color: context.colors.onSurface)
-                                            : null,
-                                        onTap: () {
-                                          showCupertinoModalPopup<void>(
-                                            context: context,
-                                            builder: (BuildContext modalContext) {
-                                              return CupertinoActionSheet(
-                                                actions: [
-                                                  SizedBox(
-                                                    height: 200.h,
-                                                    child: Localizations.override(
-                                                      context: modalContext,
-                                                      locale: const Locale('en', 'US'),
-                                                      child: CupertinoDatePicker(
-                                                        onDateTimeChanged: (DateTime date) {
-                                                          // Calculate duration in hours from the selected time
-                                                          final duration = date.hour + (date.minute / 60.0);
-                                                          cubit.sendRequestedDuration(duration);
-                                                        },
-                                                        initialDateTime: DateTime(2000, 1, 1, 0, 30), // Start at 0:30 (0.5 hours)
-                                                        mode: CupertinoDatePickerMode.time,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                                cancelButton: CupertinoButton(
-                                                  onPressed: () {
-                                                    if (state.requestedDuration == null) {
-                                                      cubit.sendRequestedDuration(0.5); // Default to 30 minutes
-                                                    }
-                                                    Navigator.of(modalContext).pop();
-                                                    AppLogger.instance.logDebug('selected duration: ${state.requestedDuration}');
-                                                  },
-                                                  child: Text(context.localizations.done, style: context.typography.regular16),
-                                                ),
-                                              );
-                                            },
-                                          );
+                                        hintTextLabel: '0.5',
+                                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                        textDirection: TextDirection.ltr,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,1}$')),
+                                        ],
+                                        onChanged: (value) {
+                                          if (value.isNotEmpty) {
+                                            final duration = double.tryParse(value);
+                                            if (duration != null && duration > 0) {
+                                              cubit.selectRequestedDuration(duration);
+                                            }
+                                          } else {
+                                            cubit.selectRequestedDuration(null);
+                                          }
                                         },
                                       ),
                                   ],
@@ -802,32 +875,12 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                               AppTextField(
                                 controller: _reasonController,
                                 title: context.localizations.reason,
-                                hintTextLabel: 'أكتب سبب الإستئذان إن وجد...',
+                                hintTextLabel: context.localizations.enterPermissionReasonHere,
                                 maxLines: 4,
                               ),
                               Text(context.localizations.attachments, style: context.typography.medium16),
-                              DottedBorder(
-                                options: RoundedRectDottedBorderOptions(
-                                  color: context.colors.dividerColor,
-                                  radius: Radius.circular(AppSpacing.xxxxl.r),
-                                  dashPattern: [10, 10],
-                                ),
-                                child: InkWell(
-                                  onTap: () {},
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: AppSpacing.xxxxl.h, horizontal: AppSpacing.xxxxl.w),
-                                    child: Center(
-                                      child: Column(
-                                        spacing: AppSpacing.sm.h,
-                                        children: [
-                                          const AppVectorGraphic(path: Assets.vectorsUploadCloud),
-                                          Text(context.localizations.clickToUpload, style: context.typography.medium14),
-                                          Text(context.localizations.fileFormatsHint, style: context.typography.regular14),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                              FileUploadWidget(
+                                cubit: _fileUploadCubit,
                               ),
                             ],
                           ),
@@ -857,10 +910,10 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                               child: SizedBox(
                                 width: 24.r,
                                 height: 24.r,
-                                child: CircularProgressIndicator(
+                                child: CircularProgressIndicator.adaptive(
                                   strokeWidth: 2.r,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                    context.colors.onSurface,
+                                    context.colors.black,
                                   ),
                                 ),
                               ),
@@ -868,7 +921,9 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                           : PrimaryTextButton(
                               appButtonSize: AppButtonSize.xxLarge,
                               label: context.localizations.submitRequest,
-                              onTap: () => _submitPermissionRequest(context, state),
+                              onTap: state.permissionTypeId == null || state.shiftId == null || state.date == null
+                                  ? null
+                                  : () => _submitPermissionRequest(context, state),
                             ),
                     );
                   },

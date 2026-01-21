@@ -1,194 +1,145 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rose_hr/common/helpers/timezone_helper.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
-/// {@template app_date_picker}
-/// A reusable iOS-style date picker widget that displays in a bottom sheet.
-/// Provides a callback with the selected date value.
-/// {@endtemplate}
-class AppDatePicker extends StatefulWidget {
-  /// {@macro app_date_picker}
-  const AppDatePicker({
-    required this.onDateSelected,
-    this.initialDate,
-    this.minimumDate,
-    this.maximumDate,
-    this.mode = CupertinoDatePickerMode.date,
-    super.key,
-  });
+/// A reusable Cupertino-style date picker component
+///
+/// Features:
+/// - Displays a modal date picker in iOS style
+/// - Supports customizable date range (min/max years)
+/// - Handles timezone conversion
+/// - Provides callbacks for date selection
+///
+/// Example:
+/// ```dart
+/// AppDatePicker.show(
+///   context,
+///   initialDate: DateTime.now(),
+///   onDateConfirmed: (selectedDate) {
+///     print('Selected: $selectedDate');
+///   },
+/// );
+/// ```
+class AppDatePicker {
+  /// Shows a Cupertino-style date picker modal
+  ///
+  /// Parameters:
+  /// - [context]: BuildContext for showing the modal
+  /// - [initialDate]: The initially selected date (defaults to current Egypt time)
+  /// - [minimumYear]: Minimum selectable year (defaults to 100 years ago)
+  /// - [maximumYear]: Maximum selectable year (defaults to current year)
+  /// - [onDateChanged]: Optional callback triggered on each date scroll change
+  /// - [onDateConfirmed]: Callback triggered when user confirms the date
+  /// - [timezone]: Target timezone for date handling (defaults to Egypt)
+  /// - [buttonText]: Custom text for the confirmation button (defaults to localized "done")
+  static Future<void> show(
+    BuildContext context, {
+    required ValueChanged<DateTime> onDateConfirmed,
+    DateTime? initialDate,
+    int? minimumYear,
+    int? maximumYear,
+    ValueChanged<DateTime>? onDateChanged,
+    AppTimezone timezone = AppTimezone.egypt,
+    String? buttonText,
+    CupertinoDatePickerMode? mode,
+  }) async {
+    var tempSelectedDate = initialDate ?? TimezoneHelper.now(timezone);
 
-  /// Callback function that returns the selected date
-  final ValueChanged<DateTime> onDateSelected;
-
-  /// Initial date to display in the picker
-  final DateTime? initialDate;
-
-  /// Minimum selectable date
-  final DateTime? minimumDate;
-
-  /// Maximum selectable date
-  final DateTime? maximumDate;
-
-  /// Date picker mode (date, time, dateAndTime)
-  final CupertinoDatePickerMode mode;
-
-  @override
-  State<AppDatePicker> createState() => _AppDatePickerState();
-}
-
-class _AppDatePickerState extends State<AppDatePicker> {
-  late DateTime _selectedDate;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedDate = widget.initialDate ?? DateTime.now();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 280,
-      decoration: BoxDecoration(
-        color: context.colors.surface,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(16),
-        ),
-      ),
-      child: Column(
-        children: [
-          _DatePickerHeader(
-            onCancel: () => Navigator.of(context).pop(),
-            onDone: () {
-              widget.onDateSelected(_selectedDate);
-              Navigator.of(context).pop();
-            },
-          ),
-          Expanded(
-            child: Localizations.override(
-              context: context,
-              locale: const Locale('en', 'US'),
-              child: CupertinoDatePicker(
-                mode: widget.mode,
-                initialDateTime: _selectedDate,
-                minimumDate: widget.minimumDate,
-                maximumDate: widget.maximumDate,
-                onDateTimeChanged: (DateTime newDate) {
-                  setState(() {
-                    _selectedDate = newDate;
-                  });
-                },
-                backgroundColor: context.colors.surface,
+    await showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext modalContext) {
+        return CupertinoActionSheet(
+          actions: [
+            Container(
+              decoration: BoxDecoration(
+                color: context.isLightMode ? null : context.colors.surfaceVariant,
+                borderRadius: BorderRadius.circular(AppSpacing.lg.r),
+              ),
+              height: 200.h,
+              child: Localizations.override(
+                context: modalContext,
+                locale: const Locale('en', 'US'),
+                child: CupertinoDatePicker(
+                  maximumYear: maximumYear ?? DateTime.now().year,
+                  minimumYear: minimumYear ?? (DateTime.now().year - 100),
+                  onDateTimeChanged: (DateTime date) {
+                    tempSelectedDate = date;
+                    onDateChanged?.call(date);
+                  },
+                  initialDateTime: initialDate ?? TimezoneHelper.now(timezone),
+                  mode: mode ?? CupertinoDatePickerMode.date,
+                ),
               ),
             ),
+          ],
+          cancelButton: CupertinoButton(
+            color: context.isLightMode ? null : context.colors.surfaceVariant,
+            onPressed: () {
+              Navigator.of(modalContext).pop();
+              onDateConfirmed(tempSelectedDate);
+            },
+            child: Text(
+              buttonText ?? context.localizations.done,
+              style: context.typography.regular16,
+            ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
-}
 
-/// {@template date_picker_header}
-/// Header widget for the date picker with Cancel and Done buttons
-/// {@endtemplate}
-class _DatePickerHeader extends StatelessWidget {
-  /// {@macro date_picker_header}
-  const _DatePickerHeader({
-    required this.onCancel,
-    required this.onDone,
-  });
-
-  final VoidCallback onCancel;
-  final VoidCallback onDone;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xxl,
-        vertical: AppSpacing.xl,
-      ),
-      decoration: BoxDecoration(
-        color: context.colors.surface,
-        border: Border(
-          bottom: BorderSide(
-            color: context.colors.dividerColor,
-            width: 0.5,
-          ),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _DatePickerActionButton(
-            label: context.localizations.cancel,
-            onPressed: onCancel,
-          ),
-          _DatePickerActionButton(
-            label: context.localizations.done,
-            onPressed: onDone,
-            isBold: true,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// {@template date_picker_action_button}
-/// Action button widget used in the date picker header
-/// {@endtemplate}
-class _DatePickerActionButton extends StatelessWidget {
-  /// {@macro date_picker_action_button}
-  const _DatePickerActionButton({
-    required this.label,
-    required this.onPressed,
-    this.isBold,
-  });
-
-  final String label;
-  final VoidCallback onPressed;
-  final bool? isBold;
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoButton(
-      padding: EdgeInsets.zero,
-      onPressed: onPressed,
-      child: Text(
-        label,
-        style: (isBold ?? false)
-            ? context.typography.semiBold16.copyWith(
-                color: context.colors.info,
-              )
-            : context.typography.regular16.copyWith(
-                color: context.colors.info,
-              ),
-      ),
-    );
-  }
-}
-
-/// Extension to show the date picker as a modal bottom sheet
-extension AppDatePickerExtension on BuildContext {
-  /// Shows the iOS-style date picker in a modal bottom sheet
-  Future<void> showAppDatePicker({
-    required ValueChanged<DateTime> onDateSelected,
+  /// Shows a simple date picker without dark mode styling
+  ///
+  /// This is a lighter version suitable for simpler use cases
+  static Future<void> showSimple(
+    BuildContext context, {
+    required ValueChanged<DateTime> onDateConfirmed,
     DateTime? initialDate,
-    DateTime? minimumDate,
-    DateTime? maximumDate,
-    CupertinoDatePickerMode mode = CupertinoDatePickerMode.date,
-  }) {
-    return showCupertinoModalPopup<void>(
-      context: this,
+    int? minimumYear,
+    int? maximumYear,
+    ValueChanged<DateTime>? onDateChanged,
+    AppTimezone timezone = AppTimezone.egypt,
+    String? buttonText,
+    CupertinoDatePickerMode? mode,
+  }) async {
+    var tempSelectedDate = initialDate ?? TimezoneHelper.now(timezone);
 
-      builder: (BuildContext context) {
-        return AppDatePicker(
-          onDateSelected: onDateSelected,
-          initialDate: initialDate,
-          minimumDate: minimumDate,
-          maximumDate: maximumDate,
-          mode: mode,
+    await showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext modalContext) {
+        return CupertinoActionSheet(
+          actions: [
+            SizedBox(
+              height: 200.h,
+              child: Localizations.override(
+                context: modalContext,
+                locale: const Locale('en', 'US'),
+                child: CupertinoDatePicker(
+                  maximumYear: maximumYear ?? DateTime.now().year,
+                  minimumYear: minimumYear ?? (DateTime.now().year - 100),
+                  onDateTimeChanged: (DateTime date) {
+                    tempSelectedDate = date;
+                    onDateChanged?.call(date);
+                  },
+                  initialDateTime: initialDate ?? TimezoneHelper.now(timezone),
+                  mode: mode ?? CupertinoDatePickerMode.date,
+                ),
+              ),
+            ),
+          ],
+          cancelButton: CupertinoButton(
+            onPressed: () {
+              Navigator.of(modalContext).pop();
+              onDateConfirmed(tempSelectedDate);
+            },
+            child: Text(
+              buttonText ?? context.localizations.done,
+              style: context.typography.regular16,
+            ),
+          ),
         );
       },
     );

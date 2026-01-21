@@ -125,7 +125,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         Text(
                           AppStrings.appName,
                           style: context.typography.bold22.copyWith(
-                            color: Colors.white,
+                            color: context.colors.white,
                           ),
                         ),
                       ],

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rose_hr/common/dependency_injection/injection_container.dart';
+import 'package:rose_hr/common/helpers/timezone_manager.dart';
+import 'package:rose_hr/features/home/presentation/cubit/timezone_cubit.dart';
 import 'package:rose_hr/features/home/presentation/widgets/header_shift_section.dart';
 import 'package:rose_hr/features/home/presentation/widgets/holidays_section.dart';
 import 'package:rose_hr/features/home/presentation/widgets/new_request_section.dart';
@@ -10,18 +14,36 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            spacing: AppSpacing.md.h,
-            children: const [
-              HeaderAndShiftSection(),
-              NewRequestSection(),
-              HolidaysSection(),
-            ],
-          ),
-        ),
+    return BlocProvider(
+      create: (context) => sl<TimezoneCubit>(),
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            body: SafeArea(
+              child: RefreshIndicator.adaptive(
+                onRefresh: () async {
+                  // Refresh timezone detection from GPS
+                  await TimezoneManager.refreshFromGps();
+                  // Also refresh the cubit to update UI with new timezone
+                  if (context.mounted) {
+                    await context.read<TimezoneCubit>().refreshTimezone();
+                  }
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    spacing: AppSpacing.md.h,
+                    children: const [
+                      HeaderAndShiftSection(),
+                      NewRequestSection(),
+                      HolidaysSection(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

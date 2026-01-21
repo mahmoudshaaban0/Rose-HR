@@ -55,6 +55,10 @@ interface class AppColors extends ThemeExtension<AppColors> {
     required this.leaveColor,
     required this.publicOffColor,
     required this.errorBadgeBackground,
+    required this.fileItemBackground,
+    required this.statusPendingBackground,
+    required this.statusPendingBorder,
+    required this.statusPendingText,
   });
 
   factory AppColors.light() {
@@ -126,6 +130,15 @@ interface class AppColors extends ThemeExtension<AppColors> {
 
   // Badge colors
   final Color errorBadgeBackground;
+
+  // File upload colors
+  final Color fileItemBackground;
+
+  // Status colors
+  final Color statusPendingBackground;
+  final Color statusPendingBorder;
+  final Color statusPendingText;
+
   @override
   ThemeExtension<AppColors> copyWith({
     Color? surface,
@@ -168,6 +181,10 @@ interface class AppColors extends ThemeExtension<AppColors> {
     Color? leaveColor,
     Color? publicOffColor,
     Color? errorBadgeBackground,
+    Color? fileItemBackground,
+    Color? statusPendingBackground,
+    Color? statusPendingBorder,
+    Color? statusPendingText,
   }) {
     return AppColors(
       surface: surface ?? this.surface,
@@ -211,6 +228,10 @@ interface class AppColors extends ThemeExtension<AppColors> {
       leaveColor: leaveColor ?? this.leaveColor,
       publicOffColor: publicOffColor ?? this.publicOffColor,
       errorBadgeBackground: errorBadgeBackground ?? this.errorBadgeBackground,
+      fileItemBackground: fileItemBackground ?? this.fileItemBackground,
+      statusPendingBackground: statusPendingBackground ?? this.statusPendingBackground,
+      statusPendingBorder: statusPendingBorder ?? this.statusPendingBorder,
+      statusPendingText: statusPendingText ?? this.statusPendingText,
     );
   }
 
@@ -265,6 +286,10 @@ interface class AppColors extends ThemeExtension<AppColors> {
       leaveColor: Color.lerp(leaveColor, other.leaveColor, t)!,
       publicOffColor: Color.lerp(publicOffColor, other.publicOffColor, t)!,
       errorBadgeBackground: Color.lerp(errorBadgeBackground, other.errorBadgeBackground, t)!,
+      fileItemBackground: Color.lerp(fileItemBackground, other.fileItemBackground, t)!,
+      statusPendingBackground: Color.lerp(statusPendingBackground, other.statusPendingBackground, t)!,
+      statusPendingBorder: Color.lerp(statusPendingBorder, other.statusPendingBorder, t)!,
+      statusPendingText: Color.lerp(statusPendingText, other.statusPendingText, t)!,
     );
   }
 }
@@ -318,6 +343,10 @@ class AppLightColors extends AppColors {
     super.leaveColor = const Color(0xFF335CFF), // Blue for leave days
     super.publicOffColor = const Color(0xFF9C27B0), // Purple for public holidays
     super.errorBadgeBackground = const Color(0xffFFF3F1), // Light pink background for error badges
+    super.fileItemBackground = const Color(0xffFDFAF6), // Light beige for file items
+    super.statusPendingBackground = const Color(0xffFFF8F5), // Light orange background
+    super.statusPendingBorder = const Color(0xffF3651D), // Orange border
+    super.statusPendingText = const Color(0xffF3651D), // Orange text
   });
 }
 
@@ -375,5 +404,9 @@ class AppDarkColors extends AppColors {
     super.leaveColor = const Color(0xFF5C8AFF), // Blue for leave days
     super.publicOffColor = const Color(0xFFBA68C8), // Purple for public holidays
     super.errorBadgeBackground = const Color(0xFF3D1F1F), // Dark reddish background for error badges in dark mode
+    super.fileItemBackground = const Color(0xff1A1D25), // Dark background for file items
+    super.statusPendingBackground = const Color(0xff2A1F1A), // Dark orange background
+    super.statusPendingBorder = const Color(0xffFF7A3D), // Lighter orange border for dark mode
+    super.statusPendingText = const Color(0xffFF7A3D), // Lighter orange text for dark mode
   });
 }

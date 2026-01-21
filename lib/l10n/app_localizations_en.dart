@@ -70,7 +70,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get attendanceCorrection => 'Attendance Correction';
 
   @override
-  String get workAssignment => 'Work Assignment';
+  String get workMission => 'Work Mission';
 
   @override
   String get leaveRequest => 'Leave Request';
@@ -313,4 +313,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get partialExcuse => 'Partial Excuse';
+
+  @override
+  String get earlyOut => 'Early Out';
+
+  @override
+  String get b => 'B';
+
+  @override
+  String get kb => 'KB';
+
+  @override
+  String get mb => 'MB';
+
+  @override
+  String get pleaseSelectPermissionType => 'Please select permission type';
+
+  @override
+  String get pleaseSelectDate => 'Please select a date';
+
+  @override
+  String get pleaseSelectShift => 'Please select a shift';
+
+  @override
+  String get pleaseSelectStartAndEndTime => 'Please select start and end time';
+
+  @override
+  String get endTimeMustBeAfterStartTime => 'End time must be after start time';
+
+  @override
+  String get pleaseSpecifyRequestedDuration =>
+      'Please specify the requested duration';
+
+  @override
+  String get invalidPermissionRequestData => 'Invalid permission request data';
+
+  @override
+  String get failedToFetchShiftInformation =>
+      'Failed to fetch shift information';
+
+  @override
+  String get failedToSubmitPermissionRequest =>
+      'Failed to submit permission request';
+
+  @override
+  String get permissionType => 'Permission Type';
+
+  @override
+  String get selectShift => 'Select Shift';
+
+  @override
+  String get hour => 'hour';
+
+  @override
+  String get enterPermissionReasonHere =>
+      'Enter permission reason here if any...';
+
+  @override
+  String get uploading => 'Uploading...';
+
+  @override
+  String get uploadFailed => 'Upload failed';
+
+  @override
+  String get uploadedSuccessfully => 'Uploaded successfully';
+
+  @override
+  String get pleaseSelectCorrectionType =>
+      'Please select correction type (In or Out)';
+
+  @override
+  String get pleaseSelectAttendanceMethod => 'Please select attendance method';
+
+  @override
+  String get pleaseSelectReason => 'Please select reason';
+
+  @override
+  String get pleaseSelectCorrectionTime => 'Please select correction time';
+
+  @override
+  String get failedToSubmitPunchCorrection =>
+      'Failed to submit punch correction';
+
+  @override
+  String get selectCorrectionReason => 'Select correction reason';
+
+  @override
+  String get anErrorOccurred => 'An error occurred';
+
+  @override
+  String get defaultTime => '08:00 AM';
+
+  @override
+  String get defaultDate => 'April 08, 2026';
+
+  @override
+  String get late => 'Late';
+
+  @override
+  String get notes => 'Notes';
 }

@@ -6,10 +6,13 @@ import 'package:rose_hr/features/account/presentation/screens/update_account_scr
 import 'package:rose_hr/features/auth/presentation/screens/forget_password_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/login_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/verification_screen.dart';
+import 'package:rose_hr/features/holiday_request/presentation/screens/holiday_request_screen.dart';
 import 'package:rose_hr/features/permission_request/presentation/screens/permission_request_screen.dart';
+import 'package:rose_hr/features/punch_correction/presentation/cubit/punch_correction_cubit.dart';
 import 'package:rose_hr/features/punch_correction/presentation/screens/correction_time_screen.dart';
 import 'package:rose_hr/features/punch_correction/presentation/screens/punch_correction_screen.dart';
 import 'package:rose_hr/features/splash/presentation/screens/splash_screen.dart';
+import 'package:rose_hr/features/work_mission/presentation/screens/work_mission_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -54,12 +57,22 @@ class AppRouter {
       GoRoute(
         name: AppRoutes.correctionTime.name,
         path: AppRoutes.correctionTime.path,
-        builder: (context, state) => const CorrectionTimeScreen(),
+        builder: (context, state) => CorrectionTimeScreen(cubit: state.extra! as PunchCorrectionCubit),
       ),
       GoRoute(
         name: AppRoutes.permissionRequest.name,
         path: AppRoutes.permissionRequest.path,
         builder: (context, state) => const PermissionRequestScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.workMission.name,
+        path: AppRoutes.workMission.path,
+        builder: (context, state) => const WorkMissionScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.holidayRequest.name,
+        path: AppRoutes.holidayRequest.path,
+        builder: (context, state) => const HolidayRequestScreen(),
       ),
     ],
   );
