@@ -66,7 +66,6 @@ class FileUploadCubit extends Cubit<FileUploadState> {
         type: pickerFileType,
         allowMultiple: allowMultiple && !state.isMaxFilesReached,
         allowedExtensions: allowedExtensions,
-        allowCompression: true,
       );
 
       if (result == null || result.files.isEmpty) {
@@ -120,12 +119,12 @@ class FileUploadCubit extends Cubit<FileUploadState> {
       if (newFiles.isNotEmpty) {
         await _encodeFilesToBase64(newFiles);
       }
-    } catch (e) {
+    } on Exception catch (e) {
       AppLogger.instance.logError('Error picking files: $e');
       emit(
         state.copyWith(
           status: FileUploadStatus.error,
-          errorMessage: 'Failed to pick files: ${e.toString()}',
+          errorMessage: 'Failed to pick files: $e',
         ),
       );
     }
@@ -209,7 +208,7 @@ class FileUploadCubit extends Cubit<FileUploadState> {
         );
 
         AppLogger.instance.logDebug('File encoded successfully: ${file.name}');
-      } catch (e) {
+      } on Exception catch (e) {
         AppLogger.instance.logError('Error encoding file ${file.name}: $e');
         _updateFile(
           file.id,

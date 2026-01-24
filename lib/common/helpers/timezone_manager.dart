@@ -1,9 +1,8 @@
 import 'package:logger/logger.dart';
-import 'package:timezone/data/latest_all.dart' as tz_data;
-import 'package:timezone/timezone.dart' as tz;
-
 import 'package:rose_hr/common/helpers/location_provider.dart';
 import 'package:rose_hr/common/helpers/timezone_helper.dart';
+import 'package:timezone/data/latest_all.dart' as tz_data;
+import 'package:timezone/timezone.dart' as tz;
 
 /// A singleton manager for handling the app's current timezone.
 ///
@@ -210,16 +209,16 @@ class TimezoneManager {
   /// Use this to change the timezone after initialization, for example
   /// when the user manually selects a different timezone.
   static void setTimezone(AppTimezone timezone, {String? cityName}) {
-    _instance._ensureInitialized();
-    _instance._setTimezone(timezone, cityName: cityName);
+    _instance.._ensureInitialized()
+    .._setTimezone(timezone, cityName: cityName);
   }
 
   /// Refresh timezone detection from GPS
   ///
   /// Call this after location permission is granted to re-detect the timezone.
   static Future<void> refreshFromGps() async {
-    _instance._ensureInitialized();
-    _instance._isDetecting = true;
+    _instance.._ensureInitialized()
+    .._isDetecting = true;
     await _instance._detectTimezoneFromGps();
     _instance._isDetecting = false;
   }

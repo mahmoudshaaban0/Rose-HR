@@ -32,6 +32,10 @@ import 'package:rose_hr/features/permission_request/presentation/cubit/shift_id_
 import 'package:rose_hr/features/punch_correction/data/datasources/punch_correction_datasource.dart';
 import 'package:rose_hr/features/punch_correction/data/repositories/punch_correction_repository.dart';
 import 'package:rose_hr/features/punch_correction/presentation/cubit/punch_correction_cubit.dart';
+import 'package:rose_hr/features/requests/data/datasources/requests_datasource.dart';
+import 'package:rose_hr/features/requests/data/repositories/requests_repository.dart';
+import 'package:rose_hr/features/requests/presentation/cubit/requests_cubit.dart';
+import 'package:rose_hr/features/requests/presentation/cubit/single_request_cubit.dart';
 import 'package:rose_hr/features/work_mission/data/datasources/work_mission_datasource.dart';
 import 'package:rose_hr/features/work_mission/data/repositories/work_mission_repository.dart';
 import 'package:rose_hr/features/work_mission/presentation/bloc/work_mission_cubit.dart';
@@ -49,6 +53,7 @@ Future<void> init() async {
     ..registerLazySingleton<PunchCorrectionDataSource>(() => PunchCorrectionDataSource(sl<ApiConsumer>()))
     ..registerLazySingleton<WorkMissionDataSource>(() => WorkMissionDataSource(sl<ApiConsumer>()))
     ..registerLazySingleton<HolidayRequestDataSource>(() => HolidayRequestDataSource(sl<ApiConsumer>()))
+    ..registerLazySingleton<RequestsDataSource>(() => RequestsDataSource(sl<ApiConsumer>()))
     // Repositories
     ..registerLazySingleton<AuthRepository>(() => AuthRepository(sl<AuthDataSource>()))
     ..registerLazySingleton<HomeRepository>(() => HomeRepository(sl<HomeDataSource>()))
@@ -58,6 +63,7 @@ Future<void> init() async {
     ..registerLazySingleton<PunchCorrectionRepository>(() => PunchCorrectionRepository(sl<PunchCorrectionDataSource>()))
     ..registerLazySingleton<WorkMissionRepository>(() => WorkMissionRepository(sl<WorkMissionDataSource>()))
     ..registerLazySingleton<HolidayRequestRepository>(() => HolidayRequestRepository(sl<HolidayRequestDataSource>()))
+    ..registerLazySingleton<RequestsRepository>(() => RequestsRepository(sl<RequestsDataSource>()))
     // Cubits/Blocs
     ..registerFactory<AuthBloc>(() => AuthBloc(sl<AuthRepository>()))
     ..registerFactory<HomeCubit>(() => HomeCubit(sl<HomeRepository>()))
@@ -72,6 +78,8 @@ Future<void> init() async {
     ..registerFactory<FileUploadCubit>(FileUploadCubit.new)
     ..registerFactory<WorkMissionCubit>(() => WorkMissionCubit(sl<WorkMissionRepository>()))
     ..registerFactory<HolidayRequestCubit>(() => HolidayRequestCubit(sl<HolidayRequestRepository>()))
+    ..registerFactory<RequestsCubit>(() => RequestsCubit(sl<RequestsRepository>()))
+    ..registerFactory<SingleRequestCubit>(() => SingleRequestCubit(sl<RequestsRepository>()))
     ///! Core
     ..registerLazySingleton<NetworkInfo>(
       () => NetworkInfoImpl(connectivityChecker: sl()),

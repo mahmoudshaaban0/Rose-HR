@@ -287,7 +287,6 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                         subtitle: state.startDate != null
                                             ? TimezoneHelper.format(
                                                 TimezoneHelper.createTimestamp(
-                                                  AppTimezone.egypt,
                                                   DateTime.parse(state.startDate!),
                                                 ),
                                                 locale: 'en',
@@ -306,7 +305,7 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                             mode: CupertinoDatePickerMode.date,
                                             initialDate: state.startDate != null
                                                 ? DateTime.parse(state.startDate!)
-                                                : TimezoneHelper.now(AppTimezone.egypt),
+                                                : TimezoneHelper.now(),
                                             onDateChanged: cubit.selectStartDate,
                                             onDateConfirmed: cubit.selectStartDate,
                                           );
@@ -322,7 +321,6 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                         subtitle: state.endDate != null
                                             ? TimezoneHelper.format(
                                                 TimezoneHelper.createTimestamp(
-                                                  AppTimezone.egypt,
                                                   DateTime.parse(state.endDate!),
                                                 ),
                                                 locale: 'en',
@@ -343,7 +341,7 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                                 ? DateTime.parse(state.endDate!)
                                                 : state.startDate != null
                                                 ? DateTime.parse(state.startDate!)
-                                                : TimezoneHelper.now(AppTimezone.egypt),
+                                                : TimezoneHelper.now(),
                                             minimumYear: state.startDate != null
                                                 ? DateTime.parse(state.startDate!).year
                                                 : DateTime.now().year - 100,
@@ -484,7 +482,6 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                           subtitle: state.visaDate != null
                                               ? TimezoneHelper.format(
                                                   TimezoneHelper.createTimestamp(
-                                                    AppTimezone.egypt,
                                                     DateTime.parse(state.visaDate!),
                                                   ),
                                                   locale: 'en',
@@ -503,7 +500,7 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                               mode: CupertinoDatePickerMode.date,
                                               initialDate: state.visaDate != null
                                                   ? DateTime.parse(state.visaDate!)
-                                                  : TimezoneHelper.now(AppTimezone.egypt),
+                                                  : TimezoneHelper.now(),
                                               onDateChanged: cubit.selectVisaDate,
                                               onDateConfirmed: cubit.selectVisaDate,
                                             );

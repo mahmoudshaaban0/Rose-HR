@@ -275,6 +275,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestNumber => 'رقم الطلــــب';
 
   @override
+  String get requestType => 'نوع الطلــــــب';
+
+  @override
   String get requestStatus => 'حالة الطلـــب';
 
   @override
@@ -411,4 +414,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notes => 'الملاحظات';
+
+  @override
+  String get midDay => 'منتصف اليوم';
+
+  @override
+  String get requestCancelledSuccessfully => 'تم إلغاء الطلب بنجاح';
+
+  @override
+  String get failedToCancelRequest => 'فشل إلغاء الطلب';
+
+  @override
+  String get managerName => 'اسم المدير';
+
+  @override
+  String get approvalChain => 'سلسلة الموافقات';
+
+  @override
+  String get cancelRequestConfirmation => 'هل أنت متأكد من إلغاء هذا الطلب؟';
 }

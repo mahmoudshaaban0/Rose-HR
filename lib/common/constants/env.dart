@@ -36,4 +36,10 @@ final class Env {
   static String getLeaveTypes = _Env.getLeaveTypes;
   @EnviedField(varName: 'createHolidayRequest', obfuscate: true)
   static String createHolidayRequest = _Env.createHolidayRequest;
+  @EnviedField(varName: 'employeeList', obfuscate: true)
+  static String employeeList = _Env.employeeList;
+  @EnviedField(varName: 'cancelRequestById', obfuscate: true)
+  static String cancelRequestById = _Env.cancelRequestById;
+  @EnviedField(varName: 'getRequestById', obfuscate: true)
+  static String getRequestById = _Env.getRequestById;
 }

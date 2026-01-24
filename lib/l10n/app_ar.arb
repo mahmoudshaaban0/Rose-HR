@@ -87,8 +87,9 @@
      "edit": "تعديل",
      "firstName": "الاسم الأول",
      "lastName": "الاسم الأخير",
-     "requestNumber": "رقم الطلــــب",
-     "requestStatus": "حالة الطلـــب",
+    "requestNumber": "رقم الطلــــب",
+    "requestType": "نوع الطلــــــب",
+    "requestStatus": "حالة الطلـــب",
      "cancelRequest": "الغاء الطلب",
      "cancel": "إلغاء",
      "done": "تم",
@@ -132,5 +133,11 @@
     "defaultTime": "08:00 ص",
     "defaultDate": "08 ابريل 2026",
     "late": "متأخر",
-    "notes": "الملاحظات"
+    "notes": "الملاحظات",
+    "midDay": "منتصف اليوم",
+    "requestCancelledSuccessfully": "تم إلغاء الطلب بنجاح",
+    "failedToCancelRequest": "فشل إلغاء الطلب",
+    "managerName": "اسم المدير",
+    "approvalChain": "سلسلة الموافقات",
+    "cancelRequestConfirmation": "هل أنت متأكد من إلغاء هذا الطلب؟"
 }

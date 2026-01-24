@@ -273,6 +273,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get requestNumber => 'Request Number';
 
   @override
+  String get requestType => 'Request Type';
+
+  @override
   String get requestStatus => 'Request Status';
 
   @override
@@ -412,4 +415,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notes => 'Notes';
+
+  @override
+  String get midDay => 'Mid Day';
+
+  @override
+  String get requestCancelledSuccessfully => 'Request cancelled successfully';
+
+  @override
+  String get failedToCancelRequest => 'Failed to cancel request';
+
+  @override
+  String get managerName => 'Manager Name';
+
+  @override
+  String get approvalChain => 'Approval Chain';
+
+  @override
+  String get cancelRequestConfirmation =>
+      'Are you sure you want to cancel this request?';
 }

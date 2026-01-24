@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_single_quotes
 class Assets {
   Assets._();
-  
+
   static const String fontsGraphikArabicBlack = "assets/fonts/GraphikArabic-Black.ttf";
 
   static const String fontsGraphikArabicBold = "assets/fonts/GraphikArabic-Bold.ttf";
@@ -92,4 +91,3 @@ class Assets {
 
   static const String vectorsVisibilityOn = "assets/vectors/visibility_on.svg";
 }
-

@@ -26,7 +26,7 @@ class TimezoneCubit extends Cubit<TimezoneState> {
     _startClock();
 
     // Emit an initial loaded state with default timezone so clock shows immediately
-    final now = TimezoneHelper.now(_currentTimezone);
+    final now = TimezoneHelper.now();
     emit(
       TimezoneLoaded(
         timezone: _currentTimezone,
@@ -48,7 +48,7 @@ class TimezoneCubit extends Cubit<TimezoneState> {
       // Get timezone with city name from geocoding
       final result = await LocationProvider.getTimezoneWithLocationName();
       _currentTimezone = result.timezone;
-      final now = TimezoneHelper.now(_currentTimezone);
+      final now = TimezoneHelper.now();
 
       if (isClosed) return;
       emit(
@@ -62,7 +62,7 @@ class TimezoneCubit extends Cubit<TimezoneState> {
     } on Exception catch (_) {
       // Fallback to default timezone if location detection fails
       _currentTimezone = AppTimezone.saudiArabia;
-      final now = TimezoneHelper.now(_currentTimezone);
+      final now = TimezoneHelper.now();
       if (isClosed) return;
       emit(
         TimezoneLoaded(
@@ -89,11 +89,11 @@ class TimezoneCubit extends Cubit<TimezoneState> {
 
     final currentState = state;
     if (currentState is TimezoneLoaded) {
-      final now = TimezoneHelper.now(currentState.timezone);
+      final now = TimezoneHelper.now();
       emit(currentState.copyWith(currentTime: now));
     } else {
       // Even in loading/initial state, emit time updates with current timezone
-      final now = TimezoneHelper.now(_currentTimezone);
+      final now = TimezoneHelper.now();
       emit(
         TimezoneLoaded(
           timezone: _currentTimezone,

@@ -46,7 +46,7 @@ class AppDatePicker {
     String? buttonText,
     CupertinoDatePickerMode? mode,
   }) async {
-    var tempSelectedDate = initialDate ?? TimezoneHelper.now(timezone);
+    var tempSelectedDate = initialDate ?? TimezoneHelper.now();
 
     await showCupertinoModalPopup<void>(
       context: context,
@@ -69,7 +69,7 @@ class AppDatePicker {
                     tempSelectedDate = date;
                     onDateChanged?.call(date);
                   },
-                  initialDateTime: initialDate ?? TimezoneHelper.now(timezone),
+                  initialDateTime: initialDate ?? TimezoneHelper.now(),
                   mode: mode ?? CupertinoDatePickerMode.date,
                 ),
               ),
@@ -105,7 +105,7 @@ class AppDatePicker {
     String? buttonText,
     CupertinoDatePickerMode? mode,
   }) async {
-    var tempSelectedDate = initialDate ?? TimezoneHelper.now(timezone);
+    var tempSelectedDate = initialDate ?? TimezoneHelper.now();
 
     await showCupertinoModalPopup<void>(
       context: context,
@@ -124,7 +124,7 @@ class AppDatePicker {
                     tempSelectedDate = date;
                     onDateChanged?.call(date);
                   },
-                  initialDateTime: initialDate ?? TimezoneHelper.now(timezone),
+                  initialDateTime: initialDate ?? TimezoneHelper.now(),
                   mode: mode ?? CupertinoDatePickerMode.date,
                 ),
               ),

@@ -9,7 +9,8 @@ enum AppRoutes {
   correctionTime('/correction-time', 'Correction Time'),
   permissionRequest('/permission-request', 'Permission Request'),
   workMission('/work-mission', 'Work Mission'),
-  holidayRequest('/holiday-request', 'Holiday Request');
+  holidayRequest('/holiday-request', 'Holiday Request'),
+  singleRequest('/single-request', 'Single Request');
 
   const AppRoutes(this.path, this.name);
   final String path;

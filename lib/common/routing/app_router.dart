@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/routing/notifier.dart';
@@ -11,6 +12,9 @@ import 'package:rose_hr/features/permission_request/presentation/screens/permiss
 import 'package:rose_hr/features/punch_correction/presentation/cubit/punch_correction_cubit.dart';
 import 'package:rose_hr/features/punch_correction/presentation/screens/correction_time_screen.dart';
 import 'package:rose_hr/features/punch_correction/presentation/screens/punch_correction_screen.dart';
+import 'package:rose_hr/features/requests/data/models/employee_list_response_model.dart';
+import 'package:rose_hr/features/requests/presentation/cubit/requests_cubit.dart';
+import 'package:rose_hr/features/requests/presentation/screens/single_request_screen.dart';
 import 'package:rose_hr/features/splash/presentation/screens/splash_screen.dart';
 import 'package:rose_hr/features/work_mission/presentation/screens/work_mission_screen.dart';
 
@@ -73,6 +77,22 @@ class AppRouter {
         name: AppRoutes.holidayRequest.name,
         path: AppRoutes.holidayRequest.path,
         builder: (context, state) => const HolidayRequestScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.singleRequest.name,
+        path: AppRoutes.singleRequest.path,
+        builder: (context, state) {
+          final extra = state.extra;
+          if (extra is Map<String, dynamic> && extra['request'] is Datum) {
+            return SingleRequestScreen(request: extra['request'] as Datum, parentRequestsCubit: extra['cubit'] as RequestsCubit?);
+          }
+          // If extra is not Datum, navigate back or show error
+          return const Scaffold(
+            body: Center(
+              child: Text('Invalid request data'),
+            ),
+          );
+        },
       ),
     ],
   );

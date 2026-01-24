@@ -35,7 +35,7 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
   late tz.TZDateTime _focusedDay;
 
   /// Get the current time in the configured timezone
-  tz.TZDateTime get _now => TimezoneHelper.now(widget.timezone);
+  tz.TZDateTime get _now => TimezoneHelper.now();
 
   @override
   void initState() {

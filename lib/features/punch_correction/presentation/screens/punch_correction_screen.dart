@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -239,7 +238,7 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
 
     // Format date as yyyy-MM-dd for API
     final formattedDate = TimezoneHelper.format(
-      TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.parse(state.date!)),
+      TimezoneHelper.createTimestamp(DateTime.parse(state.date!)),
       pattern: 'yyyy-MM-dd',
       locale: 'en',
     );
@@ -346,14 +345,14 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                   title: context.localizations.date,
                                   subtitle: state.date != null
                                       ? TimezoneHelper.format(
-                                          TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.parse(state.date!)),
+                                          TimezoneHelper.createTimestamp(DateTime.parse(state.date!)),
                                           locale: 'en',
                                           pattern: 'yyyy-MM-dd',
                                         )
                                       : context.localizations.defaultDate,
                                   value: state.date != null
                                       ? TimezoneHelper.format(
-                                          TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.parse(state.date!)),
+                                          TimezoneHelper.createTimestamp(DateTime.parse(state.date!)),
                                           locale: 'en',
                                           pattern: 'yyyy-MM-dd',
                                         )
@@ -383,7 +382,7 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                                   onDateTimeChanged: (DateTime date) {
                                                     context.read<PunchCorrectionCubit>().selectDate(date);
                                                   },
-                                                  initialDateTime: TimezoneHelper.now(AppTimezone.egypt),
+                                                  initialDateTime: TimezoneHelper.now(),
                                                   mode: CupertinoDatePickerMode.date,
                                                 ),
                                               ),
@@ -400,7 +399,7 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
 
                                               // Format date as yyyy-MM-dd for API
                                               final formattedDate = TimezoneHelper.format(
-                                                TimezoneHelper.createTimestamp(AppTimezone.egypt, selectedDate),
+                                                TimezoneHelper.createTimestamp(selectedDate),
                                                 pattern: 'yyyy-MM-dd',
                                                 locale: 'en',
                                               );

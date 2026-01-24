@@ -620,6 +620,12 @@ abstract class AppLocalizations {
   /// **'Request Number'**
   String get requestNumber;
 
+  /// No description provided for @requestType.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Type'**
+  String get requestType;
+
   /// No description provided for @requestStatus.
   ///
   /// In en, this message translates to:
@@ -889,6 +895,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notes'**
   String get notes;
+
+  /// No description provided for @midDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Mid Day'**
+  String get midDay;
+
+  /// No description provided for @requestCancelledSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Request cancelled successfully'**
+  String get requestCancelledSuccessfully;
+
+  /// No description provided for @failedToCancelRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to cancel request'**
+  String get failedToCancelRequest;
+
+  /// No description provided for @managerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager Name'**
+  String get managerName;
+
+  /// No description provided for @approvalChain.
+  ///
+  /// In en, this message translates to:
+  /// **'Approval Chain'**
+  String get approvalChain;
+
+  /// No description provided for @cancelRequestConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this request?'**
+  String get cancelRequestConfirmation;
 }
 
 class _AppLocalizationsDelegate

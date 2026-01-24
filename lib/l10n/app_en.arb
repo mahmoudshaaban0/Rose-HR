@@ -87,6 +87,7 @@
     "firstName": "First Name",
     "lastName": "Last Name",
     "requestNumber": "Request Number",
+    "requestType": "Request Type",
     "requestStatus": "Request Status",
     "cancelRequest": "Cancel Request",
     "cancel": "Cancel",
@@ -131,5 +132,11 @@
     "defaultTime": "08:00 AM",
     "defaultDate": "April 08, 2026",
     "late": "Late",
-    "notes": "Notes"
+    "notes": "Notes",
+    "midDay": "Mid Day",
+    "requestCancelledSuccessfully": "Request cancelled successfully",
+    "failedToCancelRequest": "Failed to cancel request",
+    "managerName": "Manager Name",
+    "approvalChain": "Approval Chain",
+    "cancelRequestConfirmation": "Are you sure you want to cancel this request?"
 }

@@ -145,7 +145,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
 
       // Get today's date for the API
       final today = TimezoneHelper.format(
-        TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.now()),
+        TimezoneHelper.createTimestamp(DateTime.now()),
         pattern: 'yyyy-MM-dd',
         locale: 'en',
       );
@@ -172,13 +172,13 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
 
       // Format dates as yyyy-MM-dd
       final startDate = TimezoneHelper.format(
-        TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.parse(state.startDate!)),
+        TimezoneHelper.createTimestamp(DateTime.parse(state.startDate!)),
         pattern: 'yyyy-MM-dd',
         locale: 'en',
       );
 
       final endDate = TimezoneHelper.format(
-        TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.parse(state.endDate!)),
+        TimezoneHelper.createTimestamp(DateTime.parse(state.endDate!)),
         pattern: 'yyyy-MM-dd',
         locale: 'en',
       );
@@ -204,7 +204,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
         BlocProvider(
           create: (context) {
             final formattedDate = TimezoneHelper.format(
-              TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.now()),
+              TimezoneHelper.createTimestamp(DateTime.now()),
               pattern: 'yyyy-MM-dd',
               locale: 'en',
             );
@@ -569,7 +569,6 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                         subtitle: state.startDate != null
                                             ? TimezoneHelper.format(
                                                 TimezoneHelper.createTimestamp(
-                                                  AppTimezone.egypt,
                                                   DateTime.parse(state.startDate!),
                                                 ),
                                                 locale: 'en',
@@ -581,7 +580,6 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                         value: state.startDate != null
                                             ? TimezoneHelper.format(
                                                 TimezoneHelper.createTimestamp(
-                                                  AppTimezone.egypt,
                                                   DateTime.parse(state.startDate!),
                                                 ),
                                                 locale: 'en',
@@ -602,7 +600,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                             context,
                                             initialDate: state.startDate != null
                                                 ? DateTime.parse(state.startDate!)
-                                                : TimezoneHelper.now(AppTimezone.egypt),
+                                                : TimezoneHelper.now(),
                                             onDateChanged: (date) {
                                               if (state.workMissionTypeId == WorkMissionTypeModel.days.id) {
                                                 cubit.selectStartDate(date);
@@ -617,7 +615,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                                 cubit.selectStartTime(selectedDate);
                                               }
                                               final formattedDate = TimezoneHelper.format(
-                                                TimezoneHelper.createTimestamp(AppTimezone.egypt, selectedDate),
+                                                TimezoneHelper.createTimestamp(selectedDate),
                                                 pattern: 'yyyy-MM-dd',
                                                 locale: 'en',
                                               );
@@ -637,7 +635,6 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                         subtitle: state.endDate != null
                                             ? TimezoneHelper.format(
                                                 TimezoneHelper.createTimestamp(
-                                                  AppTimezone.egypt,
                                                   DateTime.parse(state.endDate!),
                                                 ),
                                                 locale: 'en',
@@ -649,7 +646,6 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                         value: state.endDate != null
                                             ? TimezoneHelper.format(
                                                 TimezoneHelper.createTimestamp(
-                                                  AppTimezone.egypt,
                                                   DateTime.parse(state.endDate!),
                                                 ),
                                                 locale: 'en',
@@ -670,7 +666,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                             context,
                                             initialDate: state.endDate != null
                                                 ? DateTime.parse(state.endDate!)
-                                                : TimezoneHelper.now(AppTimezone.egypt),
+                                                : TimezoneHelper.now(),
                                             minimumYear: state.startDate != null
                                                 ? DateTime.parse(state.startDate!).year
                                                 : DateTime.now().year - 100,
@@ -688,7 +684,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                                 cubit.selectEndTime(selectedDate);
                                               }
                                               final formattedDate = TimezoneHelper.format(
-                                                TimezoneHelper.createTimestamp(AppTimezone.egypt, selectedDate),
+                                                TimezoneHelper.createTimestamp(selectedDate),
                                                 pattern: state.workMissionTypeId == WorkMissionTypeModel.days.id
                                                     ? 'yyyy-MM-dd'
                                                     : 'hh:mm a',

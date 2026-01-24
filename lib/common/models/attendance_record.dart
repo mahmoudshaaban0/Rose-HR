@@ -86,15 +86,13 @@ class AttendanceRecord {
 
   /// Get clock in time in local timezone
   tz.TZDateTime getClockInLocal() {
-    final timezone = _getTimezoneFromString(clockInTimezone);
-    return TimezoneHelper.fromUtc(clockInUtc, timezone);
+    return TimezoneHelper.fromUtc(clockInUtc);
   }
 
   /// Get clock out time in local timezone (null if not clocked out)
   tz.TZDateTime? getClockOutLocal() {
     if (clockOutUtc == null) return null;
-    final timezone = _getTimezoneFromString(clockInTimezone);
-    return TimezoneHelper.fromUtc(clockOutUtc!, timezone);
+    return TimezoneHelper.fromUtc(clockOutUtc!);
   }
 
   /// Get formatted clock in time
@@ -187,18 +185,6 @@ class AttendanceRecord {
     );
   }
 
-  /// Helper to convert timezone string to AppTimezone enum
-  AppTimezone _getTimezoneFromString(String timezoneStr) {
-    switch (timezoneStr) {
-      case 'Africa/Cairo':
-        return AppTimezone.egypt;
-      case 'Asia/Riyadh':
-        return AppTimezone.saudiArabia;
-      default:
-        return AppTimezone.egypt; // Default fallback
-    }
-  }
-
   @override
   String toString() {
     return 'AttendanceRecord(id: $id, employee: $employeeId, '
@@ -236,7 +222,7 @@ class AttendanceRecordBuilder {
       officeName = office.name;
     }
 
-    final now = TimezoneHelper.now(timezone);
+    final now = TimezoneHelper.now();
     final utc = TimezoneHelper.toUtc(now);
 
     return AttendanceRecord(
@@ -258,7 +244,7 @@ class AttendanceRecordBuilder {
     required AttendanceRecord record,
     required LocationResult location,
   }) {
-    final now = TimezoneHelper.now(timezone);
+    final now = TimezoneHelper.now();
     final utc = TimezoneHelper.toUtc(now);
 
     return record.copyWith(

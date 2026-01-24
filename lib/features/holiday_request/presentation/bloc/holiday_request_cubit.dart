@@ -130,7 +130,6 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
       // Format dates as yyyy-MM-dd
       final formattedStartDate = TimezoneHelper.format(
         TimezoneHelper.createTimestamp(
-          AppTimezone.egypt,
           DateTime.parse(state.startDate!),
         ),
         pattern: 'yyyy-MM-dd',
@@ -139,7 +138,6 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
 
       final formattedEndDate = TimezoneHelper.format(
         TimezoneHelper.createTimestamp(
-          AppTimezone.egypt,
           DateTime.parse(state.endDate!),
         ),
         pattern: 'yyyy-MM-dd',
@@ -151,7 +149,6 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
       if (state.airTicket && state.visaDate != null) {
         formattedVisaDate = TimezoneHelper.format(
           TimezoneHelper.createTimestamp(
-            AppTimezone.egypt,
             DateTime.parse(state.visaDate!),
           ),
           pattern: 'yyyy-MM-dd',

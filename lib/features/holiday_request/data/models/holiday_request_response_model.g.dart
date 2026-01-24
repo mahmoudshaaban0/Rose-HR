@@ -10,8 +10,8 @@ HolidayRequestResponseModel _$HolidayRequestResponseModelFromJson(
   Map<String, dynamic> json,
 ) => HolidayRequestResponseModel(
   jsonrpc: json['jsonrpc'] as String,
-  id: json['id'],
   result: HolidayRequestResult.fromJson(json['result'] as Map<String, dynamic>),
+  id: json['id'],
 );
 
 Map<String, dynamic> _$HolidayRequestResponseModelToJson(

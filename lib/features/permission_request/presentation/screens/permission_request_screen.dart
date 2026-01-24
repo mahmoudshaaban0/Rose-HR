@@ -123,7 +123,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
 
     // Format date as yyyy-MM-dd
     final formattedDate = TimezoneHelper.format(
-      TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.parse(state.date!)),
+      TimezoneHelper.createTimestamp(DateTime.parse(state.date!)),
       pattern: 'yyyy-MM-dd',
       locale: 'en',
     );
@@ -354,7 +354,6 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                             subtitle: state.startTime != null
                                                 ? TimezoneHelper.format(
                                                     TimezoneHelper.createTimestamp(
-                                                      AppTimezone.egypt,
                                                       DateTime.parse(state.startTime!),
                                                     ),
                                                     locale: 'en',
@@ -364,7 +363,6 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                             value: state.startTime != null
                                                 ? TimezoneHelper.format(
                                                     TimezoneHelper.createTimestamp(
-                                                      AppTimezone.egypt,
                                                       DateTime.parse(state.startTime!),
                                                     ),
                                                     locale: 'en',
@@ -428,7 +426,6 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                             subtitle: state.endTime != null
                                                 ? TimezoneHelper.format(
                                                     TimezoneHelper.createTimestamp(
-                                                      AppTimezone.egypt,
                                                       DateTime.parse(state.endTime!),
                                                     ),
                                                     locale: 'en',
@@ -503,14 +500,14 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                     title: context.localizations.date,
                                     subtitle: state.date != null
                                         ? TimezoneHelper.format(
-                                            TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.parse(state.date!)),
+                                            TimezoneHelper.createTimestamp(DateTime.parse(state.date!)),
                                             locale: 'en',
                                             pattern: 'yyyy-MM-dd',
                                           )
                                         : context.localizations.defaultDate,
                                     value: state.date != null
                                         ? TimezoneHelper.format(
-                                            TimezoneHelper.createTimestamp(AppTimezone.egypt, DateTime.parse(state.date!)),
+                                            TimezoneHelper.createTimestamp(DateTime.parse(state.date!)),
                                             locale: 'en',
                                             pattern: 'yyyy-MM-dd',
                                           )
@@ -536,7 +533,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                                     onDateTimeChanged: (DateTime date) {
                                                       context.read<PermissionRequestCubit>().selectDate(date);
                                                     },
-                                                    initialDateTime: TimezoneHelper.now(AppTimezone.egypt),
+                                                    initialDateTime: TimezoneHelper.now(),
                                                     mode: CupertinoDatePickerMode.date,
                                                   ),
                                                 ),
@@ -552,7 +549,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
 
                                                 // Format date as yyyy-MM-dd for API
                                                 final formattedDate = TimezoneHelper.format(
-                                                  TimezoneHelper.createTimestamp(AppTimezone.egypt, selectedDate),
+                                                  TimezoneHelper.createTimestamp(selectedDate),
                                                   pattern: 'yyyy-MM-dd',
                                                   locale: 'en',
                                                 );

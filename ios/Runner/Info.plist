@@ -53,5 +53,7 @@
 	<string>Rose HR needs your location to track attendance and verify you are at the office</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Rose HR needs your location to track attendance even when the app is in background</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Rose HR needs access to your photo library to allow you to attach photos and documents to your requests such as permission requests, work missions, and other HR-related submissions</string>
 </dict>
 </plist>
