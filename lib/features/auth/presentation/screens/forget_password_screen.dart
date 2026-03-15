@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/auth_helper.dart';
-import 'package:rose_hr/common/routing/app_routes.dart';
+import 'package:rose_hr/common/helpers/snackbar_service.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:rose_hr/theme/app_sizes.dart';
@@ -41,15 +40,16 @@ class _LoginScreenState extends State<ForgetPasswordScreen> {
         listener: (context, state) {
           if (state.status == AuthStatus.resetPasswordLoading) {
             showDialog<void>(
+              barrierDismissible: false,
               context: context,
               builder: (context) => const Center(
                 child: CircularProgressIndicator(),
               ),
             );
           } else if (state.status == AuthStatus.resetPasswordSuccess) {
-            Fluttertoast.showToast(msg: 'Password Reset Sent to your email');
-            Navigator.pop(context);
-            context.goNamed(AppRoutes.login.name);
+            SnackbarService.showSuccess(context, context.localizations.passwordResetSentToEmail);
+            Navigator.popUntil(context, (route) => route.isFirst);
+            // context.goNamed(AppRoutes.login.name);
           } else if (state.status == AuthStatus.resetPasswordError) {
             Navigator.pop(context);
             showDialog<void>(

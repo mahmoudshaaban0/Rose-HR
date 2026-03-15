@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
@@ -20,17 +20,17 @@ class SuccessRequestBottomsheet extends StatelessWidget {
         children: [
           const AppVectorGraphic(path: Assets.vectorsPermissionReqeuestSuccessIcon),
           Text(
-            'شكرًا لك',
+            context.localizations.thankYou,
             style: context.typography.regular16,
             textAlign: TextAlign.center,
           ),
           Text(
-            'تم تقديم طلبك بنجاح!',
+            context.localizations.requestSubmittedSuccessfully,
             style: context.typography.semiBold28.copyWith(color: context.colors.success),
             textAlign: TextAlign.center,
           ),
           PrimaryTextButton(
-            label: 'تم',
+            label: context.localizations.done,
             appButtonSize: AppButtonSize.xxLarge,
             onTap: () {
               if (Navigator.canPop(context)) {

@@ -39,7 +39,7 @@ class _PdfView extends StatelessWidget {
   Widget _placeholder(BuildContext context) {
     return Center(
       child: Text(
-        'No URL available',
+        context.localizations.noUrlAvailable,
         style: context.typography.regular14,
       ),
     );
@@ -55,7 +55,7 @@ class _ImageView extends StatelessWidget {
   Widget build(BuildContext context) {
     if (url.isEmpty) {
       return Center(
-        child: Text('No URL available', style: context.typography.regular14),
+        child: Text(context.localizations.noUrlAvailable, style: context.typography.regular14),
       );
     }
     return PhotoView(
@@ -68,7 +68,7 @@ class _ImageView extends StatelessWidget {
       ),
       errorBuilder: (_, _, _) => Center(
         child: Text(
-          'Failed to load image',
+          context.localizations.failedToLoadImage,
           style: context.typography.regular14.copyWith(color: Colors.white),
         ),
       ),

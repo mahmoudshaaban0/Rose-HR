@@ -1,6 +1,7 @@
+// ignore_for_file: prefer_single_quotes
 class Assets {
   Assets._();
-
+  
   static const String fontsGraphikArabicBlack = "assets/fonts/GraphikArabic-Black.ttf";
 
   static const String fontsGraphikArabicBold = "assets/fonts/GraphikArabic-Bold.ttf";
@@ -37,6 +38,8 @@ class Assets {
 
   static const String vectorsCalendarFill = "assets/vectors/calendar-fill.svg";
 
+  static const String vectorsChangePasswordIcon = "assets/vectors/change_password_icon.svg";
+
   static const String vectorsCheckline = "assets/vectors/checkline.svg";
 
   static const String vectorsDot = "assets/vectors/dot.svg";
@@ -47,6 +50,8 @@ class Assets {
 
   static const String vectorsFingerprint = "assets/vectors/fingerprint.svg";
 
+  static const String vectorsGeneralSettingsIcon = "assets/vectors/general_settings_icon.svg";
+
   static const String vectorsHashtag = "assets/vectors/hashtag.svg";
 
   static const String vectorsHomeActive = "assets/vectors/homeActive.svg";
@@ -54,6 +59,8 @@ class Assets {
   static const String vectorsHomeInActive = "assets/vectors/homeInActive.svg";
 
   static const String vectorsImage = "assets/vectors/image.svg";
+
+  static const String vectorsLanguageIcon = "assets/vectors/language_icon.svg";
 
   static const String vectorsLocationIcon = "assets/vectors/location_icon.svg";
 
@@ -70,6 +77,8 @@ class Assets {
   static const String vectorsPdf = "assets/vectors/pdf.svg";
 
   static const String vectorsPermissionReqeuestSuccessIcon = "assets/vectors/permission_reqeuest_success_icon.svg";
+
+  static const String vectorsPersonalInformationIcon = "assets/vectors/personal_information_icon.svg";
 
   static const String vectorsPulseLine = "assets/vectors/pulse_line.svg";
 
@@ -91,3 +100,4 @@ class Assets {
 
   static const String vectorsVisibilityOn = "assets/vectors/visibility_on.svg";
 }
+

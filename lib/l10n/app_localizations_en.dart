@@ -570,4 +570,91 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pleaseSelectHolidayDatesError =>
       'Please select start and end dates';
+
+  @override
+  String get hrInformation => 'Human Resources Information';
+
+  @override
+  String get employmentData => 'Employment Data';
+
+  @override
+  String get employmentDataSubtitle =>
+      'Joining Date, Job Title, Employment Type';
+
+  @override
+  String get financialDetails => 'Financial Details';
+
+  @override
+  String get financialDetailsSubtitle => 'Salary and Advance Details';
+
+  @override
+  String get vacations => 'Vacations';
+
+  @override
+  String get vacationsSubtitle =>
+      'Annual Entitlement, Annual and Scheduled Leaves';
+
+  @override
+  String get generalSettings => 'General Settings';
+
+  @override
+  String get generalSettingsSubtitle => 'Language, Notifications';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get changePasswordSubtitle => 'Update your password';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get noName => 'No Name';
+
+  @override
+  String get noEmail => 'No Email';
+
+  @override
+  String maxFilesReached(int count) {
+    return 'Maximum $count files reached';
+  }
+
+  @override
+  String get passwordResetSentToEmail => 'Password reset sent to your email';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notificationsSubtitle =>
+      'Request alerts and general app notifications';
+
+  @override
+  String get thankYou => 'Thank you';
+
+  @override
+  String get requestSubmittedSuccessfully =>
+      'Your request has been submitted successfully!';
+
+  @override
+  String get noUrlAvailable => 'No URL available';
+
+  @override
+  String get failedToLoadImage => 'Failed to load image';
+
+  @override
+  String get invalidRequestData => 'Invalid request data';
+
+  @override
+  String get timePeriodAm => 'AM';
+
+  @override
+  String get timePeriodPm => 'PM';
+
+  @override
+  String get personalinfo => 'Personal information, identity, address';
 }

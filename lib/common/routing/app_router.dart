@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rose_hr/theme/theme_ext.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/routing/notifier.dart';
 import 'package:rose_hr/common/widgets/bottom_nav_bar.dart';
+import 'package:rose_hr/features/account/presentation/screens/my_information_account_screen.dart';
 import 'package:rose_hr/features/account/presentation/screens/update_account_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/forget_password_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/login_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/verification_screen.dart';
+import 'package:rose_hr/features/general_settings/presentation/screens/general_settings_screen.dart';
 import 'package:rose_hr/features/holiday_request/presentation/screens/holiday_request_screen.dart';
 import 'package:rose_hr/features/permission_request/presentation/screens/permission_request_screen.dart';
 import 'package:rose_hr/features/punch_correction/presentation/cubit/punch_correction_cubit.dart';
@@ -49,6 +52,11 @@ class AppRouter {
         builder: (context, state) => const BottomNavBar(),
       ),
       GoRoute(
+        name: AppRoutes.myInformation.name,
+        path: AppRoutes.myInformation.path,
+        builder: (context, state) => const MyInformationAccountScreen(),
+      ),
+      GoRoute(
         name: AppRoutes.updateAccount.name,
         path: AppRoutes.updateAccount.path,
         builder: (context, state) => const UpdateAccountScreen(),
@@ -87,12 +95,17 @@ class AppRouter {
             return SingleRequestScreen(request: extra['request'] as Datum, parentRequestsCubit: extra['cubit'] as RequestsCubit?);
           }
           // If extra is not Datum, navigate back or show error
-          return const Scaffold(
+          return Scaffold(
             body: Center(
-              child: Text('Invalid request data'),
+              child: Text(context.localizations.invalidRequestData),
             ),
           );
         },
+      ),
+      GoRoute(
+        name: AppRoutes.generalSettings.name,
+        path: AppRoutes.generalSettings.path,
+        builder: (context, state) => const GeneralSettingsScreen(),
       ),
     ],
   );

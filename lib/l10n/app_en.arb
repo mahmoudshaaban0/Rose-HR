@@ -189,5 +189,37 @@
     "lateAttendance": "Late attendance",
     "earlyCheckout": "Early checkout",
     "pleaseSelectLeaveTypeError": "Please select leave type",
-    "pleaseSelectHolidayDatesError": "Please select start and end dates"
+    "pleaseSelectHolidayDatesError": "Please select start and end dates",
+    "hrInformation": "Human Resources Information",
+    "employmentData": "Employment Data",
+    "employmentDataSubtitle": "Joining Date, Job Title, Employment Type",
+    "financialDetails": "Financial Details",
+    "financialDetailsSubtitle": "Salary and Advance Details",
+    "vacations": "Vacations",
+    "vacationsSubtitle": "Annual Entitlement, Annual and Scheduled Leaves",
+    "generalSettings": "General Settings",
+    "generalSettingsSubtitle": "Language, Notifications",
+    "changePassword": "Change Password",
+    "changePasswordSubtitle": "Update your password",
+    "logout": "Logout",
+    "noName": "No Name",
+    "noEmail": "No Email",
+    "maxFilesReached": "Maximum {count} files reached",
+    "@maxFilesReached": {
+      "placeholders": {
+        "count": {"type": "int"}
+      }
+    },
+    "passwordResetSentToEmail": "Password reset sent to your email",
+    "language": "Language",
+    "notifications": "Notifications",
+    "notificationsSubtitle": "Request alerts and general app notifications",
+    "thankYou": "Thank you",
+    "requestSubmittedSuccessfully": "Your request has been submitted successfully!",
+    "noUrlAvailable": "No URL available",
+    "failedToLoadImage": "Failed to load image",
+    "invalidRequestData": "Invalid request data",
+    "timePeriodAm": "AM",
+    "timePeriodPm": "PM",
+    "personalinfo" : "Personal information, identity, address"
 }

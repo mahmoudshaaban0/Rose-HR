@@ -190,5 +190,37 @@
     "lateAttendance": "حضور متأخر",
     "earlyCheckout": "إنصراف مبكر",
     "pleaseSelectLeaveTypeError": "الرجاء اختيار نوع الإجازة",
-    "pleaseSelectHolidayDatesError": "الرجاء اختيار تاريخ البداية والنهاية"
+    "pleaseSelectHolidayDatesError": "الرجاء اختيار تاريخ البداية والنهاية",
+    "hrInformation": "معلومات الموارد البشرية",
+    "employmentData": "البيانات الوظيفية",
+    "employmentDataSubtitle": "تاريخ الإلتحاق، المسمى الوظيفي، نوع التوظيف",
+    "financialDetails": "التفاصيل المالية",
+    "financialDetailsSubtitle": "تفاصيل الراتب والسلف",
+    "vacations": "الإجازات",
+    "vacationsSubtitle": "الاستحقاق السنوي الإجازات السنوية والمجدولة",
+    "generalSettings": "الإعدادات العامة",
+    "generalSettingsSubtitle": "اللغة، الإشعارات",
+    "changePassword": "تغيير كلمة المرور",
+    "changePasswordSubtitle": "تحديث كلمة المرور",
+    "logout": "تسجيل الخروج",
+    "noName": "لا يوجد اسم",
+    "noEmail": "لا يوجد بريد إلكتروني",
+    "maxFilesReached": "الحد الأقصى {count} ملفات",
+    "@maxFilesReached": {
+      "placeholders": {
+        "count": {"type": "int"}
+      }
+    },
+    "passwordResetSentToEmail": "تم إرسال إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+    "language": "اللغة",
+    "notifications": "الإشعارات",
+    "notificationsSubtitle": "تنبيهات الطلبات، والإشعارات العامة للتطبيق",
+    "thankYou": "شكرًا لك",
+    "requestSubmittedSuccessfully": "تم تقديم طلبك بنجاح!",
+    "noUrlAvailable": "لا يوجد رابط متاح",
+    "failedToLoadImage": "فشل تحميل الصورة",
+    "invalidRequestData": "بيانات الطلب غير صالحة",
+    "timePeriodAm": "صباحًا",
+    "timePeriodPm": "مساءً",
+    "personalinfo" : "المعلومات الشخصية، الهوية، العنوان"
 }

@@ -567,4 +567,90 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get pleaseSelectHolidayDatesError =>
       'الرجاء اختيار تاريخ البداية والنهاية';
+
+  @override
+  String get hrInformation => 'معلومات الموارد البشرية';
+
+  @override
+  String get employmentData => 'البيانات الوظيفية';
+
+  @override
+  String get employmentDataSubtitle =>
+      'تاريخ الإلتحاق، المسمى الوظيفي، نوع التوظيف';
+
+  @override
+  String get financialDetails => 'التفاصيل المالية';
+
+  @override
+  String get financialDetailsSubtitle => 'تفاصيل الراتب والسلف';
+
+  @override
+  String get vacations => 'الإجازات';
+
+  @override
+  String get vacationsSubtitle => 'الاستحقاق السنوي الإجازات السنوية والمجدولة';
+
+  @override
+  String get generalSettings => 'الإعدادات العامة';
+
+  @override
+  String get generalSettingsSubtitle => 'اللغة، الإشعارات';
+
+  @override
+  String get changePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get changePasswordSubtitle => 'تحديث كلمة المرور';
+
+  @override
+  String get logout => 'تسجيل الخروج';
+
+  @override
+  String get noName => 'لا يوجد اسم';
+
+  @override
+  String get noEmail => 'لا يوجد بريد إلكتروني';
+
+  @override
+  String maxFilesReached(int count) {
+    return 'الحد الأقصى $count ملفات';
+  }
+
+  @override
+  String get passwordResetSentToEmail =>
+      'تم إرسال إعادة تعيين كلمة المرور إلى بريدك الإلكتروني';
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String get notifications => 'الإشعارات';
+
+  @override
+  String get notificationsSubtitle =>
+      'تنبيهات الطلبات، والإشعارات العامة للتطبيق';
+
+  @override
+  String get thankYou => 'شكرًا لك';
+
+  @override
+  String get requestSubmittedSuccessfully => 'تم تقديم طلبك بنجاح!';
+
+  @override
+  String get noUrlAvailable => 'لا يوجد رابط متاح';
+
+  @override
+  String get failedToLoadImage => 'فشل تحميل الصورة';
+
+  @override
+  String get invalidRequestData => 'بيانات الطلب غير صالحة';
+
+  @override
+  String get timePeriodAm => 'صباحًا';
+
+  @override
+  String get timePeriodPm => 'مساءً';
+
+  @override
+  String get personalinfo => 'المعلومات الشخصية، الهوية، العنوان';
 }

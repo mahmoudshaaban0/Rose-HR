@@ -23,16 +23,16 @@ class HeaderAndShiftSection extends StatelessWidget {
   const HeaderAndShiftSection({super.key});
 
   /// Formats a 24-hour time value to 12-hour format with AM/PM
-  String _formatHourTo12Hour(int? hour) {
+  String _formatHourTo12Hour(BuildContext context, int? hour) {
     if (hour == null) return '--:--';
-    final period = hour >= 12 ? 'مساءً' : 'صباحًا';
+    final period = hour >= 12 ? context.localizations.timePeriodPm : context.localizations.timePeriodAm;
     final hour12 = hour % 12 == 0 ? 12 : hour % 12;
     return '$hour12:00 $period ';
   }
 
   /// Formats shift hours range from 24-hour to 12-hour format
-  String _formatShiftHours(int? shiftHourFrom, int? shiftHourTo) {
-    return '${_formatHourTo12Hour(shiftHourFrom)} - ${_formatHourTo12Hour(shiftHourTo)}';
+  String _formatShiftHours(BuildContext context, int? shiftHourFrom, int? shiftHourTo) {
+    return '${_formatHourTo12Hour(context, shiftHourFrom)} - ${_formatHourTo12Hour(context, shiftHourTo)}';
   }
 
   @override
@@ -297,7 +297,7 @@ class HeaderAndShiftSection extends StatelessWidget {
                         borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
                       ),
                       child: Text(
-                        _formatShiftHours(shiftData?.shiftHourFrom, shiftData?.shiftHourTo),
+                        _formatShiftHours(context, shiftData?.shiftHourFrom, shiftData?.shiftHourTo),
                         style: context.typography.regular16,
                       ),
                     );
@@ -313,7 +313,7 @@ class HeaderAndShiftSection extends StatelessWidget {
                         borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
                       ),
                       child: Text(
-                        _formatShiftHours(null, null),
+                        _formatShiftHours(context, null, null),
                         style: context.typography.regular16,
                       ),
                     );

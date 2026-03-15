@@ -789,7 +789,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                       ? null
                                       : () => _submitWorkMission(context, state),
                                   appButtonSize: AppButtonSize.xxLarge,
-                                  label: 'إرسال',
+                                  label: context.localizations.send,
                                 ),
                               );
                       },

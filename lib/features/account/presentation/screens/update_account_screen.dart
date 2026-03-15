@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
-import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/common/widgets/info_card.dart';
@@ -93,7 +91,7 @@ class UpdateAccountScreen extends StatelessWidget {
                   appButtonSize: AppButtonSize.xxLarge,
                   label: context.localizations.save,
                   onTap: () {
-                    context.goNamed(AppRoutes.login.name);
+                    // context.goNamed(AppRoutes.login.name);
                   },
                 ),
               ],

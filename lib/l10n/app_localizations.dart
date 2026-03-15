@@ -1195,6 +1195,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please select start and end dates'**
   String get pleaseSelectHolidayDatesError;
+
+  /// No description provided for @hrInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Human Resources Information'**
+  String get hrInformation;
+
+  /// No description provided for @employmentData.
+  ///
+  /// In en, this message translates to:
+  /// **'Employment Data'**
+  String get employmentData;
+
+  /// No description provided for @employmentDataSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Joining Date, Job Title, Employment Type'**
+  String get employmentDataSubtitle;
+
+  /// No description provided for @financialDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Financial Details'**
+  String get financialDetails;
+
+  /// No description provided for @financialDetailsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary and Advance Details'**
+  String get financialDetailsSubtitle;
+
+  /// No description provided for @vacations.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacations'**
+  String get vacations;
+
+  /// No description provided for @vacationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual Entitlement, Annual and Scheduled Leaves'**
+  String get vacationsSubtitle;
+
+  /// No description provided for @generalSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'General Settings'**
+  String get generalSettings;
+
+  /// No description provided for @generalSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Language, Notifications'**
+  String get generalSettingsSubtitle;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @changePasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your password'**
+  String get changePasswordSubtitle;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @noName.
+  ///
+  /// In en, this message translates to:
+  /// **'No Name'**
+  String get noName;
+
+  /// No description provided for @noEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'No Email'**
+  String get noEmail;
+
+  /// No description provided for @maxFilesReached.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum {count} files reached'**
+  String maxFilesReached(int count);
+
+  /// No description provided for @passwordResetSentToEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset sent to your email'**
+  String get passwordResetSentToEmail;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @notificationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request alerts and general app notifications'**
+  String get notificationsSubtitle;
+
+  /// No description provided for @thankYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you'**
+  String get thankYou;
+
+  /// No description provided for @requestSubmittedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request has been submitted successfully!'**
+  String get requestSubmittedSuccessfully;
+
+  /// No description provided for @noUrlAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No URL available'**
+  String get noUrlAvailable;
+
+  /// No description provided for @failedToLoadImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load image'**
+  String get failedToLoadImage;
+
+  /// No description provided for @invalidRequestData.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid request data'**
+  String get invalidRequestData;
+
+  /// No description provided for @timePeriodAm.
+  ///
+  /// In en, this message translates to:
+  /// **'AM'**
+  String get timePeriodAm;
+
+  /// No description provided for @timePeriodPm.
+  ///
+  /// In en, this message translates to:
+  /// **'PM'**
+  String get timePeriodPm;
+
+  /// No description provided for @personalinfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal information, identity, address'**
+  String get personalinfo;
 }
 
 class _AppLocalizationsDelegate

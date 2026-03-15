@@ -710,7 +710,7 @@ void _showVisaPeriodDialog(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: AppSpacing.md.h,
           children: [
-            Text('مدة التأشيرة', style: context.typography.semiBold16),
+            Text(context.localizations.visaPeriodTitle, style: context.typography.semiBold16),
             Expanded(
               child: ListView.separated(
                 separatorBuilder: (_, _) => const AppDivider(),
@@ -733,7 +733,7 @@ void _showVisaPeriodDialog(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '$period أشهر',
+                            context.localizations.visaMonths(period),
                             style: isSelected ? context.typography.medium16 : context.typography.regular16,
                           ),
                           if (isSelected) const AppVectorGraphic(path: Assets.vectorsCheckline),

@@ -124,7 +124,7 @@ class FileUploadWidget extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(top: AppSpacing.xs.h),
                           child: Text(
-                            'Maximum ${state.maxFiles} files reached',
+                            context.localizations.maxFilesReached(state.maxFiles),
                             style: context.typography.regular12.copyWith(
                               color: context.colors.error,
                             ),
@@ -230,7 +230,7 @@ class FileUploadWidget extends StatelessWidget {
             ),
           ),
           Text(
-            'جاري التحميل...',
+            context.localizations.uploading,
             style: context.typography.regular14.copyWith(
               color: context.colors.containerBorder,
             ),
@@ -241,7 +241,7 @@ class FileUploadWidget extends StatelessWidget {
 
     if (file.hasError) {
       return Text(
-        file.errorMessage ?? 'فشل التحميل',
+        file.errorMessage ?? context.localizations.uploadFailed,
         style: context.typography.regular14.copyWith(
           color: context.colors.error,
         ),
@@ -264,7 +264,7 @@ class FileUploadWidget extends StatelessWidget {
             height: 16,
           ),
           Text(
-            'تم التحميل بنجاح',
+            context.localizations.uploadedSuccessfully,
             style: context.typography.regular14,
           ),
         ],

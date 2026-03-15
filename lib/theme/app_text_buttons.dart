@@ -193,7 +193,7 @@ abstract class AppTextButton extends StatelessWidget {
                     AppButtonSize.small || AppButtonSize.xSmall => context.typography.regular16,
                     AppButtonSize.medium => context.typography.regular18,
                     AppButtonSize.large => context.typography.regular22,
-                    AppButtonSize.xlarge => context.typography.bold28,
+                    AppButtonSize.xlarge => context.typography.medium16,
                     AppButtonSize.xxLarge => context.typography.medium18,
                   }).copyWith(
                     color: onTap != null ? textColor(context) : disabledTextColor(context),
