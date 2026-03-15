@@ -62,7 +62,7 @@ class SingleRequestScreen extends StatelessWidget {
 
           // Dismiss the loading dialog — use the same non-root navigator
           if (state.status == SingleRequestStatus.cancelSuccess || state.status == SingleRequestStatus.cancelError) {
-            Navigator.of(context, rootNavigator: false).pop();
+            Navigator.of(context).pop();
           }
         },
         child: Scaffold(

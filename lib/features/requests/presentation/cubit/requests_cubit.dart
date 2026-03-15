@@ -33,7 +33,7 @@ class RequestsCubit extends Cubit<RequestsState> {
       case Success(:final data):
         if (isClosed) return;
         // Check if cancellation was successful
-        if (data.result?.success == true) {
+        if (data.result?.success ?? false) {
           emit(state.copyWith(status: RequestsStatus.cancelSuccess, cancelledRequestId: requestId));
           // Refresh the list after successful cancellation
           await getEmployeeList();

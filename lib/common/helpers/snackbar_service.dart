@@ -220,7 +220,6 @@ class SnackbarService {
                 color: textColor,
               ),
               softWrap: true,
-              maxLines: null,
             ),
           ),
         ],

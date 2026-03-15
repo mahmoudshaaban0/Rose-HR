@@ -713,7 +713,7 @@ void _showVisaPeriodDialog(
             Text('مدة التأشيرة', style: context.typography.semiBold16),
             Expanded(
               child: ListView.separated(
-                separatorBuilder: (_, __) => const AppDivider(),
+                separatorBuilder: (_, _) => const AppDivider(),
                 itemCount: options.length,
                 itemBuilder: (_, index) {
                   final period = options[index];

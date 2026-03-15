@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rose_hr/common/constants/app_assets.dart';
+import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
@@ -68,17 +70,6 @@ class _ApprovalEmployeeItem extends StatelessWidget {
     }
   }
 
-  IconData _getStatusIcon(ApprovalStatus status) {
-    switch (status) {
-      case ApprovalStatus.approved:
-        return Icons.check_circle;
-      case ApprovalStatus.rejected:
-        return Icons.cancel;
-      case ApprovalStatus.pending:
-        return Icons.access_time;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final statusColor = _getStatusColor(context, employee.status);
@@ -89,23 +80,7 @@ class _ApprovalEmployeeItem extends StatelessWidget {
         // Status icon column with connector
         Column(
           children: [
-            Container(
-              width: 32.r,
-              height: 32.r,
-              decoration: BoxDecoration(
-                color: statusColor.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: statusColor,
-                  width: 2,
-                ),
-              ),
-              child: Icon(
-                _getStatusIcon(employee.status),
-                size: 16.r,
-                color: statusColor,
-              ),
-            ),
+            const AppVectorGraphic(path: Assets.vectorsUserPlaceHolder),
             if (showConnector)
               Container(
                 width: 2,

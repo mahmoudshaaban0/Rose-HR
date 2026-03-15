@@ -45,7 +45,6 @@ void showUploadSourceSheet(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       AppVectorGraphic(
                         path: Assets.vectorsImage,
@@ -85,7 +84,6 @@ void showUploadSourceSheet(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       AppVectorGraphic(
                         path: Assets.vectorsPdf,

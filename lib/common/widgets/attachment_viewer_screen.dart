@@ -63,10 +63,10 @@ class _ImageView extends StatelessWidget {
       minScale: PhotoViewComputedScale.contained,
       maxScale: PhotoViewComputedScale.covered * 4,
       backgroundDecoration: const BoxDecoration(color: Colors.black),
-      loadingBuilder: (_, __) => const Center(
+      loadingBuilder: (_, _) => const Center(
         child: CircularProgressIndicator.adaptive(),
       ),
-      errorBuilder: (_, __, ___) => Center(
+      errorBuilder: (_, _, _) => Center(
         child: Text(
           'Failed to load image',
           style: context.typography.regular14.copyWith(color: Colors.white),

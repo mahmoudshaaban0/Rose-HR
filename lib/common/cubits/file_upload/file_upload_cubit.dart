@@ -184,7 +184,7 @@ class FileUploadCubit extends Cubit<FileUploadState> {
     for (final file in filesToEncode) {
       try {
         // Update file status to uploading
-        _updateFileStatus(file.id, UploadStatus.uploading, progress: 0.0);
+        _updateFileStatus(file.id, UploadStatus.uploading, progress: 0);
 
         // Read file and convert to base64
         final fileBytes = await File(file.path).readAsBytes();
@@ -203,7 +203,7 @@ class FileUploadCubit extends Cubit<FileUploadState> {
           file.copyWith(
             base64Data: base64String,
             uploadStatus: UploadStatus.success,
-            uploadProgress: 1.0,
+            uploadProgress: 1,
           ),
         );
 

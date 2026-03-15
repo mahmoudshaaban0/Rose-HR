@@ -16,21 +16,21 @@ class ShiftIdResponseModel {
   @JsonKey(name: "id")
   dynamic id;
   @JsonKey(name: "result")
-  Result? result;
+  ShiftIdResult? result;
 
   Map<String, dynamic> toJson() => _$ShiftIdResponseModelToJson(this);
 }
 
 @JsonSerializable()
-class Result {
-  Result({
+class ShiftIdResult {
+  ShiftIdResult({
     this.success,
     this.statusCode,
     this.message,
     this.data,
   });
 
-  factory Result.fromJson(Map<String, dynamic> json) {
+  factory ShiftIdResult.fromJson(Map<String, dynamic> json) {
     final success = json['success'] as bool?;
     final statusCode = (json['status_code'] as num?)?.toInt();
     final message = json['message'] as String?;
@@ -44,7 +44,7 @@ class Result {
       data = [Datum.fromJson(rawData)];
     }
 
-    return Result(
+    return ShiftIdResult(
       success: success,
       statusCode: statusCode,
       message: message,
@@ -61,7 +61,7 @@ class Result {
   @JsonKey(name: "data")
   List<Datum>? data;
 
-  Map<String, dynamic> toJson() => _$ResultToJson(this);
+  Map<String, dynamic> toJson() => _$ShiftIdResultToJson(this);
 }
 
 @JsonSerializable()

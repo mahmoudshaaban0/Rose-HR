@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/common/helpers/timezone_helper.dart';
 import 'package:rose_hr/theme/app_spacing.dart';

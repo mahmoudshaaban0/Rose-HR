@@ -4,7 +4,7 @@ import 'package:rose_hr/common/networking/result.dart';
 import 'package:rose_hr/features/permission_request/data/datasources/permission_request_datasource.dart';
 import 'package:rose_hr/features/permission_request/data/models/permission_request_model.dart';
 import 'package:rose_hr/features/permission_request/data/models/permission_request_response_model.dart';
-import 'package:rose_hr/features/permission_request/data/models/shift_id_response_model.dart' hide Result;
+import 'package:rose_hr/features/permission_request/data/models/shift_id_response_model.dart' hide ShiftIdResult;
 
 class PermissionRequestRepository {
   PermissionRequestRepository(this.permissionRequestDatasource);

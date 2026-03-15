@@ -205,7 +205,7 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
             ),
           );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (isClosed) return;
       emit(
         state.copyWith(

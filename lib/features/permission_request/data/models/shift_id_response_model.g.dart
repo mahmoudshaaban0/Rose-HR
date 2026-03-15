@@ -13,7 +13,7 @@ ShiftIdResponseModel _$ShiftIdResponseModelFromJson(
   id: json['id'],
   result: json['result'] == null
       ? null
-      : Result.fromJson(json['result'] as Map<String, dynamic>),
+      : ShiftIdResult.fromJson(json['result'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ShiftIdResponseModelToJson(
@@ -24,21 +24,23 @@ Map<String, dynamic> _$ShiftIdResponseModelToJson(
   'result': instance.result,
 };
 
-Result _$ResultFromJson(Map<String, dynamic> json) => Result(
-  success: json['success'] as bool?,
-  statusCode: (json['status_code'] as num?)?.toInt(),
-  message: json['message'] as String?,
-  data: (json['data'] as List<dynamic>?)
-      ?.map((e) => Datum.fromJson(e as Map<String, dynamic>))
-      .toList(),
-);
+ShiftIdResult _$ShiftIdResultFromJson(Map<String, dynamic> json) =>
+    ShiftIdResult(
+      success: json['success'] as bool?,
+      statusCode: (json['status_code'] as num?)?.toInt(),
+      message: json['message'] as String?,
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => Datum.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
-Map<String, dynamic> _$ResultToJson(Result instance) => <String, dynamic>{
-  'success': instance.success,
-  'status_code': instance.statusCode,
-  'message': instance.message,
-  'data': instance.data,
-};
+Map<String, dynamic> _$ShiftIdResultToJson(ShiftIdResult instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status_code': instance.statusCode,
+      'message': instance.message,
+      'data': instance.data,
+    };
 
 Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
   id: (json['id'] as num?)?.toInt(),

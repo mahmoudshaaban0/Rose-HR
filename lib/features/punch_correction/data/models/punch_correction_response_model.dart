@@ -10,8 +10,7 @@ class PunchCorrectionResponseModel {
     this.result,
   });
 
-  factory PunchCorrectionResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$PunchCorrectionResponseModelFromJson(json);
+  factory PunchCorrectionResponseModel.fromJson(Map<String, dynamic> json) => _$PunchCorrectionResponseModelFromJson(json);
   @JsonKey(name: "jsonrpc")
   String? jsonrpc;
   @JsonKey(name: "id")
@@ -31,8 +30,7 @@ class PunchCorrectionResult {
     this.data,
   });
 
-  factory PunchCorrectionResult.fromJson(Map<String, dynamic> json) =>
-      _$PunchCorrectionResultFromJson(json);
+  factory PunchCorrectionResult.fromJson(Map<String, dynamic> json) => _$PunchCorrectionResultFromJson(json);
   @JsonKey(name: "success")
   bool? success;
   @JsonKey(name: "status_code")
@@ -67,8 +65,7 @@ class PunchCorrectionData {
     this.fixAttendanceMethod,
   });
 
-  factory PunchCorrectionData.fromJson(Map<String, dynamic> json) =>
-      _$PunchCorrectionDataFromJson(json);
+  factory PunchCorrectionData.fromJson(Map<String, dynamic> json) => _$PunchCorrectionDataFromJson(json);
   @JsonKey(name: "id")
   int? id;
   @JsonKey(name: "name")
@@ -106,4 +103,3 @@ class PunchCorrectionData {
 
   Map<String, dynamic> toJson() => _$PunchCorrectionDataToJson(this);
 }
-

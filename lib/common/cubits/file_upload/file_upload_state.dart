@@ -1,14 +1,7 @@
 part of 'file_upload_cubit.dart';
 
 /// Status for the overall file upload cubit
-enum FileUploadStatus {
-  initial,
-  picking,
-  encoding,
-  uploading,
-  success,
-  error;
-}
+enum FileUploadStatus { initial, picking, encoding, uploading, success, error }
 
 /// State for file upload cubit
 class FileUploadState extends Equatable {
@@ -55,19 +48,19 @@ class FileUploadState extends Equatable {
 
   /// Get overall upload progress (0.0 to 1.0)
   double get overallProgress {
-    if (files.isEmpty) return 0.0;
-    final totalProgress = files.fold<double>(0.0, (sum, file) => sum + file.uploadProgress);
+    if (files.isEmpty) return 0;
+    final totalProgress = files.fold<double>(0, (sum, file) => sum + file.uploadProgress);
     return totalProgress / files.length;
   }
 
   @override
   List<Object?> get props => [
-        status,
-        files,
-        errorMessage,
-        maxFiles,
-        maxFileSizeInMB,
-      ];
+    status,
+    files,
+    errorMessage,
+    maxFiles,
+    maxFileSizeInMB,
+  ];
 
   FileUploadState copyWith({
     FileUploadStatus? status,
@@ -86,4 +79,3 @@ class FileUploadState extends Equatable {
     );
   }
 }
-
