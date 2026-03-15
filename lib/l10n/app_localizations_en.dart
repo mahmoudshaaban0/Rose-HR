@@ -88,6 +88,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hours => 'Hours';
 
   @override
+  String get minutes => 'Minutes';
+
+  @override
   String get inRange => 'In Range';
 
   @override
@@ -144,6 +147,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fileFormatsHint => 'JPEG, PNG, PDF, and MP4 formats, up to 50 MB.';
+
+  @override
+  String get chooseImages => 'Images';
+
+  @override
+  String get chooseFiles => 'Files';
 
   @override
   String get submitRequest => 'Submit Request';
@@ -434,4 +443,131 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get cancelRequestConfirmation =>
       'Are you sure you want to cancel this request?';
+
+  @override
+  String get teamRequests => 'Team Requests';
+
+  @override
+  String get viewAllRequests => 'View all requests';
+
+  @override
+  String get approveRequest => 'Approve Request';
+
+  @override
+  String get rejectRequest => 'Reject Request';
+
+  @override
+  String get noTeamRequestsYet => 'No team requests at the moment';
+
+  @override
+  String get timeFrom => 'Start Time';
+
+  @override
+  String get timeTo => 'End Time';
+
+  @override
+  String get requestedDuration => 'Requested Duration';
+
+  @override
+  String get workMissionTypeLabel => 'Mission Type';
+
+  @override
+  String get workMissionTypeHours => 'Hours';
+
+  @override
+  String get workMissionTypeDays => 'Days';
+
+  @override
+  String get missionStartDate => 'Mission Start Date';
+
+  @override
+  String get missionEndDate => 'Mission End Date';
+
+  @override
+  String get holidayRequestTitle => 'Holiday Request';
+
+  @override
+  String get failedToSendHolidayRequest => 'Failed to submit holiday request';
+
+  @override
+  String get leaveType => 'Leave Type';
+
+  @override
+  String get selectLeaveType => 'Select leave type';
+
+  @override
+  String get startsFrom => 'Starts from:';
+
+  @override
+  String get selectStartDate => 'Select start date';
+
+  @override
+  String get endsAt => 'Ends at:';
+
+  @override
+  String get selectEndDate => 'Select end date';
+
+  @override
+  String get wantAdvanceSalary => 'Do you want to receive salary in advance?';
+
+  @override
+  String get airTicket => 'Air Ticket';
+
+  @override
+  String get visaType => 'Visa Type';
+
+  @override
+  String get selectVisaType => 'Select visa type';
+
+  @override
+  String get visaPeriod => 'Visa Period';
+
+  @override
+  String get enterVisaPeriod => 'Enter visa period';
+
+  @override
+  String get visaDate => 'Visa Date';
+
+  @override
+  String get selectVisaDate => 'Select visa date';
+
+  @override
+  String get enterHolidayReasonHere => 'Enter holiday reason here if any...';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get visaPeriodTitle => 'Visa Period';
+
+  @override
+  String visaMonths(String months) {
+    return '$months months';
+  }
+
+  @override
+  String get noLeaveTypesAvailable => 'No leave types available';
+
+  @override
+  String get dayOff => 'Day off';
+
+  @override
+  String get enjoyYourHoliday =>
+      'Enjoy your holiday for a productive week start';
+
+  @override
+  String get absent => 'Absent';
+
+  @override
+  String get lateAttendance => 'Late attendance';
+
+  @override
+  String get earlyCheckout => 'Early checkout';
+
+  @override
+  String get pleaseSelectLeaveTypeError => 'Please select leave type';
+
+  @override
+  String get pleaseSelectHolidayDatesError =>
+      'Please select start and end dates';
 }

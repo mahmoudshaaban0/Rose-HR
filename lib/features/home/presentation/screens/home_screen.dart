@@ -7,6 +7,7 @@ import 'package:rose_hr/features/home/presentation/cubit/timezone_cubit.dart';
 import 'package:rose_hr/features/home/presentation/widgets/header_shift_section.dart';
 import 'package:rose_hr/features/home/presentation/widgets/holidays_section.dart';
 import 'package:rose_hr/features/home/presentation/widgets/new_request_section.dart';
+import 'package:rose_hr/features/requests/presentation/widgets/team_requests_section.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -36,6 +37,7 @@ class HomeScreen extends StatelessWidget {
                     children: const [
                       HeaderAndShiftSection(),
                       NewRequestSection(),
+                      TeamRequestsSection(),
                       HolidaysSection(),
                     ],
                   ),

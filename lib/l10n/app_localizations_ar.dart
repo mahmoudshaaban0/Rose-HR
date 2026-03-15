@@ -89,6 +89,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hours => 'ساعات ';
 
   @override
+  String get minutes => 'دقائق';
+
+  @override
   String get inRange => 'داخل النطاق';
 
   @override
@@ -147,6 +150,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fileFormatsHint => 'JPEG, PNG, PDF, and MP4 formats, up to 50 MB.';
+
+  @override
+  String get chooseImages => 'صور';
+
+  @override
+  String get chooseFiles => 'ملفات';
 
   @override
   String get submitRequest => 'إرسال الطلب';
@@ -432,4 +441,130 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get cancelRequestConfirmation => 'هل أنت متأكد من إلغاء هذا الطلب؟';
+
+  @override
+  String get teamRequests => 'طلبات الفريق';
+
+  @override
+  String get viewAllRequests => 'مشاهدة جميع الطلبات';
+
+  @override
+  String get approveRequest => 'الموافقة على الطلب';
+
+  @override
+  String get rejectRequest => 'رفض الطلب';
+
+  @override
+  String get noTeamRequestsYet => 'لا توجد طلبات فريق حاليًا';
+
+  @override
+  String get timeFrom => 'وقت البداية';
+
+  @override
+  String get timeTo => 'وقت النهاية';
+
+  @override
+  String get requestedDuration => 'المدة المطلوبة';
+
+  @override
+  String get workMissionTypeLabel => 'نوع المهمة';
+
+  @override
+  String get workMissionTypeHours => 'ساعات';
+
+  @override
+  String get workMissionTypeDays => 'أيام';
+
+  @override
+  String get missionStartDate => 'تاريخ بداية المهمة';
+
+  @override
+  String get missionEndDate => 'تاريخ نهاية المهمة';
+
+  @override
+  String get holidayRequestTitle => 'طلب إجازة';
+
+  @override
+  String get failedToSendHolidayRequest => 'فشل إرسال الطلب';
+
+  @override
+  String get leaveType => 'نوع الإجازة';
+
+  @override
+  String get selectLeaveType => 'اختر نوع الإجازة';
+
+  @override
+  String get startsFrom => 'تبدأ من:';
+
+  @override
+  String get selectStartDate => 'اختر تاريخ البدء';
+
+  @override
+  String get endsAt => 'تنتهي في:';
+
+  @override
+  String get selectEndDate => 'اختر تاريخ النهاية';
+
+  @override
+  String get wantAdvanceSalary => 'هل ترغب في استلام الراتب مُقدمًا؟';
+
+  @override
+  String get airTicket => 'تذكرة الطيران';
+
+  @override
+  String get visaType => 'نوع التأشيرة';
+
+  @override
+  String get selectVisaType => 'اختر نوع التأشيرة';
+
+  @override
+  String get visaPeriod => 'مدة التأشيرة';
+
+  @override
+  String get enterVisaPeriod => 'أدخل مدة التأشيرة';
+
+  @override
+  String get visaDate => 'تاريخ التأشيرة';
+
+  @override
+  String get selectVisaDate => 'اختر تاريخ التأشيرة';
+
+  @override
+  String get enterHolidayReasonHere => 'أكتب سبب الإجازة إن وجد...';
+
+  @override
+  String get send => 'إرسال';
+
+  @override
+  String get visaPeriodTitle => 'مدة التأشيرة';
+
+  @override
+  String visaMonths(String months) {
+    return '$months أشهر';
+  }
+
+  @override
+  String get noLeaveTypesAvailable => 'لا توجد أنواع إجازات متاحة';
+
+  @override
+  String get dayOff => 'يوم راحة';
+
+  @override
+  String get enjoyYourHoliday => 'استمتع في عطلتك، لبداية اسبوع مُثمر';
+
+  @override
+  String get absent => 'غائب';
+
+  @override
+  String get lateAttendance => 'حضور متأخر';
+
+  @override
+  String get earlyCheckout => 'إنصراف مبكر';
+
+  @override
+  String get pleaseSelectLeaveTypeError => 'الرجاء اختيار نوع الإجازة';
+
+  @override
+  String get pleaseSelectHolidayDatesError =>
+      'الرجاء اختيار تاريخ البداية والنهاية';
 }

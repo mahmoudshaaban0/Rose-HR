@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
-import 'package:rose_hr/common/helpers/toast_service.dart';
+import 'package:rose_hr/common/helpers/snackbar_service.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
+import 'package:rose_hr/common/widgets/attachment_viewer_widget.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/features/requests/data/models/employee_list_response_model.dart';
 import 'package:rose_hr/features/requests/data/models/single_request_response_by_id.dart';
@@ -39,33 +39,44 @@ class SingleRequestScreen extends StatelessWidget {
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
           if (state.status == SingleRequestStatus.cancelSuccess) {
-            ToastService.showSuccess(
-              gravity: ToastGravity.CENTER,
+            SnackbarService.showSuccess(
+              context,
               context.localizations.requestCancelledSuccessfully,
             );
             parentRequestsCubit?.getEmployeeList();
           } else if (state.status == SingleRequestStatus.cancelError) {
-            ToastService.showError(
-              gravity: ToastGravity.CENTER,
+            SnackbarService.showError(
+              context,
               state.errorMessage ?? context.localizations.failedToCancelRequest,
             );
           } else if (state.status == SingleRequestStatus.cancelling) {
             showDialog<void>(
               context: context,
               barrierDismissible: false,
-              builder: (context) => const Center(child: CircularProgressIndicator.adaptive()),
+              // Use a local navigator so pop() only closes this dialog,
+              // never the underlying screen.
+              useRootNavigator: false,
+              builder: (_) => const Center(child: CircularProgressIndicator.adaptive()),
             );
           }
 
-          // Dismiss loading dialog when cancelling is done
+          // Dismiss the loading dialog — use the same non-root navigator
           if (state.status == SingleRequestStatus.cancelSuccess || state.status == SingleRequestStatus.cancelError) {
-            Navigator.of(context, rootNavigator: true).pop();
+            Navigator.of(context, rootNavigator: false).pop();
           }
         },
         child: Scaffold(
           appBar: PrimaryAppBar(title: _getLocalizedRequestType(context, request?.requestType)),
           body: SafeArea(
             child: BlocBuilder<SingleRequestCubit, SingleRequestState>(
+              // Only rebuild the UI for fetch-related status changes.
+              // Cancel sub-states (cancelling / cancelSuccess / cancelError)
+              // are handled exclusively by the BlocListener above — they must
+              // NOT trigger a rebuild so the displayed data never disappears.
+              buildWhen: (previous, current) =>
+                  current.status == SingleRequestStatus.loading ||
+                  current.status == SingleRequestStatus.success ||
+                  current.status == SingleRequestStatus.error,
               builder: (context, state) {
                 if (state.status == SingleRequestStatus.loading) {
                   return _buildLoadingState();
@@ -75,15 +86,11 @@ class SingleRequestScreen extends StatelessWidget {
                   return _buildErrorState(context, state.errorMessage);
                 }
 
-                if (state.status == SingleRequestStatus.success) {
-                  final data = state.singleRequestResponse?.result?.data;
-                  if (data == null) {
-                    return _buildErrorState(context, context.localizations.noData);
-                  }
-                  return _buildSuccessState(context, data);
+                final data = state.singleRequestResponse?.result?.data;
+                if (data == null) {
+                  return _buildLoadingState();
                 }
-
-                return const SizedBox.shrink();
+                return _buildSuccessState(context, data);
               },
             ),
           ),
@@ -168,6 +175,7 @@ class SingleRequestScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
+                  // ── Main details card ─────────────────────────────────
                   Container(
                     padding: EdgeInsets.all(AppSpacing.md.r),
                     decoration: BoxDecoration(
@@ -177,7 +185,7 @@ class SingleRequestScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Header Section
+                        // Header row: employee name + date
                         Row(
                           children: [
                             Expanded(
@@ -188,79 +196,82 @@ class SingleRequestScreen extends StatelessWidget {
                                     data.employeeName ?? '',
                                     style: context.typography.semiBold18,
                                   ),
-                                  SizedBox(height: AppSpacing.xs.h),
-                                  Text(
-                                    '${context.localizations.managerName} - ${data.managerName}',
-                                    style: context.typography.regular14.copyWith(
-                                      color: context.colors.onSurfaceVariant,
+                                  if (data.managerName != null) ...[
+                                    SizedBox(height: AppSpacing.xs.h),
+                                    Text(
+                                      '${context.localizations.managerName} - ${data.managerName}',
+                                      style: context.typography.regular14.copyWith(
+                                        color: context.colors.onSurfaceVariant,
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ],
                               ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  data.date != null ? _formatDate(data.date) : '',
-                                  style: context.typography.regular14.copyWith(),
-                                ),
-                              ],
-                            ),
+                            if (data.date != null)
+                              Text(
+                                _formatDate(data.date),
+                                style: context.typography.regular14,
+                              ),
                           ],
                         ),
                         SizedBox(height: AppSpacing.md.h),
                         const AppDivider(),
                         SizedBox(height: AppSpacing.md.h),
 
-                        // Request Details
-                        RequestDetailRow(
-                          icon: Assets.vectorsHashtag,
-                          title: context.localizations.requestNumber,
-                          trailingText: data.name ?? '',
-                        ),
-                        SizedBox(height: AppSpacing.md.h),
+                        // Request number
+                        if (data.name != null) ...[
+                          RequestDetailRow(
+                            icon: Assets.vectorsHashtag,
+                            title: context.localizations.requestNumber,
+                            trailingText: data.name,
+                          ),
+                          SizedBox(height: AppSpacing.md.h),
+                        ],
 
-                        RequestDetailRow(
-                          icon: Assets.vectorsRequestsActive,
-                          title: context.localizations.requestType,
-                          trailingText: data.requestTypeDisplay ?? _getLocalizedRequestType(context, data.requestType),
-                        ),
-                        SizedBox(height: AppSpacing.md.h),
-                        RequestDetailRow(
-                          icon: Assets.vectorsPulseLine,
-                          title: context.localizations.requestStatus,
-                          trailingWidget: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: AppSpacing.sm.w,
-                              vertical: AppSpacing.xs.h,
+                        // Request type badge
+                        if (data.requestTypeDisplay != null) ...[
+                          RequestDetailRow(
+                            icon: Assets.vectorsPulseLine,
+                            title: context.localizations.requestType,
+                            trailingWidget: _buildBadge(
+                              context,
+                              text: data.requestTypeDisplay!,
+                              bg: context.colors.surfaceDim,
+                              border: context.colors.info,
+                              textColor: context.colors.info,
                             ),
-                            decoration: BoxDecoration(
-                              color: _getStatusBackgroundColor(context, data.state),
-                              borderRadius: BorderRadius.circular(AppSpacing.sm.r),
-                              border: Border.all(color: _getStatusBorderColor(context, data.state)),
-                            ),
-                            child: Text(
-                              data.stateDisplay ?? '',
-                              style: context.typography.medium12.copyWith(
-                                color: _getStatusTextColor(context, data.state),
+                          ),
+                          SizedBox(height: AppSpacing.md.h),
+                        ],
+
+                        // Status badge (keep original fixed colors)
+                        if (data.stateDisplay != null) ...[
+                          RequestDetailRow(
+                            icon: Assets.vectorsPulseLine,
+                            title: context.localizations.requestStatus,
+                            trailingWidget: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSpacing.sm.w,
+                                vertical: AppSpacing.xs.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: context.colors.statusPendingBackground,
+                                borderRadius: BorderRadius.circular(AppSpacing.sm.r),
+                                border: Border.all(color: context.colors.error),
+                              ),
+                              child: Text(
+                                data.stateDisplay!,
+                                style: context.typography.medium12.copyWith(
+                                  color: context.colors.error,
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                          SizedBox(height: AppSpacing.md.h),
+                        ],
 
-                        // SizedBox(height: AppSpacing.md.h),
-
-                        // if (data.employeeName != null) ...[
-                        //   _buildDetailItem(
-                        //     context: context,
-                        //     icon: Assets.vectorsUserPlaceHolder,
-                        //     title: context.localizations.firstName,
-                        //     value: data.employeeName!,
-                        //   ),
-                        // SizedBox(height: AppSpacing.md.h),
-                        // ],
-                        SizedBox(height: AppSpacing.md.h),
+                        // Shift name
                         if (data.shiftName != null) ...[
                           RequestDetailRow(
                             icon: Assets.vectorsTime,
@@ -269,7 +280,70 @@ class SingleRequestScreen extends StatelessWidget {
                           ),
                           SizedBox(height: AppSpacing.md.h),
                         ],
-                        SizedBox(height: AppSpacing.md.h),
+
+                        // Time from (hide if 0.0)
+                        if (_hasValidTime(data.timeFrom)) ...[
+                          RequestDetailRow(
+                            icon: Assets.vectorsTime,
+                            title: context.localizations.timeFrom,
+                            trailingText: _decimalHoursToTime(data.timeFrom!),
+                          ),
+                          SizedBox(height: AppSpacing.md.h),
+                        ],
+
+                        // Time to (hide if 0.0)
+                        if (_hasValidTime(data.timeTo)) ...[
+                          RequestDetailRow(
+                            icon: Assets.vectorsTime,
+                            title: context.localizations.timeTo,
+                            trailingText: _decimalHoursToTime(data.timeTo!),
+                          ),
+                          SizedBox(height: AppSpacing.md.h),
+                        ],
+
+                        // Requested duration
+                        if (data.requestedDuration != null) ...[
+                          RequestDetailRow(
+                            icon: Assets.vectorsTime,
+                            title: context.localizations.requestedDuration,
+                            trailingText: _formatDuration(context, data.requestedDuration!),
+                          ),
+                          SizedBox(height: AppSpacing.md.h),
+                        ],
+
+                        // Work mission type
+                        if (data.workMissionType != null) ...[
+                          RequestDetailRow(
+                            icon: Assets.vectorsPulseLine,
+                            title: context.localizations.workMissionTypeLabel,
+                            trailingText: data.workMissionType == 'hours'
+                                ? context.localizations.workMissionTypeHours
+                                : context.localizations.workMissionTypeDays,
+                          ),
+                          SizedBox(height: AppSpacing.md.h),
+                        ],
+
+                        // Mission start date (for days-type work missions)
+                        if (data.missionStartDate != null) ...[
+                          RequestDetailRow(
+                            icon: Assets.vectorsCalendarFill,
+                            title: context.localizations.missionStartDate,
+                            trailingText: _formatDate(data.missionStartDate),
+                          ),
+                          SizedBox(height: AppSpacing.md.h),
+                        ],
+
+                        // Mission end date
+                        if (data.missionEndDate != null) ...[
+                          RequestDetailRow(
+                            icon: Assets.vectorsCalendarFill,
+                            title: context.localizations.missionEndDate,
+                            trailingText: _formatDate(data.missionEndDate),
+                          ),
+                          SizedBox(height: AppSpacing.md.h),
+                        ],
+
+                        // Reason
                         if (data.reason != null && data.reason!.isNotEmpty) ...[
                           const AppDivider(),
                           SizedBox(height: AppSpacing.md.h),
@@ -286,13 +360,14 @@ class SingleRequestScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(AppSpacing.md.r),
                             ),
                             child: Text(
-                              data.requestTypeDisplay!,
+                              data.reason!,
                               style: context.typography.medium16,
                             ),
                           ),
                           SizedBox(height: AppSpacing.md.h),
                         ],
 
+                        // Attachments
                         if (data.attachments != null && data.attachments!.isNotEmpty) ...[
                           const AppDivider(),
                           SizedBox(height: AppSpacing.md.h),
@@ -301,30 +376,26 @@ class SingleRequestScreen extends StatelessWidget {
                             style: context.typography.semiBold16,
                           ),
                           SizedBox(height: AppSpacing.sm.h),
-                          Text(
-                            '${data.attachments!.length} ${context.localizations.attachments}',
-                            style: context.typography.regular14.copyWith(
-                              color: context.colors.onSurfaceVariant,
-                            ),
-                          ),
+                          AttachmentViewerWidget(attachments: data.attachments!),
+                          SizedBox(height: AppSpacing.md.h),
                         ],
                       ],
                     ),
                   ),
+
                   SizedBox(height: AppSpacing.md.h),
-                  Container(
-                    padding: EdgeInsets.all(AppSpacing.md.r),
-                    decoration: BoxDecoration(
-                      color: context.colors.containerBackground,
-                      borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Approval Chain Section (Example with mock data)
-                        // Approval Chain Section (Example with mock data)
-                        if (data.managerName != null) ...[
-                          SizedBox(height: AppSpacing.md.h),
+
+                  // ── Approval chain card ───────────────────────────────
+                  if (data.managerName != null)
+                    Container(
+                      padding: EdgeInsets.all(AppSpacing.md.r),
+                      decoration: BoxDecoration(
+                        color: context.colors.containerBackground,
+                        borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
                             context.localizations.approvalChain,
                             style: context.typography.semiBold16,
@@ -340,20 +411,18 @@ class SingleRequestScreen extends StatelessWidget {
                                     ? ApprovalStatus.rejected
                                     : ApprovalStatus.pending,
                               ),
-                              // Additional approvers can be added here when API provides them
                             ],
                           ),
                           SizedBox(height: AppSpacing.md.h),
                         ],
-                      ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
           ),
         ),
-        if (canCancel) ...[
+        if (canCancel)
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: AppSpacing.md.w,
@@ -384,9 +453,56 @@ class SingleRequestScreen extends StatelessWidget {
               ),
             ),
           ),
-        ],
       ],
     );
+  }
+
+  Widget _buildBadge(
+    BuildContext context, {
+    required String text,
+    required Color bg,
+    required Color border,
+    required Color textColor,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm.w,
+        vertical: AppSpacing.xs.h,
+      ),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(AppSpacing.sm.r),
+        border: Border.all(color: border),
+      ),
+      child: Text(
+        text,
+        style: context.typography.medium12.copyWith(color: textColor),
+      ),
+    );
+  }
+
+  /// Returns true when a decimal time value should be shown (non-null and > 0).
+  bool _hasValidTime(double? decimal) => decimal != null && decimal > 0;
+
+  /// Converts a decimal hours value (e.g. 16.65) to 12-hour time (e.g. "04:39 PM").
+  String _decimalHoursToTime(double decimal) {
+    final hours = decimal.floor();
+    final minutes = ((decimal - hours) * 60).round();
+    final dateTime = DateTime(0, 1, 1, hours, minutes);
+    try {
+      return DateFormat('hh:mm a').format(dateTime);
+    } on Exception catch (_) {
+      return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
+    }
+  }
+
+  /// Formats a decimal hours duration to a human-readable string (e.g. "3h 9m").
+  String _formatDuration(BuildContext context, double decimal) {
+    final hours = decimal.floor();
+    final minutes = ((decimal - hours) * 60).round();
+    if (hours == 0) return '${minutes}m';
+    if (minutes == 0) return '${hours}h';
+    return '${hours}h ${minutes}m';
   }
 
   String _getLocalizedRequestType(BuildContext context, String? requestType) {
@@ -421,60 +537,9 @@ class SingleRequestScreen extends StatelessWidget {
     }
   }
 
-  Color _getStatusBackgroundColor(BuildContext context, String? state) {
-    switch (state) {
-      case 'approve':
-      case 'done':
-        return context.colors.success.withValues(alpha: 0.1);
-      case 'refuse':
-        return context.colors.error.withValues(alpha: 0.1);
-      case 'cancelled':
-      case 'cancel':
-        return context.colors.surfaceVariant;
-      case 'draft':
-      case 'confirm':
-      default:
-        return context.colors.statusPendingBackground;
-    }
-  }
-
-  Color _getStatusBorderColor(BuildContext context, String? state) {
-    switch (state) {
-      case 'approve':
-      case 'done':
-        return context.colors.success;
-      case 'refuse':
-        return context.colors.error;
-      case 'cancelled':
-      case 'cancel':
-        return context.colors.onSurfaceVariant;
-      case 'draft':
-      case 'confirm':
-      default:
-        return context.colors.statusPendingBorder;
-    }
-  }
-
-  Color _getStatusTextColor(BuildContext context, String? state) {
-    switch (state) {
-      case 'approve':
-      case 'done':
-        return context.colors.success;
-      case 'refuse':
-        return context.colors.error;
-      case 'cancelled':
-      case 'cancel':
-        return context.colors.onSurfaceVariant;
-      case 'draft':
-      case 'confirm':
-      default:
-        return context.colors.statusPendingText;
-    }
-  }
-
   bool _canCancelRequest(String? state) {
     // Can cancel if the request is not done, cancelled, or refused
-    return state != 'done' && state != 'cancel' && state != 'cancelled' && state != 'refuse';
+    return state != 'done' && state != 'cancel' && state != 'cancelled' && state != 'refuse' && state != 'approved';
   }
 
   void _showCancelConfirmationDialog(BuildContext context, int? requestId) {

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/location_provider.dart';
-import 'package:rose_hr/common/helpers/toast_service.dart';
+import 'package:rose_hr/common/helpers/snackbar_service.dart';
 import 'package:rose_hr/common/widgets/bottom_sheet_wrapper.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/home/data/models/create_attendance_punch_request.dart';
@@ -340,11 +340,11 @@ class HeaderAndShiftSection extends StatelessWidget {
                   );
                 },
               ),
-              Text(
-                'آخر تسجيل حدث 09:23 صباحًا',
-                style: context.typography.regular14,
-                textAlign: TextAlign.center,
-              ),
+              // Text(
+              //   'آخر تسجيل حدث 09:23 صباحًا',
+              //   style: context.typography.regular14,
+              //   textAlign: TextAlign.center,
+              // ),
               BlocBuilder<ShiftCubit, ShiftState>(
                 builder: (context, shiftState) {
                   final isLocationLoading = shiftState.locationCheckStatus == LocationCheckStatus.checkingBetweenRadiusLoading;
@@ -357,22 +357,38 @@ class HeaderAndShiftSection extends StatelessWidget {
                   return BlocConsumer<HomeCubit, HomeState>(
                     listener: (context, homeState) {
                       if (homeState.status == HomeStatus.success) {
-                        // final response = homeState.createAttendancePunchResponse?.result;
-                        if (context.mounted) {
-                          context.pop();
-                          BottomSheetWrapper(
-                            initialSize: 0.35.h,
-                            maxChildSize: 0.35.h,
-                            removeAutoScroll: true,
-                            disableDrag: true,
-                            useRootNavigator: true,
-                            child: const ClockInClockOutBottomSheet(clockImage: Assets.rastersFingerPrintRegistered),
-                          ).callSheet(context);
+                        final result = homeState.createAttendancePunchResponse?.result;
+
+                        // Check if the operation was actually successful
+                        if (result?.success ?? false) {
+                          if (context.mounted) {
+                            context.pop();
+                            BottomSheetWrapper(
+                              initialSize: 0.35.h,
+                              maxChildSize: 0.35.h,
+                              removeAutoScroll: true,
+                              disableDrag: true,
+                              useRootNavigator: true,
+                              child: const ClockInClockOutBottomSheet(clockImage: Assets.rastersFingerPrintRegistered),
+                            ).callSheet(context);
+                          }
+                        } else {
+                          // Handle case where success is false (e.g., not in geofence)
+                          if (context.mounted) {
+                            context.pop();
+                            SnackbarService.showError(
+                              context,
+                              result?.message ?? 'فشلت العملية',
+                            );
+                          }
                         }
                       } else if (homeState.status == HomeStatus.error) {
                         if (context.mounted) {
                           context.pop();
-                          ToastService.showError(homeState.error ?? 'Something went wrong');
+                          SnackbarService.showError(
+                            context,
+                            homeState.error ?? 'حدث خطأ ما',
+                          );
                         }
                       }
                     },

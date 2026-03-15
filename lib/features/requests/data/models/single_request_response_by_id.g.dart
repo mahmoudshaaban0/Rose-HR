@@ -50,8 +50,8 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   requestType: json['request_type'] as String?,
   requestTypeDisplay: json['request_type_display'] as String?,
   date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
-  timeFrom: (json['time_from'] as num?)?.toInt(),
-  timeTo: (json['time_to'] as num?)?.toInt(),
+  timeFrom: (json['time_from'] as num?)?.toDouble(),
+  timeTo: (json['time_to'] as num?)?.toDouble(),
   reason: json['reason'] as String?,
   state: json['state'] as String?,
   stateDisplay: json['state_display'] as String?,
@@ -61,7 +61,16 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   managerName: json['manager_name'] as String?,
   resAttendanceId: (json['res_attendance_id'] as num?)?.toInt(),
   shiftName: json['shift_name'] as String?,
-  attachments: json['attachments'] as List<dynamic>?,
+  workMissionType: json['work_mission_type'] as String?,
+  missionStartDate: json['mission_start_date'] == null
+      ? null
+      : DateTime.parse(json['mission_start_date'] as String),
+  missionEndDate: json['mission_end_date'] == null
+      ? null
+      : DateTime.parse(json['mission_end_date'] as String),
+  attachments: (json['attachments'] as List<dynamic>?)
+      ?.map((e) => RequestAttachment.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
@@ -83,5 +92,24 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'manager_name': instance.managerName,
   'res_attendance_id': instance.resAttendanceId,
   'shift_name': instance.shiftName,
+  'work_mission_type': instance.workMissionType,
+  'mission_start_date': instance.missionStartDate?.toIso8601String(),
+  'mission_end_date': instance.missionEndDate?.toIso8601String(),
   'attachments': instance.attachments,
 };
+
+RequestAttachment _$RequestAttachmentFromJson(Map<String, dynamic> json) =>
+    RequestAttachment(
+      id: (json['id'] as num?)?.toInt(),
+      name: json['name'] as String?,
+      url: json['url'] as String?,
+      mimetype: json['mimetype'] as String?,
+    );
+
+Map<String, dynamic> _$RequestAttachmentToJson(RequestAttachment instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'url': instance.url,
+      'mimetype': instance.mimetype,
+    };

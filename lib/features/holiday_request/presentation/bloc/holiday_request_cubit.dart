@@ -111,7 +111,7 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
         emit(
           state.copyWith(
             status: HolidayRequestStatus.submitError,
-            errorMessage: 'Please select leave type',
+            errorMessage: 'pleaseSelectLeaveTypeError',
           ),
         );
         return;
@@ -121,7 +121,7 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
         emit(
           state.copyWith(
             status: HolidayRequestStatus.submitError,
-            errorMessage: 'Please select start and end dates',
+            errorMessage: 'pleaseSelectHolidayDatesError',
           ),
         );
         return;

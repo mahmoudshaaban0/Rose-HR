@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:rose_hr/common/helpers/timezone_helper.dart';
-import 'package:rose_hr/common/helpers/toast_service.dart';
+import 'package:rose_hr/common/helpers/snackbar_service.dart';
 import 'package:rose_hr/features/attendance/presentation/cubit/attendance_cubit.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -81,7 +81,7 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
     return BlocConsumer<AttendanceCubit, AttendanceState>(
       listener: (context, state) {
         if (state.status == AttendanceStatus.error) {
-          ToastService.showError(state.error ?? context.localizations.anErrorOccurred);
+          SnackbarService.showError(context, state.error ?? context.localizations.anErrorOccurred);
         }
       },
       builder: (context, state) {

@@ -254,6 +254,12 @@ abstract class AppLocalizations {
   /// **'Hours'**
   String get hours;
 
+  /// No description provided for @minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get minutes;
+
   /// No description provided for @inRange.
   ///
   /// In en, this message translates to:
@@ -367,6 +373,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'JPEG, PNG, PDF, and MP4 formats, up to 50 MB.'**
   String get fileFormatsHint;
+
+  /// No description provided for @chooseImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Images'**
+  String get chooseImages;
+
+  /// No description provided for @chooseFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Files'**
+  String get chooseFiles;
 
   /// No description provided for @submitRequest.
   ///
@@ -931,6 +949,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to cancel this request?'**
   String get cancelRequestConfirmation;
+
+  /// No description provided for @teamRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Requests'**
+  String get teamRequests;
+
+  /// No description provided for @viewAllRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'View all requests'**
+  String get viewAllRequests;
+
+  /// No description provided for @approveRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve Request'**
+  String get approveRequest;
+
+  /// No description provided for @rejectRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject Request'**
+  String get rejectRequest;
+
+  /// No description provided for @noTeamRequestsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No team requests at the moment'**
+  String get noTeamRequestsYet;
+
+  /// No description provided for @timeFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Time'**
+  String get timeFrom;
+
+  /// No description provided for @timeTo.
+  ///
+  /// In en, this message translates to:
+  /// **'End Time'**
+  String get timeTo;
+
+  /// No description provided for @requestedDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested Duration'**
+  String get requestedDuration;
+
+  /// No description provided for @workMissionTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission Type'**
+  String get workMissionTypeLabel;
+
+  /// No description provided for @workMissionTypeHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get workMissionTypeHours;
+
+  /// No description provided for @workMissionTypeDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get workMissionTypeDays;
+
+  /// No description provided for @missionStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission Start Date'**
+  String get missionStartDate;
+
+  /// No description provided for @missionEndDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission End Date'**
+  String get missionEndDate;
+
+  /// No description provided for @holidayRequestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Holiday Request'**
+  String get holidayRequestTitle;
+
+  /// No description provided for @failedToSendHolidayRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit holiday request'**
+  String get failedToSendHolidayRequest;
+
+  /// No description provided for @leaveType.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Type'**
+  String get leaveType;
+
+  /// No description provided for @selectLeaveType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select leave type'**
+  String get selectLeaveType;
+
+  /// No description provided for @startsFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts from:'**
+  String get startsFrom;
+
+  /// No description provided for @selectStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select start date'**
+  String get selectStartDate;
+
+  /// No description provided for @endsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends at:'**
+  String get endsAt;
+
+  /// No description provided for @selectEndDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select end date'**
+  String get selectEndDate;
+
+  /// No description provided for @wantAdvanceSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to receive salary in advance?'**
+  String get wantAdvanceSalary;
+
+  /// No description provided for @airTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Air Ticket'**
+  String get airTicket;
+
+  /// No description provided for @visaType.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa Type'**
+  String get visaType;
+
+  /// No description provided for @selectVisaType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select visa type'**
+  String get selectVisaType;
+
+  /// No description provided for @visaPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa Period'**
+  String get visaPeriod;
+
+  /// No description provided for @enterVisaPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter visa period'**
+  String get enterVisaPeriod;
+
+  /// No description provided for @visaDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa Date'**
+  String get visaDate;
+
+  /// No description provided for @selectVisaDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select visa date'**
+  String get selectVisaDate;
+
+  /// No description provided for @enterHolidayReasonHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter holiday reason here if any...'**
+  String get enterHolidayReasonHere;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @visaPeriodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa Period'**
+  String get visaPeriodTitle;
+
+  /// No description provided for @visaMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{months} months'**
+  String visaMonths(String months);
+
+  /// No description provided for @noLeaveTypesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No leave types available'**
+  String get noLeaveTypesAvailable;
+
+  /// No description provided for @dayOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Day off'**
+  String get dayOff;
+
+  /// No description provided for @enjoyYourHoliday.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy your holiday for a productive week start'**
+  String get enjoyYourHoliday;
+
+  /// No description provided for @absent.
+  ///
+  /// In en, this message translates to:
+  /// **'Absent'**
+  String get absent;
+
+  /// No description provided for @lateAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Late attendance'**
+  String get lateAttendance;
+
+  /// No description provided for @earlyCheckout.
+  ///
+  /// In en, this message translates to:
+  /// **'Early checkout'**
+  String get earlyCheckout;
+
+  /// No description provided for @pleaseSelectLeaveTypeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select leave type'**
+  String get pleaseSelectLeaveTypeError;
+
+  /// No description provided for @pleaseSelectHolidayDatesError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select start and end dates'**
+  String get pleaseSelectHolidayDatesError;
 }
 
 class _AppLocalizationsDelegate

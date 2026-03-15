@@ -34,9 +34,8 @@ class AppRadioButton<T> extends StatelessWidget {
               groupValue: groupValue,
               child: CupertinoRadio<T>(
                 value: value,
-                inactiveColor: context.colors.iconOnSurface,
-                fillColor: context.colors.warning,
-                activeColor: context.colors.warning,
+                inactiveColor: context.colors.outlineVariant,
+                activeColor: context.colors.info,
               ),
             ),
           ),

@@ -63,22 +63,22 @@ class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
                                     );
                                   },
                                 ),
-                                const AppDivider(),
-                                BlocBuilder<PunchCorrectionCubit, PunchCorrectionState>(
-                                  builder: (context, state) {
-                                    return AppRadioButton<String>(
-                                      value: AttendanceMethod.attendanceLog.id,
-                                      groupValue: state.attendanceMethod,
-                                      onChanged: (value) {
-                                        if (value != null) {
-                                          AppLogger.instance.logDebug('selected attendance method: $value');
-                                          context.read<PunchCorrectionCubit>().selectAttendanceMethod(value);
-                                        }
-                                      },
-                                      label: context.localizations.selectFromRecordedFingerprints,
-                                    );
-                                  },
-                                ),
+                                // const AppDivider(),
+                                // BlocBuilder<PunchCorrectionCubit, PunchCorrectionState>(
+                                //   builder: (context, state) {
+                                //     return AppRadioButton<String>(
+                                //       value: AttendanceMethod.attendanceLog.id,
+                                //       groupValue: state.attendanceMethod,
+                                //       onChanged: (value) {
+                                //         if (value != null) {
+                                //           AppLogger.instance.logDebug('selected attendance method: $value');
+                                //           context.read<PunchCorrectionCubit>().selectAttendanceMethod(value);
+                                //         }
+                                //       },
+                                //       label: context.localizations.selectFromRecordedFingerprints,
+                                //     );
+                                //   },
+                                // ),
                               ],
                             ),
                           ),

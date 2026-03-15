@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
-import 'package:rose_hr/common/helpers/toast_service.dart';
+import 'package:rose_hr/common/helpers/snackbar_service.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/features/requests/presentation/cubit/requests_cubit.dart';
 import 'package:rose_hr/features/requests/presentation/screens/completed_requests_screen.dart';
@@ -43,16 +42,16 @@ class _RequestsScreenState extends State<RequestsScreen> with SingleTickerProvid
         listener: (context, state) {
           if (state.status == RequestsStatus.error) {
             // Handle error if needed
-            ToastService.showError(state.errorMessage ?? context.localizations.somethingWentWrong);
+            SnackbarService.showError(context, state.errorMessage ?? context.localizations.somethingWentWrong);
           } else if (state.status == RequestsStatus.cancelSuccess) {
             // Navigator.of(context, rootNavigator: true).pop();
-            ToastService.showSuccess(
-              gravity: ToastGravity.CENTER,
+            SnackbarService.showSuccess(
+              context,
               context.localizations.requestCancelledSuccessfully,
             );
           } else if (state.status == RequestsStatus.cancelError) {
-            ToastService.showError(
-              gravity: ToastGravity.CENTER,
+            SnackbarService.showError(
+              context,
               state.errorMessage ?? context.localizations.failedToCancelRequest,
             );
           } else if (state.status == RequestsStatus.cancelling) {

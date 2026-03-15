@@ -54,12 +54,9 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   absence: json['absence'] as bool?,
   description: json['description'] as String?,
   the2Shifts: json['2_shifts'] as bool?,
-  checkInTime: json['check_in_time'],
-  lateInTime: json['late_in_time'],
-  checkOutTime: json['check_out_time'],
-  earlyOutTime: json['early_out_time'],
-  totalLateTime: json['total_late_time'],
-  totalWorkTime: json['total_work_time'],
+  shifts: (json['shifts'] as List<dynamic>?)
+      ?.map((e) => ShiftData.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
@@ -70,6 +67,19 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'absence': instance.absence,
   'description': instance.description,
   '2_shifts': instance.the2Shifts,
+  'shifts': instance.shifts,
+};
+
+ShiftData _$ShiftDataFromJson(Map<String, dynamic> json) => ShiftData(
+  checkInTime: json['check_in_time'] as String?,
+  lateInTime: json['late_in_time'] as String?,
+  checkOutTime: json['check_out_time'] as String?,
+  earlyOutTime: json['early_out_time'] as String?,
+  totalLateTime: json['total_late_time'] as String?,
+  totalWorkTime: json['total_work_time'] as String?,
+);
+
+Map<String, dynamic> _$ShiftDataToJson(ShiftData instance) => <String, dynamic>{
   'check_in_time': instance.checkInTime,
   'late_in_time': instance.lateInTime,
   'check_out_time': instance.checkOutTime,

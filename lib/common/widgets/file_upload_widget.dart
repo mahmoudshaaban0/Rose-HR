@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/cubits/file_upload/file_upload_cubit.dart';
 import 'package:rose_hr/common/models/upload_file_model.dart';
+import 'package:rose_hr/common/widgets/upload_source_bottom_sheet.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -82,10 +83,24 @@ class FileUploadWidget extends StatelessWidget {
               onTap: state.isMaxFilesReached
                   ? null
                   : () {
-                      cubit.pickFiles(
-                        allowMultiple: allowMultiple,
-                        fileType: fileType,
-                      );
+                      if (fileType == FilePickerType.both) {
+                        showUploadSourceSheet(
+                          context,
+                          onChooseImages: () => cubit.pickFiles(
+                            allowMultiple: allowMultiple,
+                            fileType: FilePickerType.image,
+                          ),
+                          onChooseFiles: () => cubit.pickFiles(
+                            allowMultiple: allowMultiple,
+                            fileType: FilePickerType.pdf,
+                          ),
+                        );
+                      } else {
+                        cubit.pickFiles(
+                          allowMultiple: allowMultiple,
+                          fileType: fileType,
+                        );
+                      }
                     },
               child: Padding(
                 padding: EdgeInsets.symmetric(

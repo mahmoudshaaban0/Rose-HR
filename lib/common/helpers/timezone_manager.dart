@@ -171,6 +171,7 @@ class TimezoneManager {
       await _detectTimezoneFromGps();
       _isDetecting = false;
     }
+
   }
 
   /// Detect timezone from GPS location

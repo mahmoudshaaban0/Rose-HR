@@ -24,7 +24,7 @@ class BottomSheetWrapper extends StatefulWidget {
   final double? initialSize;
   final double? maxChildSize;
   final double? minChildSize;
-  final Function? thenFunction;
+  final VoidCallback? thenFunction;
   final bool? closeBottomSheetOnDrag;
   final bool? disableDrag;
   final bool removeAutoScroll;
@@ -56,27 +56,34 @@ class BottomSheetWrapper extends StatefulWidget {
           });
         }
 
-        return PopScope(
-          child: DraggableScrollableSheet(
-            initialChildSize: initialSize == null ? initialChildSize : initialSize!,
-            maxChildSize: maxChildSize ?? 1.0,
-            controller: ctrl,
-            minChildSize: minChildSize ?? .17,
-            expand: false,
-            builder: (ctx, scrl) {
-              return removeAutoScroll
-                  ? SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      child: this,
-                    )
-                  : SingleChildScrollView(
-                      controller: scrl,
-                      child: SizedBox(
+        return AnimatedPadding(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: PopScope(
+            child: DraggableScrollableSheet(
+              initialChildSize: initialSize == null ? initialChildSize : initialSize!,
+              maxChildSize: maxChildSize ?? 1.0,
+              controller: ctrl,
+              minChildSize: minChildSize ?? .17,
+              expand: false,
+              builder: (ctx, scrl) {
+                return removeAutoScroll
+                    ? SizedBox(
                         height: MediaQuery.of(context).size.height,
                         child: this,
-                      ),
-                    );
-            },
+                      )
+                    : SingleChildScrollView(
+                        controller: scrl,
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: this,
+                        ),
+                      );
+              },
+            ),
           ),
         );
       },

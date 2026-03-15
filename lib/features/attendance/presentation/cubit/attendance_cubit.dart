@@ -18,9 +18,8 @@ class AttendanceCubit extends Cubit<AttendanceState> {
 
   /// Refresh current month data (for pull-to-refresh)
   Future<void> refresh() async {
-    final now = state.focusedDay;
-    if (now.isBefore(DateTime.now())) return;
-    await getAttendanceSummary(now.month, now.year);
+    final focused = state.focusedDay;
+    await getAttendanceSummary(focused.month, focused.year);
   }
 
   Future<void> getAttendanceSummary(int month, int year) async {

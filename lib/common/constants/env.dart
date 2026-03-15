@@ -42,4 +42,10 @@ final class Env {
   static String cancelRequestById = _Env.cancelRequestById;
   @EnviedField(varName: 'getRequestById', obfuscate: true)
   static String getRequestById = _Env.getRequestById;
+  @EnviedField(varName: 'managerRequestsList', obfuscate: true)
+  static String managerRequestsList = _Env.managerRequestsList;
+  @EnviedField(varName: 'approveManagerRequest', obfuscate: true)
+  static String approveManagerRequest = _Env.approveManagerRequest;
+  @EnviedField(varName: 'rejectManagerRequest', obfuscate: true)
+  static String rejectManagerRequest = _Env.rejectManagerRequest;
 }

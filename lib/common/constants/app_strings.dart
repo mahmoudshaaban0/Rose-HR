@@ -11,6 +11,10 @@ class AppStrings {
   static const String english = 'en';
   static const String sa = 'SA';
   static const String accept = 'Accept';
+  // Header key for API language
+  static const String langHeader = 'lang';
+  // Stored/local language code (e.g. 'en_US' or 'ar_001')
+  static const String lang = 'lang';
   static const String version = 'v1.0.0';
   static const String uid = 'uid';
   static const String email = 'email';

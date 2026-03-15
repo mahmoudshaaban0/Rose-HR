@@ -1,8 +1,72 @@
 // change dateTime to string in format yyyy-MM-dd
 import 'package:intl/intl.dart';
+import 'package:rose_hr/common/helpers/timezone_helper.dart';
+import 'package:rose_hr/common/utility/logger.dart';
 
 String dateTimeToString(DateTime dateTime) {
   return DateFormat('yyyy-MM-dd', 'en').format(dateTime.toUtc());
+}
+
+/// Converts UTC time string to local timezone time string
+/// This handles time strings that come from the backend in UTC format
+/// and converts them to the user's local timezone
+///
+/// Examples:
+/// - "2026-01-15 13:38:19" (UTC) → local time string
+/// - "13:38:19" (UTC) → local time string (assumes today's date)
+/// - false → null
+String? convertUtcTimeToLocal(dynamic value) {
+  if (value == null || value == false) return null;
+
+  // Convert to string if it's not already
+  String str;
+  if (value is String) {
+    str = value.trim();
+  } else {
+    str = value.toString().trim();
+  }
+
+  if (str.isEmpty) return null;
+
+  try {
+    DateTime utcDateTime;
+
+    // Check if it contains a date (datetime format: "YYYY-MM-DD HH:mm:ss")
+    if (str.contains(' ')) {
+      // Full datetime string
+      utcDateTime = DateTime.parse(str).toUtc();
+    } else if (str.contains(':')) {
+      // Time only string - assume today's date in UTC
+      final parts = str.split(':');
+      if (parts.length < 2) return null;
+
+      final now = DateTime.now().toUtc();
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+      final second = parts.length > 2 ? int.parse(parts[2]) : 0;
+
+      utcDateTime = DateTime.utc(
+        now.year,
+        now.month,
+        now.day,
+        hour,
+        minute,
+        second,
+      );
+    } else {
+      return null;
+    }
+
+    // Convert UTC to local timezone using TimezoneHelper
+    final localTime = TimezoneHelper.fromUtc(utcDateTime);
+
+    // Return formatted time string in HH:mm:ss format with English numerals
+    return TimezoneHelper.format(localTime, pattern: 'HH:mm:ss', locale: 'en');
+  } on Exception catch (e) {
+    // Catch any errors during parsing or conversion
+    AppLogger.instance.logError('Error in convertUtcTimeToLocal for value "$value": $e');
+    return null;
+  }
 }
 
 /// Extracts time part from a datetime string or returns the string if it's already a time
@@ -30,24 +94,25 @@ String? extractTimeFromDateTime(dynamic value) {
 }
 
 /// Converts time from API format (list or string) to Arabic time format
+/// The backend sends times in UTC, so this function converts to local timezone first
 /// Examples:
-/// - [05:00:00] or "05:00:00" → "٥ صباحاً"
-/// - [14:00:00] or "14:00:00" → "٢ مساءاً"
-/// - [00:30:00] or "00:30:00" → "١٢:٣٠ صباحاً"
-/// - "2026-01-15 13:38:19" → "١:٣٨ مساءاً"
+/// - [05:00:00] or "05:00:00" (UTC) → "٥ صباحاً" (local time)
+/// - [14:00:00] or "14:00:00" (UTC) → "٢ مساءاً" (local time)
+/// - [00:30:00] or "00:30:00" (UTC) → "١٢:٣٠ صباحاً" (local time)
+/// - "2026-01-15 13:38:19" (UTC) → "١:٣٨ مساءاً" (local time)
 String formatTimeToArabic(dynamic timeData) {
   try {
     // Extract time string from list or use directly if string
     String? timeString;
     if (timeData is List && timeData.isNotEmpty) {
-      timeString = extractTimeFromDateTime(timeData.first);
+      timeString = convertUtcTimeToLocal(timeData.first);
     } else {
-      timeString = extractTimeFromDateTime(timeData);
+      timeString = convertUtcTimeToLocal(timeData);
     }
 
     if (timeString == null) return '--:--';
 
-    // Parse the time string (format: HH:mm:ss)
+    // Parse the time string (format: HH:mm:ss) - now in local time
     final parts = timeString.split(':');
     if (parts.length < 2) return '--:--';
 
@@ -82,30 +147,37 @@ String formatTimeToArabic(dynamic timeData) {
       final arabicMinute = _convertToArabicNumerals(minute.toString().padLeft(2, '0'));
       return '$arabicHour:$arabicMinute $period';
     }
-  } on FormatException {
+  } on Exception catch (e) {
+    AppLogger.instance.logError('Error in formatTimeToArabic: $e');
     return '--:--';
   }
 }
 
-/// Converts decimal hours to Arabic hours and minutes format
-/// Examples:
-/// - [7.9] or 7.9 → "٧ ساعات ٥٤ دقيقة"
-/// - [1.1] or 1.1 → "١ ساعة ٦ دقائق"
-/// - [0.5] or 0.5 → "٣٠ دقيقة"
-/// - [-1.5] or -1.5 → "- ١ ساعة ٣٠ دقيقة"
+/// Converts decimal hours to Arabic hours and minutes format.
+///
+/// Handles all API shapes:
+/// - String "0.0" / "0"   → "--:--"  (no data)
+/// - String "5.83"        → "٥ ساعات ٤٩ دقيقة"
+/// - num    7.9           → "٧ ساعات ٥٤ دقيقة"
+/// - List   [1.1]         → "١ ساعة ٦ دقائق"
+/// - null / false         → "--"
 String formatHoursToArabic(dynamic hoursData) {
   try {
-    // Extract hours value from list or use directly if number
-    final hoursValue = hoursData is List && hoursData.isNotEmpty
-        ? hoursData.first
-        : hoursData is num
-        ? hoursData
-        : null;
+    // Unwrap list
+    final raw = hoursData is List && hoursData.isNotEmpty ? hoursData.first : hoursData;
 
-    if (hoursValue == null) return '--';
+    if (raw == null || raw == false) return '--';
 
     // Convert to double
-    final totalHours = (hoursValue is num) ? hoursValue.toDouble() : double.parse(hoursValue.toString());
+    final double? totalHours;
+    if (raw is num) {
+      totalHours = raw.toDouble();
+    } else {
+      totalHours = double.tryParse(raw.toString().trim());
+    }
+
+    // Treat missing / zero as "no data"
+    if (totalHours == null || totalHours == 0.0) return '--:--';
 
     // Handle negative values
     final isNegative = totalHours < 0;
@@ -138,9 +210,7 @@ String formatHoursToArabic(dynamic hoursData) {
       parts.add('$arabicMinutes $minuteWord');
     }
 
-    if (parts.isEmpty) {
-      return '--:--';
-    }
+    if (parts.isEmpty) return '--:--';
 
     final result = parts.join(' ');
     return isNegative ? '- $result' : result;
@@ -190,7 +260,8 @@ String formatDecimalHoursToTime(double hours, {bool useArabic = true}) {
     } else {
       return '$hourStr:$minuteStr $period';
     }
-  } catch (e) {
+  } on Exception catch (e) {
+    AppLogger.instance.logError('  ❌ Error in formatDecimalHoursToTime: $e');
     return '--:--';
   }
 }

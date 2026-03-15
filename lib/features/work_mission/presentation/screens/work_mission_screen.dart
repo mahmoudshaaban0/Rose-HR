@@ -3,13 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/cubits/file_upload/file_upload_cubit.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/timezone_helper.dart';
-import 'package:rose_hr/common/helpers/toast_service.dart';
+import 'package:rose_hr/common/helpers/snackbar_service.dart';
 import 'package:rose_hr/common/utility/logger.dart';
 import 'package:rose_hr/common/widgets/app_datepicker.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
@@ -62,18 +61,18 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
   void _submitWorkMission(BuildContext context, WorkMissionState state) {
     // Validate required fields
     if (state.workMissionTypeId == null) {
-      ToastService.showError('الرجاء اختيار نوع المهمة', gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, 'الرجاء اختيار نوع المهمة');
       return;
     }
 
     if (state.shiftId == null) {
-      ToastService.showError(context.localizations.pleaseSelectShift, gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, context.localizations.pleaseSelectShift);
       return;
     }
 
     // Validate attachments (required for work missions)
     if (!_fileUploadCubit.state.hasFiles || !_fileUploadCubit.state.allFilesUploaded) {
-      ToastService.showError('الرجاء إرفاق ملف واحد على الأقل', gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, 'الرجاء إرفاق ملف واحد على الأقل');
       return;
     }
 
@@ -81,7 +80,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
     if (state.workMissionTypeId == WorkMissionTypeModel.hours.id) {
       // For hours type: validate start time and end time
       if (state.startDate == null || state.endDate == null) {
-        ToastService.showError('الرجاء اختيار وقت البدء والانتهاء', gravity: ToastGravity.CENTER);
+        SnackbarService.showError(context, 'الرجاء اختيار وقت البدء والانتهاء');
         return;
       }
 
@@ -92,13 +91,13 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
       final timeTo = endDateTime.hour + (endDateTime.minute / 60.0);
 
       if (timeTo <= timeFrom) {
-        ToastService.showError('يجب أن يكون وقت الانتهاء بعد وقت البدء', gravity: ToastGravity.CENTER);
+        SnackbarService.showError(context, 'يجب أن يكون وقت الانتهاء بعد وقت البدء');
         return;
       }
     } else if (state.workMissionTypeId == WorkMissionTypeModel.days.id) {
       // For days type: validate start date and end date
       if (state.startDate == null || state.endDate == null) {
-        ToastService.showError('الرجاء اختيار تاريخ البدء والانتهاء', gravity: ToastGravity.CENTER);
+        SnackbarService.showError(context, 'الرجاء اختيار تاريخ البدء والانتهاء');
         return;
       }
 
@@ -107,7 +106,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
       final endDate = DateTime.parse(state.endDate!);
 
       if (endDate.isBefore(startDate)) {
-        ToastService.showError('يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء', gravity: ToastGravity.CENTER);
+        SnackbarService.showError(context, 'يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء');
         return;
       }
     }
@@ -116,7 +115,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
     final request = _buildWorkMissionRequest(state);
 
     if (request == null) {
-      ToastService.showError('بيانات طلب المهمة غير صحيحة', gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, 'بيانات طلب المهمة غير صحيحة');
       return;
     }
 
@@ -217,7 +216,8 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
           BlocListener<ShiftIdCubit, ShiftIdState>(
             listener: (context, state) {
               if (state.status == ShiftIdStatus.error) {
-                ToastService.showError(
+                SnackbarService.showError(
+                  context,
                   state.errorMessage ?? context.localizations.failedToFetchShiftInformation,
                 );
               } else if (state.status == ShiftIdStatus.success) {
@@ -256,8 +256,8 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                   _fileUploadCubit.clearAllFiles();
                 } else {
                   // Business logic error (e.g., 400 with success: false)
-                  ToastService.showError(
-                    gravity: ToastGravity.CENTER,
+                  SnackbarService.showError(
+                    context,
                     (result?.message ?? 'فشل في إرسال طلب المهمة') as String,
                   );
                 }
@@ -270,8 +270,8 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
               } else if (state.status == WorkMissionStatus.error) {
                 context.pop();
                 // Network or other errors
-                ToastService.showError(
-                  gravity: ToastGravity.CENTER,
+                SnackbarService.showError(
+                  context,
                   state.errorMessage ?? 'فشل في إرسال طلب المهمة',
                 );
               }
@@ -751,8 +751,12 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                     style: context.typography.medium16,
                                     textAlign: TextAlign.start,
                                   ),
-                                  FileUploadWidget(
-                                    cubit: _fileUploadCubit,
+                                  Material(
+                                    borderRadius: BorderRadius.all(Radius.circular(AppSpacing.xxxl.r)),
+                                    color: Colors.transparent,
+                                    child: FileUploadWidget(
+                                      cubit: _fileUploadCubit,
+                                    ),
                                   ),
                                 ],
                               ),

@@ -36,6 +36,7 @@ import 'package:rose_hr/features/requests/data/datasources/requests_datasource.d
 import 'package:rose_hr/features/requests/data/repositories/requests_repository.dart';
 import 'package:rose_hr/features/requests/presentation/cubit/requests_cubit.dart';
 import 'package:rose_hr/features/requests/presentation/cubit/single_request_cubit.dart';
+import 'package:rose_hr/features/requests/presentation/cubit/team_requests_cubit.dart';
 import 'package:rose_hr/features/work_mission/data/datasources/work_mission_datasource.dart';
 import 'package:rose_hr/features/work_mission/data/repositories/work_mission_repository.dart';
 import 'package:rose_hr/features/work_mission/presentation/bloc/work_mission_cubit.dart';
@@ -45,41 +46,98 @@ final GetIt sl = GetIt.instance;
 Future<void> init() async {
   ///! Data Sources
   sl
-    ..registerLazySingleton<AuthDataSource>(() => AuthDataSource(sl<ApiConsumer>()))
-    ..registerLazySingleton<HomeDataSource>(() => HomeDataSource(sl<ApiConsumer>()))
-    ..registerLazySingleton<AccountDataSource>(() => AccountDataSource(sl<ApiConsumer>()))
-    ..registerLazySingleton<AttendanceDataSource>(() => AttendanceDataSource(sl<ApiConsumer>()))
-    ..registerLazySingleton<PermissionRequestDataSource>(() => PermissionRequestDataSource(sl<ApiConsumer>()))
-    ..registerLazySingleton<PunchCorrectionDataSource>(() => PunchCorrectionDataSource(sl<ApiConsumer>()))
-    ..registerLazySingleton<WorkMissionDataSource>(() => WorkMissionDataSource(sl<ApiConsumer>()))
-    ..registerLazySingleton<HolidayRequestDataSource>(() => HolidayRequestDataSource(sl<ApiConsumer>()))
-    ..registerLazySingleton<RequestsDataSource>(() => RequestsDataSource(sl<ApiConsumer>()))
+    ..registerLazySingleton<AuthDataSource>(
+      () => AuthDataSource(sl<ApiConsumer>()),
+    )
+    ..registerLazySingleton<HomeDataSource>(
+      () => HomeDataSource(sl<ApiConsumer>()),
+    )
+    ..registerLazySingleton<AccountDataSource>(
+      () => AccountDataSource(sl<ApiConsumer>()),
+    )
+    ..registerLazySingleton<AttendanceDataSource>(
+      () => AttendanceDataSource(sl<ApiConsumer>()),
+    )
+    ..registerLazySingleton<PermissionRequestDataSource>(
+      () => PermissionRequestDataSource(sl<ApiConsumer>()),
+    )
+    ..registerLazySingleton<PunchCorrectionDataSource>(
+      () => PunchCorrectionDataSource(sl<ApiConsumer>()),
+    )
+    ..registerLazySingleton<WorkMissionDataSource>(
+      () => WorkMissionDataSource(sl<ApiConsumer>()),
+    )
+    ..registerLazySingleton<HolidayRequestDataSource>(
+      () => HolidayRequestDataSource(sl<ApiConsumer>()),
+    )
+    ..registerLazySingleton<RequestsDataSource>(
+      () => RequestsDataSource(sl<ApiConsumer>()),
+    )
     // Repositories
-    ..registerLazySingleton<AuthRepository>(() => AuthRepository(sl<AuthDataSource>()))
-    ..registerLazySingleton<HomeRepository>(() => HomeRepository(sl<HomeDataSource>()))
-    ..registerLazySingleton<AccountRepository>(() => AccountRepository(sl<AccountDataSource>()))
-    ..registerLazySingleton<AttendanceRepository>(() => AttendanceRepository(sl<AttendanceDataSource>()))
-    ..registerLazySingleton<PermissionRequestRepository>(() => PermissionRequestRepository(sl<PermissionRequestDataSource>()))
-    ..registerLazySingleton<PunchCorrectionRepository>(() => PunchCorrectionRepository(sl<PunchCorrectionDataSource>()))
-    ..registerLazySingleton<WorkMissionRepository>(() => WorkMissionRepository(sl<WorkMissionDataSource>()))
-    ..registerLazySingleton<HolidayRequestRepository>(() => HolidayRequestRepository(sl<HolidayRequestDataSource>()))
-    ..registerLazySingleton<RequestsRepository>(() => RequestsRepository(sl<RequestsDataSource>()))
+    ..registerLazySingleton<AuthRepository>(
+      () => AuthRepository(sl<AuthDataSource>()),
+    )
+    ..registerLazySingleton<HomeRepository>(
+      () => HomeRepository(sl<HomeDataSource>()),
+    )
+    ..registerLazySingleton<AccountRepository>(
+      () => AccountRepository(sl<AccountDataSource>()),
+    )
+    ..registerLazySingleton<AttendanceRepository>(
+      () => AttendanceRepository(sl<AttendanceDataSource>()),
+    )
+    ..registerLazySingleton<PermissionRequestRepository>(
+      () => PermissionRequestRepository(sl<PermissionRequestDataSource>()),
+    )
+    ..registerLazySingleton<PunchCorrectionRepository>(
+      () => PunchCorrectionRepository(sl<PunchCorrectionDataSource>()),
+    )
+    ..registerLazySingleton<WorkMissionRepository>(
+      () => WorkMissionRepository(sl<WorkMissionDataSource>()),
+    )
+    ..registerLazySingleton<HolidayRequestRepository>(
+      () => HolidayRequestRepository(sl<HolidayRequestDataSource>()),
+    )
+    ..registerLazySingleton<RequestsRepository>(
+      () => RequestsRepository(sl<RequestsDataSource>()),
+    )
     // Cubits/Blocs
     ..registerFactory<AuthBloc>(() => AuthBloc(sl<AuthRepository>()))
     ..registerFactory<HomeCubit>(() => HomeCubit(sl<HomeRepository>()))
     ..registerFactory<TimezoneCubit>(TimezoneCubit.new)
     ..registerFactory<AccountCubit>(() => AccountCubit(sl<AccountRepository>()))
     ..registerFactory<ShiftCubit>(() => ShiftCubit(sl<HomeRepository>()))
-    ..registerFactory<AttendanceCubit>(() => AttendanceCubit(sl<AttendanceRepository>()))
-    ..registerFactory<AttendanceDetailsCubit>(() => AttendanceDetailsCubit(sl<AttendanceRepository>()))
-    ..registerFactory<PermissionRequestCubit>(() => PermissionRequestCubit(sl<PermissionRequestRepository>()))
-    ..registerFactory<ShiftIdCubit>(() => ShiftIdCubit(sl<PermissionRequestRepository>()))
-    ..registerFactory<PunchCorrectionCubit>(() => PunchCorrectionCubit(sl<PunchCorrectionRepository>()))
+    ..registerFactory<AttendanceCubit>(
+      () => AttendanceCubit(sl<AttendanceRepository>()),
+    )
+    ..registerFactory<AttendanceDetailsCubit>(
+      () => AttendanceDetailsCubit(sl<AttendanceRepository>()),
+    )
+    ..registerFactory<PermissionRequestCubit>(
+      () => PermissionRequestCubit(sl<PermissionRequestRepository>()),
+    )
+    ..registerFactory<ShiftIdCubit>(
+      () => ShiftIdCubit(sl<PermissionRequestRepository>()),
+    )
+    ..registerFactory<PunchCorrectionCubit>(
+      () => PunchCorrectionCubit(sl<PunchCorrectionRepository>()),
+    )
     ..registerFactory<FileUploadCubit>(FileUploadCubit.new)
-    ..registerFactory<WorkMissionCubit>(() => WorkMissionCubit(sl<WorkMissionRepository>()))
-    ..registerFactory<HolidayRequestCubit>(() => HolidayRequestCubit(sl<HolidayRequestRepository>()))
-    ..registerFactory<RequestsCubit>(() => RequestsCubit(sl<RequestsRepository>()))
-    ..registerFactory<SingleRequestCubit>(() => SingleRequestCubit(sl<RequestsRepository>()))
+    ..registerFactory<WorkMissionCubit>(
+      () => WorkMissionCubit(sl<WorkMissionRepository>()),
+    )
+    ..registerFactory<HolidayRequestCubit>(
+      () => HolidayRequestCubit(sl<HolidayRequestRepository>()),
+    )
+    ..registerFactory<RequestsCubit>(
+      () => RequestsCubit(sl<RequestsRepository>()),
+    )
+    ..registerFactory<SingleRequestCubit>(
+      () => SingleRequestCubit(sl<RequestsRepository>()),
+    )
+    ..registerFactory<TeamRequestsCubit>(
+      () => TeamRequestsCubit(sl<RequestsRepository>()),
+    )
     ///! Core
     ..registerLazySingleton<NetworkInfo>(
       () => NetworkInfoImpl(connectivityChecker: sl()),
@@ -91,8 +149,14 @@ Future<void> init() async {
     ..registerLazySingleton<SharedPreferences>(() => sharedPreferences)
     ..registerLazySingleton<AppIntercepters>(AppIntercepters.new)
     ..registerLazySingleton<PrettyDioLogger>(
-      () => PrettyDioLogger(requestBody: true, requestHeader: true, responseHeader: true),
+      () => PrettyDioLogger(
+        requestBody: true,
+        requestHeader: true,
+        responseHeader: true,
+      ),
     )
-    ..registerLazySingleton<InternetConnectionChecker>(InternetConnectionChecker.new)
+    ..registerLazySingleton<InternetConnectionChecker>(
+      InternetConnectionChecker.new,
+    )
     ..registerLazySingleton<Dio>(Dio.new);
 }

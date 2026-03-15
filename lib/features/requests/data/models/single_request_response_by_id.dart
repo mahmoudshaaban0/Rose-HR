@@ -64,10 +64,14 @@ class Data {
     this.managerName,
     this.resAttendanceId,
     this.shiftName,
+    this.workMissionType,
+    this.missionStartDate,
+    this.missionEndDate,
     this.attachments,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+
   @JsonKey(name: "id")
   int? id;
   @JsonKey(name: "name")
@@ -82,16 +86,19 @@ class Data {
   String? requestTypeDisplay;
   @JsonKey(name: "date")
   DateTime? date;
+  /// Decimal hour value, e.g. 16.65 = 16:39
   @JsonKey(name: "time_from")
-  int? timeFrom;
+  double? timeFrom;
+  /// Decimal hour value, e.g. 19.8 = 19:48
   @JsonKey(name: "time_to")
-  int? timeTo;
+  double? timeTo;
   @JsonKey(name: "reason")
   String? reason;
   @JsonKey(name: "state")
   String? state;
   @JsonKey(name: "state_display")
   String? stateDisplay;
+  /// Duration in decimal hours, e.g. 3.15
   @JsonKey(name: "requested_duration")
   double? requestedDuration;
   @JsonKey(name: "partial_excuse")
@@ -104,8 +111,38 @@ class Data {
   int? resAttendanceId;
   @JsonKey(name: "shift_name")
   String? shiftName;
+  /// "hours" or "days"
+  @JsonKey(name: "work_mission_type")
+  String? workMissionType;
+  @JsonKey(name: "mission_start_date")
+  DateTime? missionStartDate;
+  @JsonKey(name: "mission_end_date")
+  DateTime? missionEndDate;
   @JsonKey(name: "attachments")
-  List<dynamic>? attachments;
+  List<RequestAttachment>? attachments;
 
   Map<String, dynamic> toJson() => _$DataToJson(this);
+}
+
+@JsonSerializable()
+class RequestAttachment {
+  RequestAttachment({this.id, this.name, this.url, this.mimetype});
+
+  factory RequestAttachment.fromJson(Map<String, dynamic> json) =>
+      _$RequestAttachmentFromJson(json);
+
+  @JsonKey(name: "id")
+  int? id;
+  @JsonKey(name: "name")
+  String? name;
+  @JsonKey(name: "url")
+  String? url;
+  @JsonKey(name: "mimetype")
+  String? mimetype;
+
+  bool get isPdf => mimetype?.contains('pdf') ?? false;
+  bool get isImage =>
+      mimetype?.startsWith('image/') ?? false;
+
+  Map<String, dynamic> toJson() => _$RequestAttachmentToJson(this);
 }

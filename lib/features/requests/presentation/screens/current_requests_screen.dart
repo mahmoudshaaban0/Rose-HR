@@ -61,7 +61,10 @@ class CurrentRequests extends StatelessWidget {
 
           // Filter for current requests (not completed/rejected/cancelled)
           final currentRequests = data.where((request) {
-            return request.state != 'done' && request.state != 'refuse' && request.state != 'cancelled';
+            return request.state != 'done' &&
+                request.state != 'refuse' &&
+                request.state != 'cancelled' &&
+                request.state != 'approved';
           }).toList();
 
           if (currentRequests.isEmpty) {

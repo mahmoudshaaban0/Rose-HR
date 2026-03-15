@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/constants/app_strings.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/timezone_helper.dart';
-import 'package:rose_hr/common/helpers/toast_service.dart';
+import 'package:rose_hr/common/helpers/snackbar_service.dart';
 import 'package:rose_hr/common/utility/logger.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/common/widgets/bottom_sheet_wrapper.dart';
@@ -21,6 +20,7 @@ import 'package:rose_hr/common/widgets/file_upload_widget.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/permission_request/data/models/permission_request_model.dart';
 import 'package:rose_hr/features/permission_request/data/models/permission_type_model.dart';
+import 'package:rose_hr/l10n/app_localizations.dart';
 import 'package:rose_hr/features/permission_request/data/models/shift_id_response_model.dart';
 import 'package:rose_hr/features/permission_request/presentation/cubit/permission_request_cubit.dart';
 import 'package:rose_hr/features/permission_request/presentation/cubit/shift_id_cubit.dart';
@@ -32,6 +32,21 @@ import 'package:rose_hr/theme/app_textfield.dart';
 import 'package:rose_hr/theme/primary_text_button.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 import 'package:shimmer/shimmer.dart';
+
+/// Converts API value in decimal hours (e.g. 0.74 = 44 min, 1.25 = 1h 15m) to "X hours Y minutes" string.
+String _formatHoursAndMinutes(double decimalHours, AppLocalizations l10n) {
+  final totalMinutes = (decimalHours * 60).round();
+  final hours = totalMinutes ~/ 60;
+  final minutes = totalMinutes % 60;
+  if (hours > 0 && minutes > 0) {
+    return '$hours ${l10n.hours} $minutes ${l10n.minutes}';
+  }
+  if (hours > 0) return '$hours ${l10n.hours}';
+  return '$minutes ${l10n.minutes}';
+}
+
+/// Preset partial excuse durations: value sent to backend (decimal hours). Labels built as "30 minutes", "1 hour", etc.
+const List<double> _partialExcusePresetHours = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4];
 
 class PermissionRequestScreen extends StatefulWidget {
   const PermissionRequestScreen({super.key});
@@ -65,24 +80,24 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
   void _submitPermissionRequest(BuildContext context, PermissionRequestState state) {
     // Validate required fields
     if (state.permissionTypeId == null) {
-      ToastService.showError(context.localizations.pleaseSelectPermissionType, gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, context.localizations.pleaseSelectPermissionType);
       return;
     }
 
     if (state.date == null) {
-      ToastService.showError(context.localizations.pleaseSelectDate, gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, context.localizations.pleaseSelectDate);
       return;
     }
 
     if (state.shiftId == null) {
-      ToastService.showError(context.localizations.pleaseSelectShift, gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, context.localizations.pleaseSelectShift);
       return;
     }
 
     // Type-specific validation
     if (state.permissionTypeId == 'mid_day') {
       if (state.startTime == null || state.endTime == null) {
-        ToastService.showError(context.localizations.pleaseSelectStartAndEndTime);
+        SnackbarService.showError(context, context.localizations.pleaseSelectStartAndEndTime);
         return;
       }
 
@@ -93,7 +108,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
       final timeTo = endDateTime.hour + (endDateTime.minute / 60.0);
 
       if (timeTo <= timeFrom) {
-        ToastService.showError(context.localizations.endTimeMustBeAfterStartTime);
+        SnackbarService.showError(context, context.localizations.endTimeMustBeAfterStartTime);
         return;
       }
     }
@@ -101,7 +116,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
     if ((state.permissionTypeId == 'late_in' || state.permissionTypeId == 'early_out') &&
         state.partialExcuse &&
         state.requestedDuration == null) {
-      ToastService.showError(context.localizations.pleaseSpecifyRequestedDuration);
+      SnackbarService.showError(context, context.localizations.pleaseSpecifyRequestedDuration);
       return;
     }
 
@@ -109,7 +124,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
     final request = _buildPermissionRequest(state);
 
     if (request == null) {
-      ToastService.showError(context.localizations.invalidPermissionRequestData);
+      SnackbarService.showError(context, context.localizations.invalidPermissionRequestData);
       return;
     }
 
@@ -220,7 +235,9 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
           BlocListener<ShiftIdCubit, ShiftIdState>(
             listener: (context, state) {
               if (state.status == ShiftIdStatus.error) {
-                ToastService.showError(
+                context.pop();
+                SnackbarService.showError(
+                  context,
                   state.errorMessage ?? context.localizations.failedToFetchShiftInformation,
                 );
               } else if (state.status == ShiftIdStatus.success) {
@@ -257,9 +274,10 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                   _durationController.clear();
                   _fileUploadCubit.clearAllFiles();
                 } else {
+                  context.pop();
                   // Business logic error (e.g., 400 with success: false)
-                  ToastService.showError(
-                    gravity: ToastGravity.CENTER,
+                  SnackbarService.showError(
+                    context,
                     result?.message ?? context.localizations.failedToSubmitPermissionRequest,
                   );
                 }
@@ -271,8 +289,8 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
               } else if (state.status == PermissionRequestStatus.error) {
                 // Network or other errors
                 context.pop();
-                ToastService.showError(
-                  gravity: ToastGravity.CENTER,
+                SnackbarService.showError(
+                  context,
                   state.errorMessage ?? context.localizations.failedToSubmitPermissionRequest,
                 );
               }
@@ -697,7 +715,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                               return Align(
                                                 alignment: Alignment.topRight,
                                                 child: Text(
-                                                  '${context.localizations.late} : ${lateInHours.toStringAsFixed(2)} ${context.localizations.hours}',
+                                                  '${context.localizations.late} : ${_formatHoursAndMinutes(lateInHours, context.localizations)}',
                                                   style: context.typography.medium16.copyWith(color: context.colors.error),
                                                   textAlign: TextAlign.start,
                                                 ),
@@ -713,7 +731,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                               return Align(
                                                 alignment: Alignment.topRight,
                                                 child: Text(
-                                                  '${context.localizations.late} : ${earlyOutHours.toStringAsFixed(2)} ${context.localizations.hours}',
+                                                  '${context.localizations.late} : ${_formatHoursAndMinutes(earlyOutHours, context.localizations)}',
                                                   style: context.typography.medium16.copyWith(color: context.colors.error),
                                                   textAlign: TextAlign.start,
                                                 ),
@@ -807,7 +825,6 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                               onChanged: (value) {
                                                 cubit.togglePartialExcuse(value ?? false);
                                                 if (value ?? false) {
-                                                  _durationController.text = '0.5';
                                                   cubit.selectRequestedDuration(0.5);
                                                 } else {
                                                   _durationController.clear();
@@ -830,27 +847,68 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                       ),
                                     ),
 
-                                    // Show time field only if partial excuse is checked
+                                    // Show duration preset list when partial excuse is checked
                                     if (state.partialExcuse)
-                                      AppTextField(
-                                        controller: _durationController,
-                                        title: context.localizations.enterTimeManually,
-                                        hintTextLabel: '0.5',
-                                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                        textDirection: TextDirection.ltr,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,1}$')),
-                                        ],
-                                        onChanged: (value) {
-                                          if (value.isNotEmpty) {
-                                            final duration = double.tryParse(value);
-                                            if (duration != null && duration > 0) {
-                                              cubit.selectRequestedDuration(duration);
-                                            }
-                                          } else {
-                                            cubit.selectRequestedDuration(null);
-                                          }
+                                      InkWell(
+                                        onTap: () {
+                                          showCupertinoModalPopup<void>(
+                                            context: context,
+                                            builder: (BuildContext modalContext) {
+                                              return CupertinoActionSheet(
+                                                actions: _partialExcusePresetHours.map<Widget>(
+                                                  (double decimalHours) {
+                                                    final label = _formatHoursAndMinutes(
+                                                      decimalHours,
+                                                      context.localizations,
+                                                    );
+                                                    return CupertinoActionSheetAction(
+                                                      onPressed: () {
+                                                        cubit.selectRequestedDuration(decimalHours);
+                                                        Navigator.of(modalContext).pop();
+                                                      },
+                                                      child: Text(
+                                                        label,
+                                                        style: context.typography.regular16.copyWith(
+                                                          color: context.colors.onSurface,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ).toList(),
+                                                cancelButton: CupertinoActionSheetAction(
+                                                  isDefaultAction: true,
+                                                  onPressed: () => Navigator.of(modalContext).pop(),
+                                                  child: Text(context.localizations.cancel, style: context.typography.regular16),
+                                                ),
+                                              );
+                                            },
+                                          );
                                         },
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(vertical: AppSpacing.sm.h),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                context.localizations.enterTimeManually,
+                                                style: context.typography.regular16.copyWith(
+                                                  color: context.colors.onSurface,
+                                                ),
+                                              ),
+                                              Text(
+                                                state.requestedDuration != null
+                                                    ? _formatHoursAndMinutes(
+                                                        state.requestedDuration!,
+                                                        context.localizations,
+                                                      )
+                                                    : '—',
+                                                style: context.typography.regular16.copyWith(
+                                                  color: context.colors.onSurfaceVariant,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                   ],
                                 ),

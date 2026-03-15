@@ -28,7 +28,7 @@ class _VisaTypeListViewState extends State<VisaTypeListView> {
             spacing: AppSpacing.md.h,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('نوع التأشيرة', style: context.typography.semiBold16),
+              Text(context.localizations.visaType, style: context.typography.semiBold16),
 
               Expanded(
                 child: ListView.separated(

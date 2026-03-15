@@ -30,7 +30,7 @@ class _LeaveTypeListViewState extends State<LeaveTypeListView> {
               spacing: AppSpacing.md.h,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('نوع الإجازة', style: context.typography.semiBold16),
+                Text(context.localizations.leaveType, style: context.typography.semiBold16),
                 Expanded(
                   child: ListView.separated(
                     separatorBuilder: (context, index) => const AppDivider(),
@@ -74,7 +74,7 @@ class _LeaveTypeListViewState extends State<LeaveTypeListView> {
         if (leaveTypes == null || leaveTypes.isEmpty) {
           return Center(
             child: Text(
-              'لا توجد أنواع إجازات متاحة',
+              context.localizations.noLeaveTypesAvailable,
               style: context.typography.regular16,
             ),
           );
@@ -86,7 +86,7 @@ class _LeaveTypeListViewState extends State<LeaveTypeListView> {
             spacing: AppSpacing.md.h,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('نوع الإجازة', style: context.typography.semiBold16),
+              Text(context.localizations.leaveType, style: context.typography.semiBold16),
 
               Expanded(
                 child: ListView.separated(

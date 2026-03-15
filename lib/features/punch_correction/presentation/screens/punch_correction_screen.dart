@@ -3,14 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/cubits/file_upload/file_upload_cubit.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/date_helper.dart';
 import 'package:rose_hr/common/helpers/timezone_helper.dart';
-import 'package:rose_hr/common/helpers/toast_service.dart';
+import 'package:rose_hr/common/helpers/snackbar_service.dart';
 import 'package:rose_hr/common/models/upload_file_model.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/utility/extensions.dart';
@@ -21,6 +20,7 @@ import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/common/widgets/info_card.dart';
 import 'package:rose_hr/common/widgets/success_request_bottomsheet.dart';
 import 'package:rose_hr/common/widgets/upload_file_placholder.dart';
+import 'package:rose_hr/common/widgets/upload_source_bottom_sheet.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/permission_request/data/models/shift_id_response_model.dart';
 import 'package:rose_hr/features/permission_request/presentation/cubit/shift_id_cubit.dart';
@@ -205,26 +205,26 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
   void _submitPunchCorrection(BuildContext context, PunchCorrectionState state) {
     // Validate required fields
     if (state.date == null) {
-      ToastService.showError(context.localizations.pleaseSelectDate, gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, context.localizations.pleaseSelectDate);
       return;
     }
 
     if (state.shiftId == null) {
-      ToastService.showError(context.localizations.pleaseSelectShift, gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, context.localizations.pleaseSelectShift);
       return;
     }
 
     if (state.correctionType == null) {
-      ToastService.showError(context.localizations.pleaseSelectCorrectionType, gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, context.localizations.pleaseSelectCorrectionType);
       return;
     }
     if (state.attendanceMethod == null) {
-      ToastService.showError(context.localizations.pleaseSelectAttendanceMethod, gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, context.localizations.pleaseSelectAttendanceMethod);
       return;
     }
 
     if (state.reasonId == null) {
-      ToastService.showError(context.localizations.pleaseSelectReason, gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, context.localizations.pleaseSelectReason);
       return;
     }
 
@@ -232,7 +232,7 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
     final correctionTime = state.correctionType == CorrectionType.checkIn.id ? state.startTime : state.endTime;
 
     if (correctionTime == null) {
-      ToastService.showError(context.localizations.pleaseSelectCorrectionTime, gravity: ToastGravity.CENTER);
+      SnackbarService.showError(context, context.localizations.pleaseSelectCorrectionTime);
       return;
     }
 
@@ -269,7 +269,8 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
           BlocListener<ShiftIdCubit, ShiftIdState>(
             listener: (context, state) {
               if (state.status == ShiftIdStatus.error) {
-                ToastService.showError(
+                SnackbarService.showError(
+                  context,
                   state.errorMessage ?? context.localizations.failedToFetchShiftInformation,
                 );
               } else if (state.status == ShiftIdStatus.success) {
@@ -305,15 +306,15 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                   _fileUploadCubit.reset();
                 } else {
                   // Business logic error (e.g., 400 with success: false)
-                  ToastService.showError(
-                    gravity: ToastGravity.CENTER,
+                  SnackbarService.showError(
+                    context,
                     result?.message ?? context.localizations.failedToSubmitPunchCorrection,
                   );
                 }
               } else if (state.status == PunchCorrectionStatus.error) {
                 // Network or other errors
-                ToastService.showError(
-                  gravity: ToastGravity.CENTER,
+                SnackbarService.showError(
+                  context,
                   state.errorMessage ?? context.localizations.failedToSubmitPunchCorrection,
                 );
               }
@@ -758,7 +759,15 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                     if (shouldShowUploadArea)
                                       UploadFilePlacholder(
                                         onTap: () {
-                                          _fileUploadCubit.pickFiles();
+                                          showUploadSourceSheet(
+                                            context,
+                                            onChooseImages: () => _fileUploadCubit.pickFiles(
+                                              fileType: FilePickerType.image,
+                                            ),
+                                            onChooseFiles: () => _fileUploadCubit.pickFiles(
+                                              fileType: FilePickerType.pdf,
+                                            ),
+                                          );
                                         },
                                         isMaxFilesReached: fileUploadState.isMaxFilesReached,
                                       ),

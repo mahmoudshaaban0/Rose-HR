@@ -20,7 +20,7 @@ class ToastService {
 
   static Future<bool?> showError(
     String message, {
-    Toast duration = Toast.LENGTH_SHORT,
+    Toast duration = Toast.LENGTH_LONG,
     ToastGravity gravity = ToastGravity.BOTTOM,
   }) {
     return _show(

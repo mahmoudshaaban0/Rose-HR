@@ -27,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   late final GlobalKey<FormState> _formKey;
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -101,8 +102,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 title: context.localizations.password,
                                 hintTextLabel: context.localizations.pleaseEnterYourPassword,
                                 required: true,
-                                suffixIcon: const AppVectorGraphic(path: Assets.vectorsPasswordVisible),
-                                obscureText: true,
+                                suffixIcon: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _obscurePassword = !_obscurePassword;
+                                    });
+                                  },
+                                  child: _obscurePassword
+                                      ? const AppVectorGraphic(path: Assets.vectorsPasswordVisible)
+                                      : const AppVectorGraphic(path: Assets.vectorsVisibilityOff),
+                                ),
+                                obscureText: _obscurePassword,
                                 controller: _passwordController,
                               ),
                               InkWell(

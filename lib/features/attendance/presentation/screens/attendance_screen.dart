@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/date_helper.dart';
+import 'package:rose_hr/common/helpers/timezone_helper.dart';
+import 'package:rose_hr/common/helpers/timezone_manager.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/features/attendance/presentation/cubit/attendance_cubit.dart';
 import 'package:rose_hr/features/attendance/presentation/cubit/attendance_details_cubit.dart';
@@ -10,6 +12,7 @@ import 'package:rose_hr/features/attendance/presentation/widgets/attendance_cale
 import 'package:rose_hr/features/attendance/presentation/widgets/work_hours_section.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
+import 'package:timezone/timezone.dart';
 
 class AttendanceScreen extends StatelessWidget {
   const AttendanceScreen({super.key});
@@ -18,8 +21,14 @@ class AttendanceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        // selected
         BlocProvider(create: (context) => sl<AttendanceCubit>()..init()),
-        BlocProvider(create: (context) => sl<AttendanceDetailsCubit>()),
+        BlocProvider(
+          create: (context) {
+            final selectedDate = TimezoneHelper.convertToLocal(TZDateTime.now(TimezoneManager.location)).toLocal();
+            return sl<AttendanceDetailsCubit>()..getAttendanceSummaryByDate(dateTimeToString(selectedDate));
+          },
+        ),
       ],
       child: Builder(
         builder: (context) {
@@ -34,7 +43,13 @@ class AttendanceScreen extends StatelessWidget {
             body: SafeArea(
               child: RefreshIndicator.adaptive(
                 onRefresh: () async {
-                  await context.read<AttendanceCubit>().refresh();
+                  final attendanceCubit = context.read<AttendanceCubit>();
+                  final detailsCubit = context.read<AttendanceDetailsCubit>();
+                  final selectedDay = attendanceCubit.state.selectedDay;
+                  await Future.wait([
+                    attendanceCubit.refresh(),
+                    detailsCubit.getAttendanceSummaryByDate(dateTimeToString(selectedDay)),
+                  ]);
                 },
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),

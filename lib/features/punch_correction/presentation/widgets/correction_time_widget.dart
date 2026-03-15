@@ -6,7 +6,6 @@ import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
-import 'package:rose_hr/theme/theme_mode_handler.dart';
 
 class CorrectionTimeWidget extends StatelessWidget {
   const CorrectionTimeWidget({
@@ -64,7 +63,6 @@ class CorrectionTimeWidget extends StatelessWidget {
                   }),
                   value: isChecked,
                   onChanged: (value) {
-                    ThemeScopeWidget.of(context)?.changeTo(ThemeMode.dark);
                     onCheckedChange(value ?? false);
                   },
                 ),
