@@ -266,7 +266,7 @@ class _AttendanceCalendarWidgetState extends State<AttendanceCalendarWidget> {
       textStyle = textStyle.copyWith(color: context.colors.white);
       borderColor = context.colors.error;
     } else if (isSelected) {
-      backgroundColor = context.colors.black;
+      backgroundColor = context.isDarkMode ? context.colors.infoContainer : context.colors.black;
       textStyle = textStyle.copyWith(color: context.colors.white);
     } else if (isOffDay || isWeekend) {
       // Weekend/off day - subtle background

@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'team_requests_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class TeamRequestsResponseModel {
   TeamRequestsResponseModel({
     this.jsonrpc,
@@ -10,8 +10,14 @@ class TeamRequestsResponseModel {
     this.result,
   });
 
-  factory TeamRequestsResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$TeamRequestsResponseModelFromJson(json);
+  factory TeamRequestsResponseModel.fromJson(Map<String, dynamic> json) {
+    final rawResult = json['result'];
+    return TeamRequestsResponseModel(
+      jsonrpc: json['jsonrpc'] as String?,
+      id: json['id'],
+      result: rawResult is Map<String, dynamic> ? TeamRequestsResult.fromJson(rawResult) : null,
+    );
+  }
 
   @JsonKey(name: 'jsonrpc')
   String? jsonrpc;
@@ -25,7 +31,7 @@ class TeamRequestsResponseModel {
   Map<String, dynamic> toJson() => _$TeamRequestsResponseModelToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class TeamRequestsResult {
   TeamRequestsResult({
     this.success,
@@ -34,8 +40,17 @@ class TeamRequestsResult {
     this.data,
   });
 
-  factory TeamRequestsResult.fromJson(Map<String, dynamic> json) =>
-      _$TeamRequestsResultFromJson(json);
+  factory TeamRequestsResult.fromJson(Map<String, dynamic> json) {
+    final rawData = json['data'];
+    return TeamRequestsResult(
+      success: json['success'] as bool?,
+      statusCode: (json['status_code'] as num?)?.toInt(),
+      message: json['message'] as String?,
+      data: rawData is List
+          ? rawData.map((e) => TeamRequestItem.fromJson(e as Map<String, dynamic>)).toList()
+          : null,
+    );
+  }
 
   @JsonKey(name: 'success')
   bool? success;

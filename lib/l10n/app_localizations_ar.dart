@@ -95,6 +95,30 @@ class AppLocalizationsAr extends AppLocalizations {
   String get inRange => 'داخل النطاق';
 
   @override
+  String get outOfRange => 'خارج النطاق';
+
+  @override
+  String get loadingEllipsis => '...';
+
+  @override
+  String get shiftTimeLeftPlaceholder => ' 9:00 ';
+
+  @override
+  String get timeUnavailablePlaceholder => '--:--';
+
+  @override
+  String get punchOperationFailed => 'فشلت العملية';
+
+  @override
+  String get fingerprintRecordedSuccessfully => 'تم تسجيل بصمتك بنجاح!';
+
+  @override
+  String get wishYouProductiveDay => 'نتمنى لك يومًا مُثمرًا';
+
+  @override
+  String get deviceInfoPlaceholder => 'معلومات الجهاز';
+
+  @override
   String get fingerPrintRegistration => 'تسجيل بصمة';
 
   @override
@@ -476,6 +500,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get workMissionTypeDays => 'أيام';
 
   @override
+  String get workMissionRequestTitle => 'طلب مهمة عمل';
+
+  @override
+  String get pleaseSelectWorkMissionType => 'الرجاء اختيار نوع المهمة';
+
+  @override
+  String get selectWorkMissionType => 'اختار نوع المهمة';
+
+  @override
+  String get pleaseAttachAtLeastOneFile => 'الرجاء إرفاق ملف واحد على الأقل';
+
+  @override
+  String get failedToSubmitWorkMissionRequest => 'فشل في إرسال طلب المهمة';
+
+  @override
+  String get invalidWorkMissionRequestData => 'بيانات طلب المهمة غير صحيحة';
+
+  @override
+  String get workMissionNotesHint => 'أكتب ملاحظات المهمة إن وجدت...';
+
+  @override
+  String get missionEndDateMustBeAfterStartDate =>
+      'يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء';
+
+  @override
+  String get pleaseSelectStartTime => 'اختر وقت البدء';
+
+  @override
+  String get pleaseSelectEndTime => 'اختر وقت الانتهاء';
+
+  @override
+  String get shiftNamePlaceholder => '-:-:-';
+
+  @override
   String get missionStartDate => 'تاريخ بداية المهمة';
 
   @override
@@ -621,7 +679,34 @@ class AppLocalizationsAr extends AppLocalizations {
       'تم إرسال إعادة تعيين كلمة المرور إلى بريدك الإلكتروني';
 
   @override
+  String get themeAppearance => 'المظهر';
+
+  @override
+  String get selectTheme => 'اختر المظهر';
+
+  @override
+  String get themeLight => 'فاتح';
+
+  @override
+  String get themeDark => 'داكن';
+
+  @override
+  String get themeSystem => 'حسب الجهاز';
+
+  @override
   String get language => 'اللغة';
+
+  @override
+  String get selectLanguage => 'اختر اللغة';
+
+  @override
+  String get languageChangeApplying => 'جاري تطبيق اللغة…';
+
+  @override
+  String get arabicLanguageName => 'العربية';
+
+  @override
+  String get englishLanguageName => 'English';
 
   @override
   String get notifications => 'الإشعارات';
@@ -629,6 +714,12 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get notificationsSubtitle =>
       'تنبيهات الطلبات، والإشعارات العامة للتطبيق';
+
+  @override
+  String get appNotifications => 'إشعارات التطبيق';
+
+  @override
+  String get requestsAndRepliesNotifications => 'إشعارات الطلبات والردود';
 
   @override
   String get thankYou => 'شكرًا لك';
@@ -653,4 +744,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get personalinfo => 'المعلومات الشخصية، الهوية، العنوان';
+
+  @override
+  String get correctionType => 'نوع التصحيح';
+
+  @override
+  String get fixAttendanceMethod => 'طريقة تصحيح الحضور';
+
+  @override
+  String get correctionTime => 'وقت التصحيح';
+
+  @override
+  String get numberOfDays => 'عدد الأيام';
+
+  @override
+  String get from => 'من';
+
+  @override
+  String get to => 'إلى';
+
+  @override
+  String get description => 'الملاحظات';
+
+  @override
+  String get days => 'أيام';
+
+  @override
+  String get months => 'أشهر';
+
+  @override
+  String get dateCreated => 'تاريخ الإنشاء';
 }

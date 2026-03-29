@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'create_attendance_punch_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class CreateAttendancePunchResponse {
   CreateAttendancePunchResponse({
     this.jsonrpc,
@@ -10,7 +10,14 @@ class CreateAttendancePunchResponse {
     this.result,
   });
 
-  factory CreateAttendancePunchResponse.fromJson(Map<String, dynamic> json) => _$CreateAttendancePunchResponseFromJson(json);
+  factory CreateAttendancePunchResponse.fromJson(Map<String, dynamic> json) {
+    final rawResult = json['result'];
+    return CreateAttendancePunchResponse(
+      jsonrpc: json['jsonrpc'] as String?,
+      id: json['id'],
+      result: rawResult is Map<String, dynamic> ? AttendancePunchResult.fromJson(rawResult) : null,
+    );
+  }
   @JsonKey(name: "jsonrpc")
   String? jsonrpc;
   @JsonKey(name: "id")
@@ -21,7 +28,7 @@ class CreateAttendancePunchResponse {
   Map<String, dynamic> toJson() => _$CreateAttendancePunchResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class AttendancePunchResult {
   AttendancePunchResult({
     this.success,
@@ -30,7 +37,16 @@ class AttendancePunchResult {
     this.data,
   });
 
-  factory AttendancePunchResult.fromJson(Map<String, dynamic> json) => _$AttendancePunchResultFromJson(json);
+  factory AttendancePunchResult.fromJson(Map<String, dynamic> json) {
+    final rawData = json['data'];
+    return AttendancePunchResult(
+      success: json['success'] as bool?,
+      statusCode: (json['status_code'] as num?)?.toInt(),
+      message: json['message'] as String?,
+      data: rawData is Map<String, dynamic> ? Data.fromJson(rawData) : null,
+    );
+  }
+
   @JsonKey(name: "success")
   bool? success;
   @JsonKey(name: "status_code")

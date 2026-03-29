@@ -6,14 +6,6 @@ part of 'holiday_request_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-HolidayRequestResponseModel _$HolidayRequestResponseModelFromJson(
-  Map<String, dynamic> json,
-) => HolidayRequestResponseModel(
-  jsonrpc: json['jsonrpc'] as String,
-  result: HolidayRequestResult.fromJson(json['result'] as Map<String, dynamic>),
-  id: json['id'],
-);
-
 Map<String, dynamic> _$HolidayRequestResponseModelToJson(
   HolidayRequestResponseModel instance,
 ) => <String, dynamic>{

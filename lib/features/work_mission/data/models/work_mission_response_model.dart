@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'work_mission_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class WorkPermissionResponseModel {
   WorkPermissionResponseModel({
     this.jsonrpc,
@@ -10,7 +10,14 @@ class WorkPermissionResponseModel {
     this.result,
   });
 
-  factory WorkPermissionResponseModel.fromJson(Map<String, dynamic> json) => _$WorkPermissionResponseModelFromJson(json);
+  factory WorkPermissionResponseModel.fromJson(Map<String, dynamic> json) {
+    final rawResult = json['result'];
+    return WorkPermissionResponseModel(
+      jsonrpc: json['jsonrpc'] as String?,
+      id: json['id'],
+      result: rawResult is Map<String, dynamic> ? PermissionResult.fromJson(rawResult) : null,
+    );
+  }
   @JsonKey(name: "jsonrpc")
   String? jsonrpc;
   @JsonKey(name: "id")
@@ -21,7 +28,7 @@ class WorkPermissionResponseModel {
   Map<String, dynamic> toJson() => _$WorkPermissionResponseModelToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class PermissionResult {
   PermissionResult({
     this.success,
@@ -30,7 +37,16 @@ class PermissionResult {
     this.data,
   });
 
-  factory PermissionResult.fromJson(Map<String, dynamic> json) => _$PermissionResultFromJson(json);
+  factory PermissionResult.fromJson(Map<String, dynamic> json) {
+    final rawData = json['data'];
+    return PermissionResult(
+      success: json['success'] as bool?,
+      statusCode: (json['status_code'] as num?)?.toInt(),
+      message: json['message'] as String?,
+      data: rawData is Map<String, dynamic> ? Data.fromJson(rawData) : null,
+    );
+  }
+
   @JsonKey(name: "success")
   bool? success;
   @JsonKey(name: "status_code")

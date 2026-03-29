@@ -24,17 +24,17 @@ class RequestsCubit extends Cubit<RequestsState> {
     }
   }
 
-  Future<void> cancelRequest(int? requestId) async {
-    if (requestId == null || isClosed) return;
+  Future<void> cancelRequest(String recordType, int recordId) async {
+    if (isClosed) return;
 
-    emit(state.copyWith(status: RequestsStatus.cancelling, cancelledRequestId: requestId));
-    final result = await requestsRepository.cancelRequest(requestId);
+    emit(state.copyWith(status: RequestsStatus.cancelling, cancelledRequestId: recordId));
+    final result = await requestsRepository.cancelRequest(recordType, recordId);
     switch (result) {
       case Success(:final data):
         if (isClosed) return;
         // Check if cancellation was successful
         if (data.result?.success ?? false) {
-          emit(state.copyWith(status: RequestsStatus.cancelSuccess, cancelledRequestId: requestId));
+          emit(state.copyWith(status: RequestsStatus.cancelSuccess, cancelledRequestId: recordId));
           // Refresh the list after successful cancellation
           await getEmployeeList();
         } else {

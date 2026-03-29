@@ -6,16 +6,6 @@ part of 'account_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AccountResponseModel _$AccountResponseModelFromJson(
-  Map<String, dynamic> json,
-) => AccountResponseModel(
-  jsonrpc: json['jsonrpc'] as String?,
-  id: json['id'],
-  result: json['result'] == null
-      ? null
-      : AccountResult.fromJson(json['result'] as Map<String, dynamic>),
-);
-
 Map<String, dynamic> _$AccountResponseModelToJson(
   AccountResponseModel instance,
 ) => <String, dynamic>{
@@ -24,16 +14,6 @@ Map<String, dynamic> _$AccountResponseModelToJson(
   'result': instance.result,
 };
 
-AccountResult _$AccountResultFromJson(Map<String, dynamic> json) =>
-    AccountResult(
-      success: json['success'] as bool?,
-      statusCode: (json['status_code'] as num?)?.toInt(),
-      message: json['message'] as String?,
-      data: json['data'] == null
-          ? null
-          : Data.fromJson(json['data'] as Map<String, dynamic>),
-    );
-
 Map<String, dynamic> _$AccountResultToJson(AccountResult instance) =>
     <String, dynamic>{
       'success': instance.success,
@@ -41,27 +21,6 @@ Map<String, dynamic> _$AccountResultToJson(AccountResult instance) =>
       'message': instance.message,
       'data': instance.data,
     };
-
-Data _$DataFromJson(Map<String, dynamic> json) => Data(
-  name: json['name'],
-  pin: json['pin'],
-  gender: json['gender'],
-  privateEmail: json['private_email'],
-  marital: json['marital'],
-  birthday: json['birthday'],
-  phone: json['phone'],
-  countryId: json['country_id'],
-  iqamaNumber: json['iqama_number'],
-  street: json['street'],
-  street2: json['street2'],
-  city: json['city'],
-  state: json['state'],
-  zip: json['zip'],
-  country: json['country'],
-  bankAccount: json['bank_account'] == null
-      ? null
-      : BankAccount.fromJson(json['bank_account'] as Map<String, dynamic>),
-);
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'name': instance.name,

@@ -8,7 +8,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 class AttachmentViewerScreen extends StatelessWidget {
   const AttachmentViewerScreen({required this.attachment, super.key});
 
-  final RequestAttachment attachment;
+  final Attachment attachment;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class AttachmentViewerScreen extends StatelessWidget {
       appBar: PrimaryAppBar(title: title),
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: attachment.isPdf ? _PdfView(url: url) : _ImageView(url: url),
+        child: attachment.mimetype == 'application/pdf' ? _PdfView(url: url) : _ImageView(url: url),
       ),
     );
   }

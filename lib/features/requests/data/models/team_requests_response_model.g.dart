@@ -6,16 +6,6 @@ part of 'team_requests_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TeamRequestsResponseModel _$TeamRequestsResponseModelFromJson(
-  Map<String, dynamic> json,
-) => TeamRequestsResponseModel(
-  jsonrpc: json['jsonrpc'] as String?,
-  id: json['id'],
-  result: json['result'] == null
-      ? null
-      : TeamRequestsResult.fromJson(json['result'] as Map<String, dynamic>),
-);
-
 Map<String, dynamic> _$TeamRequestsResponseModelToJson(
   TeamRequestsResponseModel instance,
 ) => <String, dynamic>{
@@ -23,16 +13,6 @@ Map<String, dynamic> _$TeamRequestsResponseModelToJson(
   'id': instance.id,
   'result': instance.result,
 };
-
-TeamRequestsResult _$TeamRequestsResultFromJson(Map<String, dynamic> json) =>
-    TeamRequestsResult(
-      success: json['success'] as bool?,
-      statusCode: (json['status_code'] as num?)?.toInt(),
-      message: json['message'] as String?,
-      data: (json['data'] as List<dynamic>?)
-          ?.map((e) => TeamRequestItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
 
 Map<String, dynamic> _$TeamRequestsResultToJson(TeamRequestsResult instance) =>
     <String, dynamic>{

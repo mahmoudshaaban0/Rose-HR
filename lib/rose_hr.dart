@@ -5,6 +5,7 @@ import 'package:rose_hr/common/constants/app_strings.dart';
 import 'package:rose_hr/common/routing/app_router.dart';
 import 'package:rose_hr/l10n/app_localizations.dart';
 import 'package:rose_hr/theme/app_theme_scope.dart';
+import 'package:rose_hr/theme/theme_mode_handler.dart';
 
 class RoseHr extends StatelessWidget {
   const RoseHr({super.key});
@@ -12,6 +13,7 @@ class RoseHr extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = AppThemeScope.of(context);
+    final locale = ThemeScopeWidget.of(context)?.locale ?? const Locale(AppStrings.arabic);
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
@@ -22,7 +24,7 @@ class RoseHr extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: AppStrings.appName,
           themeMode: theme!.themeMode,
-          locale: const Locale(AppStrings.arabic),
+          locale: locale,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -30,7 +32,10 @@ class RoseHr extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [Locale('en'), Locale('ar')],
+          // Set [brightness] explicitly so [Theme.of(context).brightness] and
+          // [context.isDarkMode] match the active Material theme (light vs dark).
           theme: ThemeData(
+            brightness: Brightness.light,
             scaffoldBackgroundColor: theme.theme.colors.surface,
             extensions: [
               theme.theme.colors,
@@ -40,6 +45,7 @@ class RoseHr extends StatelessWidget {
             ],
           ),
           darkTheme: ThemeData(
+            brightness: Brightness.dark,
             scaffoldBackgroundColor: theme.theme.colors.surface,
             extensions: [
               theme.theme.colors,

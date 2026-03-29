@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'punch_correction_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class PunchCorrectionResponseModel {
   PunchCorrectionResponseModel({
     this.jsonrpc,
@@ -10,7 +10,14 @@ class PunchCorrectionResponseModel {
     this.result,
   });
 
-  factory PunchCorrectionResponseModel.fromJson(Map<String, dynamic> json) => _$PunchCorrectionResponseModelFromJson(json);
+  factory PunchCorrectionResponseModel.fromJson(Map<String, dynamic> json) {
+    final rawResult = json['result'];
+    return PunchCorrectionResponseModel(
+      jsonrpc: json['jsonrpc'] as String?,
+      id: json['id'],
+      result: rawResult is Map<String, dynamic> ? PunchCorrectionResult.fromJson(rawResult) : null,
+    );
+  }
   @JsonKey(name: "jsonrpc")
   String? jsonrpc;
   @JsonKey(name: "id")
@@ -21,7 +28,7 @@ class PunchCorrectionResponseModel {
   Map<String, dynamic> toJson() => _$PunchCorrectionResponseModelToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class PunchCorrectionResult {
   PunchCorrectionResult({
     this.success,
@@ -30,7 +37,16 @@ class PunchCorrectionResult {
     this.data,
   });
 
-  factory PunchCorrectionResult.fromJson(Map<String, dynamic> json) => _$PunchCorrectionResultFromJson(json);
+  factory PunchCorrectionResult.fromJson(Map<String, dynamic> json) {
+    final rawData = json['data'];
+    return PunchCorrectionResult(
+      success: json['success'] as bool?,
+      statusCode: (json['status_code'] as num?)?.toInt(),
+      message: json['message'] as String?,
+      data: rawData is Map<String, dynamic> ? PunchCorrectionData.fromJson(rawData) : null,
+    );
+  }
+
   @JsonKey(name: "success")
   bool? success;
   @JsonKey(name: "status_code")

@@ -6,16 +6,6 @@ part of 'punch_correction_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PunchCorrectionResponseModel _$PunchCorrectionResponseModelFromJson(
-  Map<String, dynamic> json,
-) => PunchCorrectionResponseModel(
-  jsonrpc: json['jsonrpc'] as String?,
-  id: json['id'],
-  result: json['result'] == null
-      ? null
-      : PunchCorrectionResult.fromJson(json['result'] as Map<String, dynamic>),
-);
-
 Map<String, dynamic> _$PunchCorrectionResponseModelToJson(
   PunchCorrectionResponseModel instance,
 ) => <String, dynamic>{
@@ -23,17 +13,6 @@ Map<String, dynamic> _$PunchCorrectionResponseModelToJson(
   'id': instance.id,
   'result': instance.result,
 };
-
-PunchCorrectionResult _$PunchCorrectionResultFromJson(
-  Map<String, dynamic> json,
-) => PunchCorrectionResult(
-  success: json['success'] as bool?,
-  statusCode: (json['status_code'] as num?)?.toInt(),
-  message: json['message'] as String?,
-  data: json['data'] == null
-      ? null
-      : PunchCorrectionData.fromJson(json['data'] as Map<String, dynamic>),
-);
 
 Map<String, dynamic> _$PunchCorrectionResultToJson(
   PunchCorrectionResult instance,

@@ -6,16 +6,6 @@ part of 'single_request_response_by_id.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SingleRequestResponseById _$SingleRequestResponseByIdFromJson(
-  Map<String, dynamic> json,
-) => SingleRequestResponseById(
-  jsonrpc: json['jsonrpc'] as String?,
-  id: json['id'],
-  result: json['result'] == null
-      ? null
-      : RequestResult.fromJson(json['result'] as Map<String, dynamic>),
-);
-
 Map<String, dynamic> _$SingleRequestResponseByIdToJson(
   SingleRequestResponseById instance,
 ) => <String, dynamic>{
@@ -24,92 +14,198 @@ Map<String, dynamic> _$SingleRequestResponseByIdToJson(
   'result': instance.result,
 };
 
-RequestResult _$RequestResultFromJson(Map<String, dynamic> json) =>
-    RequestResult(
-      success: json['success'] as bool?,
-      statusCode: (json['status_code'] as num?)?.toInt(),
-      message: json['message'] as String?,
-      data: json['data'] == null
-          ? null
-          : Data.fromJson(json['data'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$RequestResultToJson(RequestResult instance) =>
-    <String, dynamic>{
-      'success': instance.success,
-      'status_code': instance.statusCode,
-      'message': instance.message,
-      'data': instance.data,
-    };
+Map<String, dynamic> _$SingleRequestResultToJson(
+  SingleRequestResult instance,
+) => <String, dynamic>{
+  'success': instance.success,
+  'status_code': instance.statusCode,
+  'message': instance.message,
+  'data': instance.data,
+};
 
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
+  recordType: json['record_type'] as String?,
   id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
   employeeId: (json['employee_id'] as num?)?.toInt(),
   employeeName: json['employee_name'] as String?,
-  requestType: json['request_type'] as String?,
-  requestTypeDisplay: json['request_type_display'] as String?,
-  date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
-  timeFrom: (json['time_from'] as num?)?.toDouble(),
-  timeTo: (json['time_to'] as num?)?.toDouble(),
-  reason: json['reason'] as String?,
   state: json['state'] as String?,
   stateDisplay: json['state_display'] as String?,
-  requestedDuration: (json['requested_duration'] as num?)?.toDouble(),
-  partialExcuse: json['partial_excuse'] as bool?,
-  managerId: (json['manager_id'] as num?)?.toInt(),
-  managerName: json['manager_name'] as String?,
-  resAttendanceId: (json['res_attendance_id'] as num?)?.toInt(),
-  shiftName: json['shift_name'] as String?,
-  workMissionType: json['work_mission_type'] as String?,
-  missionStartDate: json['mission_start_date'] == null
+  createDate: json['create_date'] == null
       ? null
-      : DateTime.parse(json['mission_start_date'] as String),
-  missionEndDate: json['mission_end_date'] == null
-      ? null
-      : DateTime.parse(json['mission_end_date'] as String),
+      : DateTime.parse(json['create_date'] as String),
+  reqRequestType: const FalseOrStringConverter().fromJson(
+    json['req_request_type'],
+  ),
+  reqRequestTypeDisplay: const FalseOrStringConverter().fromJson(
+    json['req_request_type_display'],
+  ),
+  reqDate: const FalseOrStringConverter().fromJson(json['req_date']),
+  reqTimeFrom: const FalseOrStringConverter().fromJson(json['req_time_from']),
+  reqTimeTo: const FalseOrStringConverter().fromJson(json['req_time_to']),
+  reqReason: const FalseOrStringConverter().fromJson(json['req_reason']),
+  reqRequestedDuration: const FalseOrStringConverter().fromJson(
+    json['req_requested_duration'],
+  ),
+  reqPartialExcuse: json['req_partial_excuse'] as bool?,
+  reqManagerId: const FalseOrStringConverter().fromJson(json['req_manager_id']),
+  reqManagerName: const FalseOrStringConverter().fromJson(
+    json['req_manager_name'],
+  ),
+  reqCorrectionType: const FalseOrStringConverter().fromJson(
+    json['req_correction_type'],
+  ),
+  reqFixAttendanceMethod: const FalseOrStringConverter().fromJson(
+    json['req_fix_attendance_method'],
+  ),
+  reqCorrectionTime: const FalseOrStringConverter().fromJson(
+    json['req_correction_time'],
+  ),
+  reqAttendanceLogId: json['req_attendance_log_id'] as bool?,
+  reqWorkMissionType: const FalseOrStringConverter().fromJson(
+    json['req_work_mission_type'],
+  ),
+  reqMissionStartDate: const FalseOrStringConverter().fromJson(
+    json['req_mission_start_date'],
+  ),
+  reqMissionEndDate: const FalseOrStringConverter().fromJson(
+    json['req_mission_end_date'],
+  ),
+  reqRequestedDays: const FalseOrStringConverter().fromJson(
+    json['req_requested_days'],
+  ),
+  reqShiftId: const FalseOrStringConverter().fromJson(json['req_shift_id']),
+  reqShiftName: const FalseOrStringConverter().fromJson(json['req_shift_name']),
+  leaveTypeId: const FalseOrStringConverter().fromJson(json['leave_type_id']),
+  leaveTypeName: const FalseOrStringConverter().fromJson(
+    json['leave_type_name'],
+  ),
+  leaveDateFrom: const FalseOrStringConverter().fromJson(
+    json['leave_date_from'],
+  ),
+  leaveDateTo: const FalseOrStringConverter().fromJson(json['leave_date_to']),
+  leaveNumberOfDays: const FalseOrStringConverter().fromJson(
+    json['leave_number_of_days'],
+  ),
+  leaveDescription: const FalseOrStringConverter().fromJson(
+    json['leave_description'],
+  ),
+  leaveRequireExitEntryVisa: json['leave_require_exit_entry_visa'] as bool?,
+  leaveVisaType: const FalseOrStringConverter().fromJson(
+    json['leave_visa_type'],
+  ),
+  leaveVisaPeriod: const FalseOrStringConverter().fromJson(
+    json['leave_visa_period'],
+  ),
+  leaveVisaNeededBefore: const FalseOrStringConverter().fromJson(
+    json['leave_visa_needed_before'],
+  ),
+  leaveRequireAdvanceSalary: json['leave_require_advance_salary'] as bool?,
+  leaveBereavementType: json['leave_bereavement_type'] as bool?,
+  leaveCanCancel: json['leave_can_cancel'] as bool?,
+  leaveCanApprove: json['leave_can_approve'] as bool?,
   attachments: (json['attachments'] as List<dynamic>?)
-      ?.map((e) => RequestAttachment.fromJson(e as Map<String, dynamic>))
+      ?.map((e) => Attachment.fromJson(e as Map<String, dynamic>))
       .toList(),
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
+  'record_type': instance.recordType,
   'id': instance.id,
   'name': instance.name,
   'employee_id': instance.employeeId,
   'employee_name': instance.employeeName,
-  'request_type': instance.requestType,
-  'request_type_display': instance.requestTypeDisplay,
-  'date': instance.date?.toIso8601String(),
-  'time_from': instance.timeFrom,
-  'time_to': instance.timeTo,
-  'reason': instance.reason,
   'state': instance.state,
   'state_display': instance.stateDisplay,
-  'requested_duration': instance.requestedDuration,
-  'partial_excuse': instance.partialExcuse,
-  'manager_id': instance.managerId,
-  'manager_name': instance.managerName,
-  'res_attendance_id': instance.resAttendanceId,
-  'shift_name': instance.shiftName,
-  'work_mission_type': instance.workMissionType,
-  'mission_start_date': instance.missionStartDate?.toIso8601String(),
-  'mission_end_date': instance.missionEndDate?.toIso8601String(),
+  'create_date': instance.createDate?.toIso8601String(),
+  'req_request_type': const FalseOrStringConverter().toJson(
+    instance.reqRequestType,
+  ),
+  'req_request_type_display': const FalseOrStringConverter().toJson(
+    instance.reqRequestTypeDisplay,
+  ),
+  'req_date': const FalseOrStringConverter().toJson(instance.reqDate),
+  'req_time_from': const FalseOrStringConverter().toJson(instance.reqTimeFrom),
+  'req_time_to': const FalseOrStringConverter().toJson(instance.reqTimeTo),
+  'req_reason': const FalseOrStringConverter().toJson(instance.reqReason),
+  'req_requested_duration': const FalseOrStringConverter().toJson(
+    instance.reqRequestedDuration,
+  ),
+  'req_partial_excuse': instance.reqPartialExcuse,
+  'req_manager_id': const FalseOrStringConverter().toJson(
+    instance.reqManagerId,
+  ),
+  'req_manager_name': const FalseOrStringConverter().toJson(
+    instance.reqManagerName,
+  ),
+  'req_correction_type': const FalseOrStringConverter().toJson(
+    instance.reqCorrectionType,
+  ),
+  'req_fix_attendance_method': const FalseOrStringConverter().toJson(
+    instance.reqFixAttendanceMethod,
+  ),
+  'req_correction_time': const FalseOrStringConverter().toJson(
+    instance.reqCorrectionTime,
+  ),
+  'req_attendance_log_id': instance.reqAttendanceLogId,
+  'req_work_mission_type': const FalseOrStringConverter().toJson(
+    instance.reqWorkMissionType,
+  ),
+  'req_mission_start_date': const FalseOrStringConverter().toJson(
+    instance.reqMissionStartDate,
+  ),
+  'req_mission_end_date': const FalseOrStringConverter().toJson(
+    instance.reqMissionEndDate,
+  ),
+  'req_requested_days': const FalseOrStringConverter().toJson(
+    instance.reqRequestedDays,
+  ),
+  'req_shift_id': const FalseOrStringConverter().toJson(instance.reqShiftId),
+  'req_shift_name': const FalseOrStringConverter().toJson(
+    instance.reqShiftName,
+  ),
+  'leave_type_id': const FalseOrStringConverter().toJson(instance.leaveTypeId),
+  'leave_type_name': const FalseOrStringConverter().toJson(
+    instance.leaveTypeName,
+  ),
+  'leave_date_from': const FalseOrStringConverter().toJson(
+    instance.leaveDateFrom,
+  ),
+  'leave_date_to': const FalseOrStringConverter().toJson(instance.leaveDateTo),
+  'leave_number_of_days': const FalseOrStringConverter().toJson(
+    instance.leaveNumberOfDays,
+  ),
+  'leave_description': const FalseOrStringConverter().toJson(
+    instance.leaveDescription,
+  ),
+  'leave_require_exit_entry_visa': instance.leaveRequireExitEntryVisa,
+  'leave_visa_type': const FalseOrStringConverter().toJson(
+    instance.leaveVisaType,
+  ),
+  'leave_visa_period': const FalseOrStringConverter().toJson(
+    instance.leaveVisaPeriod,
+  ),
+  'leave_visa_needed_before': const FalseOrStringConverter().toJson(
+    instance.leaveVisaNeededBefore,
+  ),
+  'leave_require_advance_salary': instance.leaveRequireAdvanceSalary,
+  'leave_bereavement_type': instance.leaveBereavementType,
+  'leave_can_cancel': instance.leaveCanCancel,
+  'leave_can_approve': instance.leaveCanApprove,
   'attachments': instance.attachments,
 };
 
-RequestAttachment _$RequestAttachmentFromJson(Map<String, dynamic> json) =>
-    RequestAttachment(
-      id: (json['id'] as num?)?.toInt(),
-      name: json['name'] as String?,
-      url: json['url'] as String?,
-      mimetype: json['mimetype'] as String?,
-    );
+Attachment _$AttachmentFromJson(Map<String, dynamic> json) => Attachment(
+  id: (json['id'] as num?)?.toInt(),
+  name: json['name'] as String?,
+  mimetype: json['mimetype'] as String?,
+  url: json['url'] as String?,
+);
 
-Map<String, dynamic> _$RequestAttachmentToJson(RequestAttachment instance) =>
+Map<String, dynamic> _$AttachmentToJson(Attachment instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'url': instance.url,
       'mimetype': instance.mimetype,
+      'url': instance.url,
     };

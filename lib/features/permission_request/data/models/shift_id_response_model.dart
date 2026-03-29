@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'shift_id_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class ShiftIdResponseModel {
   ShiftIdResponseModel({
     this.jsonrpc,
@@ -10,7 +10,14 @@ class ShiftIdResponseModel {
     this.result,
   });
 
-  factory ShiftIdResponseModel.fromJson(Map<String, dynamic> json) => _$ShiftIdResponseModelFromJson(json);
+  factory ShiftIdResponseModel.fromJson(Map<String, dynamic> json) {
+    final rawResult = json['result'];
+    return ShiftIdResponseModel(
+      jsonrpc: json['jsonrpc'] as String?,
+      id: json['id'],
+      result: rawResult is Map<String, dynamic> ? ShiftIdResult.fromJson(rawResult) : null,
+    );
+  }
   @JsonKey(name: "jsonrpc")
   String? jsonrpc;
   @JsonKey(name: "id")
@@ -21,7 +28,7 @@ class ShiftIdResponseModel {
   Map<String, dynamic> toJson() => _$ShiftIdResponseModelToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class ShiftIdResult {
   ShiftIdResult({
     this.success,

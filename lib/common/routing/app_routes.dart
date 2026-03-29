@@ -12,7 +12,9 @@ enum AppRoutes {
   workMission('/work-mission', 'Work Mission'),
   holidayRequest('/holiday-request', 'Holiday Request'),
   singleRequest('/single-request', 'Single Request'),
-  generalSettings('/general-settings', 'General Settings');
+  generalSettings('/general-settings', 'General Settings'),
+  allPendingManagerRequests('/all-pending-manager-requests', 'All Pending Manager Requests'),
+  notifications('/notifications', 'Notifications');
 
   const AppRoutes(this.path, this.name);
   final String path;

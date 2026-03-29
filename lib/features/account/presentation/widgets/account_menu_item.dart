@@ -7,17 +7,24 @@ import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
 /// A list row for the account/HR section using [ListTile]: leading icon, title, subtitle, trailing chevron.
+///
+/// Provide either [iconPath] (vector asset) or [leading] (e.g. [Icon]), not both.
 class AccountMenuItem extends StatelessWidget {
   const AccountMenuItem({
-    required this.iconPath,
     required this.title,
     required this.onTap,
     super.key,
+    this.iconPath,
+    this.leading,
     this.subtitle,
     this.showDivider = true,
-  });
+  }) : assert(
+          (iconPath != null) != (leading != null),
+          'Provide exactly one of iconPath or leading',
+        );
 
-  final String iconPath;
+  final String? iconPath;
+  final Widget? leading;
   final String title;
   final String? subtitle;
   final VoidCallback onTap;
@@ -35,11 +42,12 @@ class AccountMenuItem extends StatelessWidget {
             horizontal: AppSpacing.sm.w,
           ),
           horizontalTitleGap: AppSpacing.sm.w,
-          leading: AppVectorGraphic(
-            path: iconPath,
-            width: 18.r,
-            height: 18.r,
-          ),
+          leading: leading ??
+              AppVectorGraphic(
+                path: iconPath!,
+                width: 18.r,
+                height: 18.r,
+              ),
           title: Text(
             title,
             style: context.typography.medium16,

@@ -6,16 +6,6 @@ part of 'cancel_request_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CancelRequestResponseModel _$CancelRequestResponseModelFromJson(
-  Map<String, dynamic> json,
-) => CancelRequestResponseModel(
-  jsonrpc: json['jsonrpc'] as String?,
-  id: json['id'],
-  result: json['result'] == null
-      ? null
-      : CancelResult.fromJson(json['result'] as Map<String, dynamic>),
-);
-
 Map<String, dynamic> _$CancelRequestResponseModelToJson(
   CancelRequestResponseModel instance,
 ) => <String, dynamic>{

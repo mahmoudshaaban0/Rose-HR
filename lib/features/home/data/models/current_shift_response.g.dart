@@ -6,16 +6,6 @@ part of 'current_shift_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CurrentShiftResponse _$CurrentShiftResponseFromJson(
-  Map<String, dynamic> json,
-) => CurrentShiftResponse(
-  jsonrpc: json['jsonrpc'] as String?,
-  id: json['id'],
-  result: json['result'] == null
-      ? null
-      : CurrentShiftResult.fromJson(json['result'] as Map<String, dynamic>),
-);
-
 Map<String, dynamic> _$CurrentShiftResponseToJson(
   CurrentShiftResponse instance,
 ) => <String, dynamic>{
@@ -23,16 +13,6 @@ Map<String, dynamic> _$CurrentShiftResponseToJson(
   'id': instance.id,
   'result': instance.result,
 };
-
-CurrentShiftResult _$CurrentShiftResultFromJson(Map<String, dynamic> json) =>
-    CurrentShiftResult(
-      success: json['success'] as bool?,
-      statusCode: (json['status_code'] as num?)?.toInt(),
-      message: json['message'] as String?,
-      data: json['data'] == null
-          ? null
-          : Data.fromJson(json['data'] as Map<String, dynamic>),
-    );
 
 Map<String, dynamic> _$CurrentShiftResultToJson(CurrentShiftResult instance) =>
     <String, dynamic>{

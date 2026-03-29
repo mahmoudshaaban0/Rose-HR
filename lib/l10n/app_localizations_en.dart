@@ -67,7 +67,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newRequest => 'New Request';
 
   @override
-  String get attendanceCorrection => 'Attendance Correction';
+  String get attendanceCorrection => 'Punch Correction';
 
   @override
   String get workMission => 'Work Mission';
@@ -92,6 +92,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inRange => 'In Range';
+
+  @override
+  String get outOfRange => 'Out of range';
+
+  @override
+  String get loadingEllipsis => '...';
+
+  @override
+  String get shiftTimeLeftPlaceholder => ' 9:00 ';
+
+  @override
+  String get timeUnavailablePlaceholder => '--:--';
+
+  @override
+  String get punchOperationFailed => 'The operation failed';
+
+  @override
+  String get fingerprintRecordedSuccessfully =>
+      'Your fingerprint was registered successfully!';
+
+  @override
+  String get wishYouProductiveDay => 'We wish you a productive day';
+
+  @override
+  String get deviceInfoPlaceholder => 'Device Info';
 
   @override
   String get fingerPrintRegistration => 'FingerPrint Registration';
@@ -478,6 +503,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workMissionTypeDays => 'Days';
 
   @override
+  String get workMissionRequestTitle => 'Work mission request';
+
+  @override
+  String get pleaseSelectWorkMissionType => 'Please select mission type';
+
+  @override
+  String get selectWorkMissionType => 'Select mission type';
+
+  @override
+  String get pleaseAttachAtLeastOneFile => 'Please attach at least one file';
+
+  @override
+  String get failedToSubmitWorkMissionRequest =>
+      'Failed to submit work mission request';
+
+  @override
+  String get invalidWorkMissionRequestData =>
+      'Invalid work mission request data';
+
+  @override
+  String get workMissionNotesHint => 'Enter mission notes if any...';
+
+  @override
+  String get missionEndDateMustBeAfterStartDate =>
+      'End date must be after start date';
+
+  @override
+  String get pleaseSelectStartTime => 'Please select start time';
+
+  @override
+  String get pleaseSelectEndTime => 'Please select end time';
+
+  @override
+  String get shiftNamePlaceholder => '-:-:-';
+
+  @override
   String get missionStartDate => 'Mission Start Date';
 
   @override
@@ -624,7 +685,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordResetSentToEmail => 'Password reset sent to your email';
 
   @override
+  String get themeAppearance => 'Theme';
+
+  @override
+  String get selectTheme => 'Select theme';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeSystem => 'System default';
+
+  @override
   String get language => 'Language';
+
+  @override
+  String get selectLanguage => 'Select language';
+
+  @override
+  String get languageChangeApplying => 'Applying language…';
+
+  @override
+  String get arabicLanguageName => 'العربية';
+
+  @override
+  String get englishLanguageName => 'English';
 
   @override
   String get notifications => 'Notifications';
@@ -632,6 +720,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notificationsSubtitle =>
       'Request alerts and general app notifications';
+
+  @override
+  String get appNotifications => 'App notifications';
+
+  @override
+  String get requestsAndRepliesNotifications =>
+      'Requests and replies notifications';
 
   @override
   String get thankYou => 'Thank you';
@@ -657,4 +752,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get personalinfo => 'Personal information, identity, address';
+
+  @override
+  String get correctionType => 'Correction Type';
+
+  @override
+  String get fixAttendanceMethod => 'Fix Attendance Method';
+
+  @override
+  String get correctionTime => 'Correction Time';
+
+  @override
+  String get numberOfDays => 'Number of Days';
+
+  @override
+  String get from => 'From';
+
+  @override
+  String get to => 'To';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get days => 'days';
+
+  @override
+  String get months => 'months';
+
+  @override
+  String get dateCreated => 'Date Created';
 }

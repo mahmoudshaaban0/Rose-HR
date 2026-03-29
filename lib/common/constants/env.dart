@@ -48,4 +48,10 @@ final class Env {
   static String approveManagerRequest = _Env.approveManagerRequest;
   @EnviedField(varName: 'rejectManagerRequest', obfuscate: true)
   static String rejectManagerRequest = _Env.rejectManagerRequest;
+  @EnviedField(varName: 'pendingManagerRequests', obfuscate: true)
+  static String pendingManagerRequests = _Env.pendingManagerRequests;
+  @EnviedField(varName: 'approveRequest', obfuscate: true)
+  static String approveRequest = _Env.approveRequest;
+  @EnviedField(varName: 'rejectRequest', obfuscate: true)
+  static String rejectRequest = _Env.rejectRequest;
 }

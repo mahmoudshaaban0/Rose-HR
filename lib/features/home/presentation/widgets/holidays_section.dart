@@ -36,7 +36,7 @@ class HolidaysSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '0 ايام',
+                  '0 ${context.localizations.days}',
                   style: context.typography.semiBold16,
                 ),
                 Text(

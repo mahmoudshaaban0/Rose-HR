@@ -2,6 +2,7 @@ import 'package:rose_hr/common/constants/env.dart';
 import 'package:rose_hr/common/networking/api_consumer.dart';
 import 'package:rose_hr/features/requests/data/models/cancel_request_response_model.dart';
 import 'package:rose_hr/features/requests/data/models/employee_list_response_model.dart';
+import 'package:rose_hr/features/requests/data/models/pending_manager_requests_response_model.dart';
 import 'package:rose_hr/features/requests/data/models/single_request_response_by_id.dart';
 import 'package:rose_hr/features/requests/data/models/team_requests_response_model.dart';
 
@@ -14,11 +15,14 @@ class RequestsDataSource {
     return EmployeeListResponseModel.fromJson(response as Map<String, dynamic>);
   }
 
-  Future<CancelRequestResponseModel> cancelRequest(int requestId) async {
+  Future<CancelRequestResponseModel> cancelRequest(String recordType, int recordId) async {
     final response = await apiConsumer.post(
-      '${Env.cancelRequestById}$requestId',
+      Env.cancelRequestById,
       body: <String, dynamic>{
-        "params": <String, dynamic>{},
+        "params": <String, dynamic>{
+          "record_type": recordType,
+          "record_id": recordId,
+        },
       },
     );
     return CancelRequestResponseModel.fromJson(
@@ -26,9 +30,15 @@ class RequestsDataSource {
     );
   }
 
-  Future<SingleRequestResponseById> getSingleRequestById(int requestId) async {
-    final response = await apiConsumer.get(
-      '${Env.getRequestById}$requestId',
+  Future<SingleRequestResponseById> getSingleRequestById(String recordType, int recordId) async {
+    final response = await apiConsumer.post(
+      Env.getRequestById,
+      body: <String, dynamic>{
+        "params": <String, dynamic>{
+          "record_type": recordType,
+          "record_id": recordId,
+        },
+      },
     );
     return SingleRequestResponseById.fromJson(response as Map<String, dynamic>);
   }
@@ -38,13 +48,19 @@ class RequestsDataSource {
     return TeamRequestsResponseModel.fromJson(response as Map<String, dynamic>);
   }
 
-  Future<CancelRequestResponseModel> approveManagerRequest(
-    int requestId,
-  ) async {
+  Future<CancelRequestResponseModel> approveManagerRequest({
+    required String recordType,
+    required int recordId,
+    required String approvalType,
+  }) async {
     final response = await apiConsumer.post(
-      '${Env.approveManagerRequest}$requestId',
+      Env.approveRequest,
       body: <String, dynamic>{
-        'params': <String, dynamic>{},
+        'params': <String, dynamic>{
+          'record_type': recordType,
+          'approval_type': approvalType,
+          'record_id': recordId,
+        },
       },
     );
     return CancelRequestResponseModel.fromJson(
@@ -52,15 +68,26 @@ class RequestsDataSource {
     );
   }
 
-  Future<CancelRequestResponseModel> rejectManagerRequest(int requestId) async {
+  Future<CancelRequestResponseModel> rejectManagerRequest({
+    required String recordType,
+    required int recordId,
+  }) async {
     final response = await apiConsumer.post(
-      '${Env.rejectManagerRequest}$requestId',
+      Env.rejectRequest,
       body: <String, dynamic>{
-        'params': <String, dynamic>{},
+        'params': <String, dynamic>{
+          'record_type': recordType,
+          'record_id': recordId,
+        },
       },
     );
     return CancelRequestResponseModel.fromJson(
       response as Map<String, dynamic>,
     );
+  }
+
+  Future<PendingManagerRequestsResponseModel> getPendingManagerRequests() async {
+    final response = await apiConsumer.get(Env.pendingManagerRequests);
+    return PendingManagerRequestsResponseModel.fromJson(response as Map<String, dynamic>);
   }
 }

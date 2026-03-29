@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'holiday_request_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class HolidayRequestResponseModel {
   HolidayRequestResponseModel({
     required this.jsonrpc,
@@ -10,7 +10,16 @@ class HolidayRequestResponseModel {
     this.id,
   });
 
-  factory HolidayRequestResponseModel.fromJson(Map<String, dynamic> json) => _$HolidayRequestResponseModelFromJson(json);
+  factory HolidayRequestResponseModel.fromJson(Map<String, dynamic> json) {
+    final rawResult = json['result'];
+    return HolidayRequestResponseModel(
+      jsonrpc: json['jsonrpc'] as String,
+      id: json['id'],
+      result: rawResult is Map<String, dynamic>
+          ? HolidayRequestResult.fromJson(rawResult)
+          : HolidayRequestResult(success: false, statusCode: 0, message: ''),
+    );
+  }
 
   @JsonKey(name: 'jsonrpc')
   final String jsonrpc;

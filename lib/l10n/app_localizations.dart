@@ -215,7 +215,7 @@ abstract class AppLocalizations {
   /// No description provided for @attendanceCorrection.
   ///
   /// In en, this message translates to:
-  /// **'Attendance Correction'**
+  /// **'Punch Correction'**
   String get attendanceCorrection;
 
   /// No description provided for @workMission.
@@ -265,6 +265,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In Range'**
   String get inRange;
+
+  /// No description provided for @outOfRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of range'**
+  String get outOfRange;
+
+  /// No description provided for @loadingEllipsis.
+  ///
+  /// In en, this message translates to:
+  /// **'...'**
+  String get loadingEllipsis;
+
+  /// No description provided for @shiftTimeLeftPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **' 9:00 '**
+  String get shiftTimeLeftPlaceholder;
+
+  /// No description provided for @timeUnavailablePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'--:--'**
+  String get timeUnavailablePlaceholder;
+
+  /// No description provided for @punchOperationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The operation failed'**
+  String get punchOperationFailed;
+
+  /// No description provided for @fingerprintRecordedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Your fingerprint was registered successfully!'**
+  String get fingerprintRecordedSuccessfully;
+
+  /// No description provided for @wishYouProductiveDay.
+  ///
+  /// In en, this message translates to:
+  /// **'We wish you a productive day'**
+  String get wishYouProductiveDay;
+
+  /// No description provided for @deviceInfoPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Info'**
+  String get deviceInfoPlaceholder;
 
   /// No description provided for @fingerPrintRegistration.
   ///
@@ -1016,6 +1064,72 @@ abstract class AppLocalizations {
   /// **'Days'**
   String get workMissionTypeDays;
 
+  /// No description provided for @workMissionRequestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Work mission request'**
+  String get workMissionRequestTitle;
+
+  /// No description provided for @pleaseSelectWorkMissionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select mission type'**
+  String get pleaseSelectWorkMissionType;
+
+  /// No description provided for @selectWorkMissionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select mission type'**
+  String get selectWorkMissionType;
+
+  /// No description provided for @pleaseAttachAtLeastOneFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Please attach at least one file'**
+  String get pleaseAttachAtLeastOneFile;
+
+  /// No description provided for @failedToSubmitWorkMissionRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit work mission request'**
+  String get failedToSubmitWorkMissionRequest;
+
+  /// No description provided for @invalidWorkMissionRequestData.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid work mission request data'**
+  String get invalidWorkMissionRequestData;
+
+  /// No description provided for @workMissionNotesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter mission notes if any...'**
+  String get workMissionNotesHint;
+
+  /// No description provided for @missionEndDateMustBeAfterStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'End date must be after start date'**
+  String get missionEndDateMustBeAfterStartDate;
+
+  /// No description provided for @pleaseSelectStartTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select start time'**
+  String get pleaseSelectStartTime;
+
+  /// No description provided for @pleaseSelectEndTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select end time'**
+  String get pleaseSelectEndTime;
+
+  /// No description provided for @shiftNamePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'-:-:-'**
+  String get shiftNamePlaceholder;
+
   /// No description provided for @missionStartDate.
   ///
   /// In en, this message translates to:
@@ -1292,11 +1406,65 @@ abstract class AppLocalizations {
   /// **'Password reset sent to your email'**
   String get passwordResetSentToEmail;
 
+  /// No description provided for @themeAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get themeAppearance;
+
+  /// No description provided for @selectTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Select theme'**
+  String get selectTheme;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System default'**
+  String get themeSystem;
+
   /// No description provided for @language.
   ///
   /// In en, this message translates to:
   /// **'Language'**
   String get language;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select language'**
+  String get selectLanguage;
+
+  /// No description provided for @languageChangeApplying.
+  ///
+  /// In en, this message translates to:
+  /// **'Applying language…'**
+  String get languageChangeApplying;
+
+  /// No description provided for @arabicLanguageName.
+  ///
+  /// In en, this message translates to:
+  /// **'العربية'**
+  String get arabicLanguageName;
+
+  /// No description provided for @englishLanguageName.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get englishLanguageName;
 
   /// No description provided for @notifications.
   ///
@@ -1309,6 +1477,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Request alerts and general app notifications'**
   String get notificationsSubtitle;
+
+  /// No description provided for @appNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'App notifications'**
+  String get appNotifications;
+
+  /// No description provided for @requestsAndRepliesNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests and replies notifications'**
+  String get requestsAndRepliesNotifications;
 
   /// No description provided for @thankYou.
   ///
@@ -1357,6 +1537,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Personal information, identity, address'**
   String get personalinfo;
+
+  /// No description provided for @correctionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Correction Type'**
+  String get correctionType;
+
+  /// No description provided for @fixAttendanceMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix Attendance Method'**
+  String get fixAttendanceMethod;
+
+  /// No description provided for @correctionTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Correction Time'**
+  String get correctionTime;
+
+  /// No description provided for @numberOfDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Days'**
+  String get numberOfDays;
+
+  /// No description provided for @from.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get from;
+
+  /// No description provided for @to.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get to;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// No description provided for @months.
+  ///
+  /// In en, this message translates to:
+  /// **'months'**
+  String get months;
+
+  /// No description provided for @dateCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Date Created'**
+  String get dateCreated;
 }
 
 class _AppLocalizationsDelegate

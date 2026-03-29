@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'login_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class LoginResponseModel {
   LoginResponseModel({
     this.jsonrpc,
@@ -10,7 +10,14 @@ class LoginResponseModel {
     this.loginResult,
   });
 
-  factory LoginResponseModel.fromJson(Map<String, dynamic> json) => _$LoginResponseModelFromJson(json);
+  factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
+    final rawResult = json['result'];
+    return LoginResponseModel(
+      jsonrpc: json['jsonrpc'] as String?,
+      id: json['id'],
+      loginResult: rawResult is Map<String, dynamic> ? LoginResult.fromJson(rawResult) : null,
+    );
+  }
   @JsonKey(name: "jsonrpc")
   String? jsonrpc;
   @JsonKey(name: "id")
@@ -21,7 +28,7 @@ class LoginResponseModel {
   Map<String, dynamic> toJson() => _$LoginResponseModelToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class LoginResult {
   LoginResult({
     this.success,
@@ -30,7 +37,16 @@ class LoginResult {
     this.data,
   });
 
-  factory LoginResult.fromJson(Map<String, dynamic> json) => _$LoginResultFromJson(json);
+  factory LoginResult.fromJson(Map<String, dynamic> json) {
+    final rawData = json['data'];
+    return LoginResult(
+      success: json['success'] as bool?,
+      statusCode: (json['status_code'] as num?)?.toInt(),
+      message: json['message'] as String?,
+      data: rawData is Map<String, dynamic> ? Data.fromJson(rawData) : null,
+    );
+  }
+
   @JsonKey(name: "success")
   bool? success;
   @JsonKey(name: "status_code")

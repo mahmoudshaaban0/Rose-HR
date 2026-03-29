@@ -2,14 +2,21 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'account_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class AccountResponseModel {
   AccountResponseModel({
     this.jsonrpc,
     this.id,
     this.result,
   });
-  factory AccountResponseModel.fromJson(Map<String, dynamic> json) => _$AccountResponseModelFromJson(json);
+  factory AccountResponseModel.fromJson(Map<String, dynamic> json) {
+    final rawResult = json['result'];
+    return AccountResponseModel(
+      jsonrpc: json['jsonrpc'] as String?,
+      id: json['id'],
+      result: rawResult is Map<String, dynamic> ? AccountResult.fromJson(rawResult) : null,
+    );
+  }
   @JsonKey(name: "jsonrpc")
   String? jsonrpc;
   @JsonKey(name: "id")
@@ -20,7 +27,7 @@ class AccountResponseModel {
   Map<String, dynamic> toJson() => _$AccountResponseModelToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class AccountResult {
   AccountResult({
     this.success,
@@ -29,7 +36,16 @@ class AccountResult {
     this.data,
   });
 
-  factory AccountResult.fromJson(Map<String, dynamic> json) => _$AccountResultFromJson(json);
+  factory AccountResult.fromJson(Map<String, dynamic> json) {
+    final rawData = json['data'];
+    return AccountResult(
+      success: json['success'] as bool?,
+      statusCode: (json['status_code'] as num?)?.toInt(),
+      message: json['message'] as String?,
+      data: rawData is Map<String, dynamic> ? Data.fromJson(rawData) : null,
+    );
+  }
+
   @JsonKey(name: "success")
   bool? success;
   @JsonKey(name: "status_code")
@@ -42,7 +58,7 @@ class AccountResult {
   Map<String, dynamic> toJson() => _$AccountResultToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class Data {
   Data({
     this.name,
@@ -63,7 +79,28 @@ class Data {
     this.bankAccount,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+  factory Data.fromJson(Map<String, dynamic> json) {
+    final rawBankAccount = json['bank_account'];
+    return Data(
+      name: json['name'],
+      pin: json['pin'],
+      gender: json['gender'],
+      privateEmail: json['private_email'],
+      marital: json['marital'],
+      birthday: json['birthday'],
+      phone: json['phone'],
+      countryId: json['country_id'],
+      iqamaNumber: json['iqama_number'],
+      street: json['street'],
+      street2: json['street2'],
+      city: json['city'],
+      state: json['state'],
+      zip: json['zip'],
+      country: json['country'],
+      bankAccount:
+          rawBankAccount is Map<String, dynamic> ? BankAccount.fromJson(rawBankAccount) : null,
+    );
+  }
   @JsonKey(name: "name")
   dynamic name;
   @JsonKey(name: "pin")
@@ -98,6 +135,7 @@ class Data {
   BankAccount? bankAccount;
 
   Map<String, dynamic> toJson() => _$DataToJson(this);
+
 }
 
 @JsonSerializable()

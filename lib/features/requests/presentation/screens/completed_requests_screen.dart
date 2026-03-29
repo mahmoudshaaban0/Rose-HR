@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/features/requests/presentation/cubit/requests_cubit.dart';
 import 'package:rose_hr/features/requests/presentation/widgets/current_request_item.dart';
@@ -59,6 +58,10 @@ class CompletedRequests extends StatelessWidget {
             return request.state == 'done' ||
                 request.state == 'refuse' ||
                 request.state == 'cancelled' ||
+                request.state == 'rejected' ||
+                request.state == 'cancel' ||
+                request.state == 'refuse' ||
+                request.state == 'validate' ||
                 request.state == 'approved';
           }).toList();
 
@@ -94,9 +97,13 @@ class CompletedRequests extends StatelessWidget {
                       );
                     },
                     onCancelRequest: null,
-                    requestType: _getLocalizedRequestType(context, request.requestType),
-                    requestDate: _formatDate(request.date),
-                    requestNumber: request.name ?? '',
+                    requestType: request.recordType == 'hr.request'
+                        ? request.reqRequestTypeDisplay ?? ''
+                        : request.leaveTypeName ?? '',
+                    requestDate: request.recordType == 'hr.request'
+                        ? _formatDate(request.reqDate)
+                        : '${request.leaveDateFrom} - ${request.leaveDateTo}',
+                    requestNumber: request.name?.toString() ?? '',
                     requestStatus: request.stateDisplay ?? request.state ?? '',
                     requestColor: _getStatusColor(context, request.state),
                     requestResponse: '', // Add this if you have response data
@@ -135,14 +142,8 @@ class CompletedRequests extends StatelessWidget {
     }
   }
 
-  String _formatDate(DateTime? date) {
-    if (date == null) return '';
-
-    try {
-      return DateFormat('yyyy-MM-dd', 'en').format(date);
-    } on Exception catch (_) {
-      return date.toString();
-    }
+  String _formatDate(String? date) {
+    return date ?? '';
   }
 
   Color _getStatusColor(BuildContext context, String? state) {

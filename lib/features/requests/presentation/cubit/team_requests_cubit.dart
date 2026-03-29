@@ -36,8 +36,12 @@ class TeamRequestsCubit extends Cubit<TeamRequestsState> {
     }
   }
 
-  Future<void> approveRequest(int? requestId) async {
-    if (requestId == null || isClosed) return;
+  Future<void> approveRequest({
+    required String recordType,
+    required int requestId,
+    required String approvalType,
+  }) async {
+    if (isClosed) return;
     emit(
       state.copyWith(
         status: TeamRequestsStatus.actionLoading,
@@ -45,7 +49,11 @@ class TeamRequestsCubit extends Cubit<TeamRequestsState> {
       ),
     );
 
-    final result = await requestsRepository.approveManagerRequest(requestId);
+    final result = await requestsRepository.approveManagerRequest(
+      recordType: recordType,
+      recordId: requestId,
+      approvalType: approvalType,
+    );
     switch (result) {
       case Success(:final data):
         if (isClosed) return;
@@ -79,8 +87,11 @@ class TeamRequestsCubit extends Cubit<TeamRequestsState> {
     }
   }
 
-  Future<void> rejectRequest(int? requestId) async {
-    if (requestId == null || isClosed) return;
+  Future<void> rejectRequest({
+    required String recordType,
+    required int requestId,
+  }) async {
+    if (isClosed) return;
     emit(
       state.copyWith(
         status: TeamRequestsStatus.actionLoading,
@@ -88,7 +99,10 @@ class TeamRequestsCubit extends Cubit<TeamRequestsState> {
       ),
     );
 
-    final result = await requestsRepository.rejectManagerRequest(requestId);
+    final result = await requestsRepository.rejectManagerRequest(
+      recordType: recordType,
+      recordId: requestId,
+    );
     switch (result) {
       case Success(:final data):
         if (isClosed) return;

@@ -6,16 +6,6 @@ part of 'permission_request_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PermissionRequestResponseModel _$PermissionRequestResponseModelFromJson(
-  Map<String, dynamic> json,
-) => PermissionRequestResponseModel(
-  jsonrpc: json['jsonrpc'] as String?,
-  id: json['id'],
-  result: json['result'] == null
-      ? null
-      : RequestResult.fromJson(json['result'] as Map<String, dynamic>),
-);
-
 Map<String, dynamic> _$PermissionRequestResponseModelToJson(
   PermissionRequestResponseModel instance,
 ) => <String, dynamic>{
@@ -23,16 +13,6 @@ Map<String, dynamic> _$PermissionRequestResponseModelToJson(
   'id': instance.id,
   'result': instance.result,
 };
-
-RequestResult _$RequestResultFromJson(Map<String, dynamic> json) =>
-    RequestResult(
-      success: json['success'] as bool?,
-      statusCode: (json['status_code'] as num?)?.toInt(),
-      message: json['message'] as String?,
-      data: json['data'] == null
-          ? null
-          : Data.fromJson(json['data'] as Map<String, dynamic>),
-    );
 
 Map<String, dynamic> _$RequestResultToJson(RequestResult instance) =>
     <String, dynamic>{

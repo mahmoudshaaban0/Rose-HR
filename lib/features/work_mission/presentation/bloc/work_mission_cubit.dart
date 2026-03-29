@@ -33,7 +33,29 @@ class WorkMissionCubit extends Cubit<WorkMissionState> {
 
   void selectEndTime(DateTime date) {
     if (isClosed) return;
-    emit(state.copyWith(endDate: date.toIso8601String()));
+
+    var endTime = date;
+
+    // If a start time exists and the chosen end time is not after it (overnight span),
+    // advance the end date by one day so the DateTime comparison works correctly.
+    if (state.startDate != null) {
+      final startDT = DateTime.parse(state.startDate!);
+      final endOnSameDay = DateTime(
+        startDT.year,
+        startDT.month,
+        startDT.day,
+        date.hour,
+        date.minute,
+        date.second,
+      );
+      if (!endOnSameDay.isAfter(startDT)) {
+        endTime = endOnSameDay.add(const Duration(days: 1));
+      } else {
+        endTime = endOnSameDay;
+      }
+    }
+
+    emit(state.copyWith(endDate: endTime.toIso8601String()));
   }
 
   void selectShiftId(int shiftId) {

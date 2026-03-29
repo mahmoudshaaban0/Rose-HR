@@ -20,4 +20,10 @@ class AppStrings {
   static const String email = 'email';
   static const String name = 'name';
   static const String apiKey = 'apiKey';
+
+  /// User preference: general in-app / system-style notifications
+  static const String notificationsAppEnabled = 'notifications_app_enabled';
+
+  /// User preference: requests & replies notifications
+  static const String notificationsRequestsEnabled = 'notifications_requests_enabled';
 }

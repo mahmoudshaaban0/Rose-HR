@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
-import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/common/widgets/loading.dart';
-import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/account/presentation/cubit/account_cubit.dart';
 import 'package:rose_hr/features/account/presentation/widgets/row_item.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
@@ -63,37 +59,37 @@ class _MyInformationAccountScreenState extends State<MyInformationAccountScreen>
               backgroundColor: context.colors.containerBackground,
               appBar: PrimaryAppBar(
                 title: context.localizations.personalData,
-                actions: [
-                  InkWell(
-                    borderRadius: BorderRadius.circular(25.r),
+                // actions: [
+                // InkWell(
+                //   borderRadius: BorderRadius.circular(25.r),
 
-                    onTap: () {
-                      context.pushNamed(AppRoutes.updateAccount.name);
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(left: 4.w, right: 4.w),
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-                      decoration: BoxDecoration(
-                        color: context.colors.containerBackground,
-                        borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(color: context.colors.dividerColor),
-                      ),
-                      child: Row(
-                        children: [
-                          AppVectorGraphic(
-                            path: Assets.vectorsEdit,
-                            color: context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null,
-                          ),
-                          SizedBox(width: 2.w),
-                          Text(
-                            context.localizations.edit,
-                            style: context.typography.medium14,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                //   onTap: () {
+                //     context.pushNamed(AppRoutes.updateAccount.name);
+                //   },
+                //   child: Container(
+                //     margin: EdgeInsets.only(left: 4.w, right: 4.w),
+                //     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+                //     decoration: BoxDecoration(
+                //       color: context.colors.containerBackground,
+                //       borderRadius: BorderRadius.circular(16.r),
+                //       border: Border.all(color: context.colors.dividerColor),
+                //     ),
+                //     child: Row(
+                //       children: [
+                //         AppVectorGraphic(
+                //           path: Assets.vectorsEdit,
+                //           color: context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null,
+                //         ),
+                //         SizedBox(width: 2.w),
+                //         Text(
+                //           context.localizations.edit,
+                //           style: context.typography.medium14,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // ],
               ),
               body: SafeArea(
                 child: Padding(

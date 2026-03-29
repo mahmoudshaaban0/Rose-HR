@@ -4,6 +4,7 @@ import 'package:rose_hr/common/networking/result.dart';
 import 'package:rose_hr/features/requests/data/datasources/requests_datasource.dart';
 import 'package:rose_hr/features/requests/data/models/cancel_request_response_model.dart';
 import 'package:rose_hr/features/requests/data/models/employee_list_response_model.dart';
+import 'package:rose_hr/features/requests/data/models/pending_manager_requests_response_model.dart';
 import 'package:rose_hr/features/requests/data/models/single_request_response_by_id.dart';
 import 'package:rose_hr/features/requests/data/models/team_requests_response_model.dart';
 
@@ -29,10 +30,11 @@ class RequestsRepository {
   }
 
   Future<Result<CancelRequestResponseModel>> cancelRequest(
-    int requestId,
+    String recordType,
+    int recordId,
   ) async {
     try {
-      final response = await requestsDataSource.cancelRequest(requestId);
+      final response = await requestsDataSource.cancelRequest(recordType, recordId);
       return Success(response);
     } on NoInternetConnectionException catch (e) {
       return Error(NetworkFailure(e.toString()));
@@ -48,10 +50,11 @@ class RequestsRepository {
   }
 
   Future<Result<SingleRequestResponseById>> getSingleRequestById(
-    int requestId,
+    String recordType,
+    int recordId,
   ) async {
     try {
-      final response = await requestsDataSource.getSingleRequestById(requestId);
+      final response = await requestsDataSource.getSingleRequestById(recordType, recordId);
       return Success(response);
     } on NoInternetConnectionException catch (e) {
       return Error(NetworkFailure(e.toString()));
@@ -83,12 +86,16 @@ class RequestsRepository {
     }
   }
 
-  Future<Result<CancelRequestResponseModel>> approveManagerRequest(
-    int requestId,
-  ) async {
+  Future<Result<CancelRequestResponseModel>> approveManagerRequest({
+    required String recordType,
+    required int recordId,
+    required String approvalType,
+  }) async {
     try {
       final response = await requestsDataSource.approveManagerRequest(
-        requestId,
+        approvalType: approvalType,
+        recordType: recordType,
+        recordId: recordId,
       );
       return Success(response);
     } on NoInternetConnectionException catch (e) {
@@ -104,11 +111,32 @@ class RequestsRepository {
     }
   }
 
-  Future<Result<CancelRequestResponseModel>> rejectManagerRequest(
-    int requestId,
-  ) async {
+  Future<Result<CancelRequestResponseModel>> rejectManagerRequest({
+    required String recordType,
+    required int recordId,
+  }) async {
     try {
-      final response = await requestsDataSource.rejectManagerRequest(requestId);
+      final response = await requestsDataSource.rejectManagerRequest(
+        recordType: recordType,
+        recordId: recordId,
+      );
+      return Success(response);
+    } on NoInternetConnectionException catch (e) {
+      return Error(NetworkFailure(e.toString()));
+    } on BadCertificateException catch (e) {
+      return Error(NetworkFailure(e.toString()));
+    } on ServerException catch (e) {
+      return Error(ServerFailure(e.toString()));
+    } on FormatException catch (e) {
+      return Error(DataFailure('Invalid data format: ${e.message}'));
+    } on Exception catch (e) {
+      return Error(UnknownFailure(e.toString()));
+    }
+  }
+
+  Future<Result<PendingManagerRequestsResponseModel>> getPendingManagerRequests() async {
+    try {
+      final response = await requestsDataSource.getPendingManagerRequests();
       return Success(response);
     } on NoInternetConnectionException catch (e) {
       return Error(NetworkFailure(e.toString()));

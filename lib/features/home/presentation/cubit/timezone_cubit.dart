@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rose_hr/common/helpers/location_provider.dart';
 import 'package:rose_hr/common/helpers/timezone_helper.dart';
+import 'package:rose_hr/theme/theme_ext.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 part 'timezone_state.dart';
@@ -107,6 +109,12 @@ class TimezoneCubit extends Cubit<TimezoneState> {
 
   /// Manually refresh timezone detection (useful after permission changes)
   Future<void> refreshTimezone() async {
+    final currentState = state;
+    if (currentState is TimezoneLoaded) {
+      emit(currentState.copyWith(clearCityName: true, locationName: '...', isDetecting: true));
+    } else {
+      emit(const TimezoneLoading());
+    }
     await _detectTimezone();
   }
 

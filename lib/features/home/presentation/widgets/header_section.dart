@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/constants/app_strings.dart';
 import 'package:rose_hr/common/helpers/app_manager.dart';
+import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
-import 'package:rose_hr/theme/theme_mode_handler.dart';
 
 class HeaderSection extends StatelessWidget {
   const HeaderSection({super.key, this.hideNotificationIcon = false});
@@ -35,7 +36,7 @@ class HeaderSection extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                ThemeScopeWidget.of(context)?.changeTo(ThemeMode.light);
+                context.pushNamed(AppRoutes.notifications.name);
               },
               icon: AppVectorGraphic(
                 width: 18.r,

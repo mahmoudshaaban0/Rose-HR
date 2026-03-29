@@ -6,18 +6,6 @@ part of 'attendance_summary_details_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AttendanceSummaryDetailsResponseModel
-_$AttendanceSummaryDetailsResponseModelFromJson(Map<String, dynamic> json) =>
-    AttendanceSummaryDetailsResponseModel(
-      jsonrpc: json['jsonrpc'] as String?,
-      id: json['id'],
-      result: json['result'] == null
-          ? null
-          : AttendanceSummaryDetailsResult.fromJson(
-              json['result'] as Map<String, dynamic>,
-            ),
-    );
-
 Map<String, dynamic> _$AttendanceSummaryDetailsResponseModelToJson(
   AttendanceSummaryDetailsResponseModel instance,
 ) => <String, dynamic>{
@@ -25,17 +13,6 @@ Map<String, dynamic> _$AttendanceSummaryDetailsResponseModelToJson(
   'id': instance.id,
   'result': instance.result,
 };
-
-AttendanceSummaryDetailsResult _$AttendanceSummaryDetailsResultFromJson(
-  Map<String, dynamic> json,
-) => AttendanceSummaryDetailsResult(
-  success: json['success'] as bool?,
-  statusCode: (json['status_code'] as num?)?.toInt(),
-  message: json['message'] as String?,
-  data: json['data'] == null
-      ? null
-      : Data.fromJson(json['data'] as Map<String, dynamic>),
-);
 
 Map<String, dynamic> _$AttendanceSummaryDetailsResultToJson(
   AttendanceSummaryDetailsResult instance,

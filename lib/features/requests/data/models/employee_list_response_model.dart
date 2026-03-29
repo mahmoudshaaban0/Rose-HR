@@ -2,6 +2,26 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'employee_list_response_model.g.dart';
 
+/// Custom JSON converter to handle fields that can be either false or string
+/// When the API returns false, we convert it to null
+/// When the API returns a string, we keep it as is
+class FalseOrStringConverter implements JsonConverter<String?, dynamic> {
+  const FalseOrStringConverter();
+
+  @override
+  String? fromJson(dynamic json) {
+    if (json == false || json == null) {
+      return null;
+    }
+    return json.toString();
+  }
+
+  @override
+  dynamic toJson(String? object) {
+    return object ?? false;
+  }
+}
+
 @JsonSerializable()
 class EmployeeListResponseModel {
   EmployeeListResponseModel({
@@ -46,51 +66,163 @@ class ListResult {
 @JsonSerializable()
 class Datum {
   Datum({
+    this.recordType,
     this.id,
     this.name,
-    this.requestType,
-    this.requestTypeDisplay,
-    this.date,
+    this.employeeId,
+    this.employeeName,
     this.state,
     this.stateDisplay,
-    this.requestedDuration,
-    this.partialExcuse,
-    this.canCancel,
-    this.workMissionType,
-    this.missionStartDate,
-    this.missionEndDate,
-    this.requestedDays,
+    this.createDate,
+    this.reqRequestType,
+    this.reqRequestTypeDisplay,
+    this.reqDate,
+    this.reqTimeFrom,
+    this.reqTimeTo,
+    this.reqReason,
+    this.reqRequestedDuration,
+    this.reqPartialExcuse,
+    this.reqManagerId,
+    this.reqManagerName,
+    this.reqCorrectionType,
+    this.reqFixAttendanceMethod,
+    this.reqCorrectionTime,
+    this.reqAttendanceLogId,
+    this.reqWorkMissionType,
+    this.reqMissionStartDate,
+    this.reqMissionEndDate,
+    this.reqRequestedDays,
+    this.reqShiftId,
+    this.reqShiftName,
+    this.leaveTypeId,
+    this.leaveTypeName,
+    this.leaveDateFrom,
+    this.leaveDateTo,
+    this.leaveNumberOfDays,
+    this.leaveDescription,
+    this.leaveRequireExitEntryVisa,
+    this.leaveVisaType,
+    this.leaveVisaPeriod,
+    this.leaveVisaNeededBefore,
+    this.leaveRequireAdvanceSalary,
+    this.leaveBereavementType,
+    this.leaveCanCancel,
+    this.leaveCanApprove,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
+  @JsonKey(name: "record_type")
+  String? recordType;
   @JsonKey(name: "id")
   int? id;
+  @FalseOrStringConverter()
   @JsonKey(name: "name")
   String? name;
-  @JsonKey(name: "request_type")
-  String? requestType;
-  @JsonKey(name: "request_type_display")
-  String? requestTypeDisplay;
-  @JsonKey(name: "date")
-  DateTime? date;
+  @JsonKey(name: "employee_id")
+  int? employeeId;
+  @JsonKey(name: "employee_name")
+  String? employeeName;
   @JsonKey(name: "state")
   String? state;
   @JsonKey(name: "state_display")
   String? stateDisplay;
-  @JsonKey(name: "requested_duration")
-  double? requestedDuration;
-  @JsonKey(name: "partial_excuse")
-  bool? partialExcuse;
-  @JsonKey(name: "can_cancel")
-  bool? canCancel;
-  @JsonKey(name: "work_mission_type")
-  dynamic workMissionType;
-  @JsonKey(name: "mission_start_date")
-  DateTime? missionStartDate;
-  @JsonKey(name: "mission_end_date")
-  DateTime? missionEndDate;
-  @JsonKey(name: "requested_days")
-  int? requestedDays;
+  @JsonKey(name: "create_date")
+  DateTime? createDate;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_request_type")
+  String? reqRequestType;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_request_type_display")
+  String? reqRequestTypeDisplay;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_date")
+  String? reqDate;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_time_from")
+  String? reqTimeFrom;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_time_to")
+  String? reqTimeTo;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_reason")
+  String? reqReason;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_requested_duration")
+  String? reqRequestedDuration;
+  @JsonKey(name: "req_partial_excuse")
+  bool? reqPartialExcuse;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_manager_id")
+  String? reqManagerId;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_manager_name")
+  String? reqManagerName;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_correction_type")
+  String? reqCorrectionType;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_fix_attendance_method")
+  String? reqFixAttendanceMethod;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_correction_time")
+  String? reqCorrectionTime;
+  @JsonKey(name: "req_attendance_log_id")
+  bool? reqAttendanceLogId;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_work_mission_type")
+  String? reqWorkMissionType;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_mission_start_date")
+  String? reqMissionStartDate;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_mission_end_date")
+  String? reqMissionEndDate;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_requested_days")
+  String? reqRequestedDays;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_shift_id")
+  String? reqShiftId;
+  @FalseOrStringConverter()
+  @JsonKey(name: "req_shift_name")
+  String? reqShiftName;
+  @FalseOrStringConverter()
+  @JsonKey(name: "leave_type_id")
+  String? leaveTypeId;
+  @FalseOrStringConverter()
+  @JsonKey(name: "leave_type_name")
+  String? leaveTypeName;
+  @FalseOrStringConverter()
+  @JsonKey(name: "leave_date_from")
+  String? leaveDateFrom;
+  @FalseOrStringConverter()
+  @JsonKey(name: "leave_date_to")
+  String? leaveDateTo;
+  @FalseOrStringConverter()
+  @JsonKey(name: "leave_number_of_days")
+  String? leaveNumberOfDays;
+  @FalseOrStringConverter()
+  @JsonKey(name: "leave_description")
+  String? leaveDescription;
+  @JsonKey(name: "leave_require_exit_entry_visa")
+  bool? leaveRequireExitEntryVisa;
+  @FalseOrStringConverter()
+  @JsonKey(name: "leave_visa_type")
+  String? leaveVisaType;
+  @FalseOrStringConverter()
+  @JsonKey(name: "leave_visa_period")
+  String? leaveVisaPeriod;
+  @FalseOrStringConverter()
+  @JsonKey(name: "leave_visa_needed_before")
+  String? leaveVisaNeededBefore;
+  @JsonKey(name: "leave_require_advance_salary")
+  bool? leaveRequireAdvanceSalary;
+  @JsonKey(name: "leave_bereavement_type")
+  bool? leaveBereavementType;
+  @JsonKey(name: "leave_can_cancel")
+  bool? leaveCanCancel;
+  @JsonKey(name: "leave_can_approve")
+  bool? leaveCanApprove;
 
   Map<String, dynamic> toJson() => _$DatumToJson(this);
 }

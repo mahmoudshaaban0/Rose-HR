@@ -14,7 +14,7 @@ import 'package:rose_hr/theme/theme_ext.dart';
 class AttachmentViewerWidget extends StatelessWidget {
   const AttachmentViewerWidget({required this.attachments, super.key});
 
-  final List<RequestAttachment> attachments;
+  final List<Attachment> attachments;
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +31,12 @@ class AttachmentViewerWidget extends StatelessWidget {
 class _AttachmentItem extends StatelessWidget {
   const _AttachmentItem({required this.attachment});
 
-  final RequestAttachment attachment;
+  final Attachment attachment;
 
   @override
   Widget build(BuildContext context) {
     final name = attachment.name ?? '';
-    final iconPath = attachment.isPdf ? Assets.vectorsPdf : Assets.vectorsImage;
+    final iconPath = attachment.mimetype == 'application/pdf' ? Assets.vectorsPdf : Assets.vectorsImage;
 
     return InkWell(
       borderRadius: BorderRadius.circular(AppSpacing.xxl.r),

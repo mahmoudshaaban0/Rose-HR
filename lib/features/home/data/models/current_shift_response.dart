@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'current_shift_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class CurrentShiftResponse {
   CurrentShiftResponse({
     this.jsonrpc,
@@ -10,7 +10,14 @@ class CurrentShiftResponse {
     this.result,
   });
 
-  factory CurrentShiftResponse.fromJson(Map<String, dynamic> json) => _$CurrentShiftResponseFromJson(json);
+  factory CurrentShiftResponse.fromJson(Map<String, dynamic> json) {
+    final rawResult = json['result'];
+    return CurrentShiftResponse(
+      jsonrpc: json['jsonrpc'] as String?,
+      id: json['id'],
+      result: rawResult is Map<String, dynamic> ? CurrentShiftResult.fromJson(rawResult) : null,
+    );
+  }
   @JsonKey(name: "jsonrpc")
   String? jsonrpc;
   @JsonKey(name: "id")
@@ -21,7 +28,7 @@ class CurrentShiftResponse {
   Map<String, dynamic> toJson() => _$CurrentShiftResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class CurrentShiftResult {
   CurrentShiftResult({
     this.success,
@@ -30,7 +37,16 @@ class CurrentShiftResult {
     this.data,
   });
 
-  factory CurrentShiftResult.fromJson(Map<String, dynamic> json) => _$CurrentShiftResultFromJson(json);
+  factory CurrentShiftResult.fromJson(Map<String, dynamic> json) {
+    final rawData = json['data'];
+    return CurrentShiftResult(
+      success: json['success'] as bool?,
+      statusCode: (json['status_code'] as num?)?.toInt(),
+      message: json['message'] as String?,
+      data: rawData is Map<String, dynamic> ? Data.fromJson(rawData) : null,
+    );
+  }
+
   @JsonKey(name: "success")
   bool? success;
   @JsonKey(name: "status_code")

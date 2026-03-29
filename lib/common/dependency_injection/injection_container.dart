@@ -34,6 +34,7 @@ import 'package:rose_hr/features/punch_correction/data/repositories/punch_correc
 import 'package:rose_hr/features/punch_correction/presentation/cubit/punch_correction_cubit.dart';
 import 'package:rose_hr/features/requests/data/datasources/requests_datasource.dart';
 import 'package:rose_hr/features/requests/data/repositories/requests_repository.dart';
+import 'package:rose_hr/features/requests/presentation/cubit/pending_manager_requests_cubit.dart';
 import 'package:rose_hr/features/requests/presentation/cubit/requests_cubit.dart';
 import 'package:rose_hr/features/requests/presentation/cubit/single_request_cubit.dart';
 import 'package:rose_hr/features/requests/presentation/cubit/team_requests_cubit.dart';
@@ -137,6 +138,9 @@ Future<void> init() async {
     )
     ..registerFactory<TeamRequestsCubit>(
       () => TeamRequestsCubit(sl<RequestsRepository>()),
+    )
+    ..registerFactory<PendingRequestsCubit>(
+      () => PendingRequestsCubit(sl<RequestsRepository>()),
     )
     ///! Core
     ..registerLazySingleton<NetworkInfo>(

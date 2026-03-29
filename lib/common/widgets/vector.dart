@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rose_hr/theme/theme_ext.dart';
 import 'package:vector_graphics/vector_graphics_compat.dart';
 
 class AppVectorGraphic extends StatelessWidget {
@@ -20,13 +21,16 @@ class AppVectorGraphic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveColorFilter = color ??
+        (context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null);
+
     return VectorGraphic(
       loader: AssetBytesLoader(path),
       width: width,
       height: height,
       semanticsLabel: semanticLabel,
       fit: boxFit,
-      colorFilter: color,
+      colorFilter: effectiveColorFilter,
     );
   }
 }

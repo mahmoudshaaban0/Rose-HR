@@ -17,9 +17,12 @@ class CurrentRequestItem extends StatelessWidget {
     required this.requestStatus,
     required this.requestColor,
     required this.requestResponse,
-    required this.onCancelRequest,
     required this.onViewRequest,
     super.key,
+    this.onCancelRequest,
+    this.onApproveRequest,
+    this.onRejectRequest,
+    this.showApproveReject = false,
   });
   final String requestType;
   final String requestDate;
@@ -28,7 +31,10 @@ class CurrentRequestItem extends StatelessWidget {
   final Color requestColor;
   final String requestResponse;
   final void Function()? onCancelRequest;
+  final void Function()? onApproveRequest;
+  final void Function()? onRejectRequest;
   final void Function()? onViewRequest;
+  final bool showApproveReject;
 
   @override
   Widget build(BuildContext context) {
@@ -46,32 +52,15 @@ class CurrentRequestItem extends StatelessWidget {
               contentPadding: EdgeInsets.symmetric(horizontal: AppSpacing.xxs.w),
               title: Text(requestType, style: context.typography.semiBold18),
               subtitle: Text(requestDate, style: context.typography.regular14),
-              trailing: onCancelRequest != null
+              trailing: (onCancelRequest != null || showApproveReject)
                   ? InkWell(
                       borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
                       onTap: () {
-                        BottomSheetWrapper(
-                          initialSize: 0.12.h,
-                          minChildSize: 0.12.h,
-                          maxChildSize: 0.12.h,
-                          removeAutoScroll: true,
-                          disableDrag: true,
-                          useRootNavigator: true,
-                          child: Padding(
-                            padding: EdgeInsets.all(AppSpacing.md.w),
-                            child: Column(
-                              spacing: AppSpacing.sm.h,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                PrimaryTextButton(
-                                  appButtonSize: AppButtonSize.xxLarge,
-                                  label: context.localizations.cancelRequest,
-                                  onTap: onCancelRequest,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ).callSheet(context);
+                        if (showApproveReject) {
+                          _showApproveRejectBottomSheet(context);
+                        } else {
+                          _showCancelBottomSheet(context);
+                        }
                       },
                       child: Icon(
                         Icons.more_vert,
@@ -123,6 +112,60 @@ class CurrentRequestItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _showCancelBottomSheet(BuildContext context) {
+    BottomSheetWrapper(
+      initialSize: 0.12.h,
+      minChildSize: 0.12.h,
+      maxChildSize: 0.12.h,
+      removeAutoScroll: true,
+      disableDrag: true,
+      useRootNavigator: true,
+      child: Padding(
+        padding: EdgeInsets.all(AppSpacing.md.w),
+        child: Column(
+          spacing: AppSpacing.sm.h,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            PrimaryTextButton(
+              appButtonSize: AppButtonSize.xxLarge,
+              label: context.localizations.cancelRequest,
+              onTap: onCancelRequest,
+            ),
+          ],
+        ),
+      ),
+    ).callSheet(context);
+  }
+
+  void _showApproveRejectBottomSheet(BuildContext context) {
+    BottomSheetWrapper(
+      useSolidBackground: true,
+      initialSize: 0.35,
+      child: Padding(
+        padding: EdgeInsets.all(AppSpacing.lg.r),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: AppSpacing.md.h),
+            PrimaryTextButton(
+              label: context.localizations.approveRequest,
+              onTap: onApproveRequest,
+              overriddenBackgroundColor: context.colors.success,
+            ),
+            SizedBox(height: AppSpacing.md.h),
+            PrimaryTextButton(
+              label: context.localizations.rejectRequest,
+              onTap: onRejectRequest,
+              overriddenBackgroundColor: context.colors.error,
+            ),
+            SizedBox(height: AppSpacing.md.h),
+          ],
+        ),
+      ),
+    ).callSheet(context);
   }
 }
 

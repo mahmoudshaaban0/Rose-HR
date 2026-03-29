@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/snackbar_service.dart';
+import 'package:rose_hr/common/utility/extensions.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/common/widgets/attachment_viewer_widget.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
@@ -29,7 +30,7 @@ class SingleRequestScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => sl<SingleRequestCubit>()..getSingleRequest(request?.id ?? 0),
+          create: (context) => sl<SingleRequestCubit>()..getSingleRequest(request?.recordType ?? '', request?.id ?? 0),
         ),
         BlocProvider.value(
           value: parentRequestsCubit!,
@@ -66,7 +67,9 @@ class SingleRequestScreen extends StatelessWidget {
           }
         },
         child: Scaffold(
-          appBar: PrimaryAppBar(title: _getLocalizedRequestType(context, request?.requestType)),
+          appBar: PrimaryAppBar(
+            title: request?.recordType == 'hr.request' ? request?.reqRequestTypeDisplay ?? '' : request?.leaveTypeName ?? '',
+          ),
           body: SafeArea(
             child: BlocBuilder<SingleRequestCubit, SingleRequestState>(
               // Only rebuild the UI for fetch-related status changes.
@@ -112,7 +115,7 @@ class SingleRequestScreen extends StatelessWidget {
   Widget _buildErrorState(BuildContext context, String? errorMessage) {
     return RefreshIndicator.adaptive(
       onRefresh: () async {
-        await context.read<SingleRequestCubit>().getSingleRequest(request?.id ?? 0);
+        await context.read<SingleRequestCubit>().getSingleRequest(request?.recordType ?? '', request?.id ?? 0);
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -136,7 +139,7 @@ class SingleRequestScreen extends StatelessWidget {
                 SizedBox(height: AppSpacing.lg.h),
                 ElevatedButton.icon(
                   onPressed: () {
-                    context.read<SingleRequestCubit>().getSingleRequest(request?.id ?? 0);
+                    context.read<SingleRequestCubit>().getSingleRequest(request?.recordType ?? '', request?.id ?? 0);
                   },
                   icon: const Icon(Icons.refresh),
                   label: Text(context.localizations.tryAgainAfter),
@@ -159,13 +162,15 @@ class SingleRequestScreen extends StatelessWidget {
 
   Widget _buildSuccessState(BuildContext context, Data data) {
     final canCancel = _canCancelRequest(data.state);
+    final isLeaveRequest = data.recordType == 'hr.leave';
+    final isHrRequest = data.recordType == 'hr.request';
 
     return Column(
       children: [
         Expanded(
           child: RefreshIndicator.adaptive(
             onRefresh: () async {
-              await context.read<SingleRequestCubit>().getSingleRequest(request?.id ?? 0);
+              await context.read<SingleRequestCubit>().getSingleRequest(request?.recordType ?? '', request?.id ?? 0);
             },
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -196,10 +201,10 @@ class SingleRequestScreen extends StatelessWidget {
                                     data.employeeName ?? '',
                                     style: context.typography.semiBold18,
                                   ),
-                                  if (data.managerName != null) ...[
+                                  if (!data.reqManagerName.isNullOrEmpty) ...[
                                     SizedBox(height: AppSpacing.xs.h),
                                     Text(
-                                      '${context.localizations.managerName} - ${data.managerName}',
+                                      '${context.localizations.managerName} - ${data.reqManagerName}',
                                       style: context.typography.regular14.copyWith(
                                         color: context.colors.onSurfaceVariant,
                                       ),
@@ -208,9 +213,9 @@ class SingleRequestScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            if (data.date != null)
+                            if (!data.reqDate.isNullOrEmpty)
                               Text(
-                                _formatDate(data.date),
+                                _formatDate(data.reqDate),
                                 style: context.typography.regular14,
                               ),
                           ],
@@ -229,23 +234,215 @@ class SingleRequestScreen extends StatelessWidget {
                           SizedBox(height: AppSpacing.md.h),
                         ],
 
-                        // Request type badge
-                        if (data.requestTypeDisplay != null) ...[
-                          RequestDetailRow(
-                            icon: Assets.vectorsPulseLine,
-                            title: context.localizations.requestType,
-                            trailingWidget: _buildBadge(
-                              context,
-                              text: data.requestTypeDisplay!,
-                              bg: context.colors.surfaceDim,
-                              border: context.colors.info,
-                              textColor: context.colors.info,
+                        // ══════════════════════════════════════════════════
+                        // HR.REQUEST FIELDS
+                        // ══════════════════════════════════════════════════
+                        if (isHrRequest) ...[
+                          // Request type badge
+                          if (!data.reqRequestTypeDisplay.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsPulseLine,
+                              title: context.localizations.requestType,
+                              trailingWidget: _buildBadge(
+                                context,
+                                text: data.reqRequestTypeDisplay!,
+                                bg: context.colors.surfaceDim,
+                                border: context.colors.info,
+                                textColor: context.colors.info,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Shift name
+                          if (!data.reqShiftName.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsTime,
+                              title: context.localizations.shift,
+                              trailingText: data.reqShiftName,
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Time from (hide if 0.0)
+                          if (!data.reqTimeFrom.isNullOrEmpty && _hasValidTime(double.tryParse(data.reqTimeFrom ?? '0.0'))) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsTime,
+                              title: context.localizations.timeFrom,
+                              trailingText: _decimalHoursToTime(double.parse(data.reqTimeFrom!)),
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Time to (hide if 0.0)
+                          if (!data.reqTimeTo.isNullOrEmpty && _hasValidTime(double.tryParse(data.reqTimeTo ?? '0.0'))) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsTime,
+                              title: context.localizations.timeTo,
+                              trailingText: _decimalHoursToTime(double.parse(data.reqTimeTo!)),
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Requested duration
+                          if (!data.reqRequestedDuration.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsTime,
+                              title: context.localizations.requestedDuration,
+                              trailingText: _formatDuration(context, double.parse(data.reqRequestedDuration!)),
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Work mission type
+                          if (!data.reqWorkMissionType.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsPulseLine,
+                              title: context.localizations.workMissionTypeLabel,
+                              trailingText: data.reqWorkMissionType == 'hours'
+                                  ? context.localizations.workMissionTypeHours
+                                  : context.localizations.workMissionTypeDays,
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Mission start date (for days-type work missions)
+                          if (!data.reqMissionStartDate.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsCalendarFill,
+                              title: context.localizations.missionStartDate,
+                              trailingText: _formatDate(data.reqMissionStartDate),
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Mission end date
+                          if (!data.reqMissionEndDate.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsCalendarFill,
+                              title: context.localizations.missionEndDate,
+                              trailingText: _formatDate(data.reqMissionEndDate),
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Correction type
+                          if (!data.reqCorrectionType.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsPulseLine,
+                              title: context.localizations.correctionType,
+                              trailingText: data.reqCorrectionType,
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Fix attendance method
+                          if (!data.reqFixAttendanceMethod.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsPulseLine,
+                              title: context.localizations.fixAttendanceMethod,
+                              trailingText: data.reqFixAttendanceMethod,
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Correction time
+                          if (!data.reqCorrectionTime.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsTime,
+                              title: context.localizations.correctionTime,
+                              trailingText: data.reqCorrectionTime,
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Requested days (for work missions)
+                          if (!data.reqRequestedDays.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsCalendarFill,
+                              title: context.localizations.numberOfDays,
+                              trailingText: data.reqRequestedDays,
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
                         ],
 
-                        // Status badge (keep original fixed colors)
+                        // ══════════════════════════════════════════════════
+                        // HR.LEAVE FIELDS
+                        // ══════════════════════════════════════════════════
+                        if (isLeaveRequest) ...[
+                          // Leave type name
+                          if (!data.leaveTypeName.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsPulseLine,
+                              title: context.localizations.leaveType,
+                              trailingWidget: _buildBadge(
+                                context,
+                                text: data.leaveTypeName!,
+                                bg: context.colors.surfaceDim,
+                                border: context.colors.info,
+                                textColor: context.colors.info,
+                              ),
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Leave date from
+                          if (!data.leaveDateFrom.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsCalendarFill,
+                              title: context.localizations.from,
+                              trailingText: data.leaveDateFrom ?? '',
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Leave date to
+                          if (!data.leaveDateTo.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsCalendarFill,
+                              title: context.localizations.to,
+                              trailingText: data.leaveDateTo ?? '',
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Number of days
+                          if (!data.leaveNumberOfDays.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsCalendarFill,
+                              title: context.localizations.numberOfDays,
+                              trailingText: data.leaveNumberOfDays ?? '',
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Visa type (only if visa is required)
+                          if ((data.leaveRequireExitEntryVisa ?? false) && !data.leaveVisaType.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsPulseLine,
+                              title: context.localizations.visaType,
+                              trailingText: data.leaveVisaType ?? '',
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Visa period (only if visa is required)
+                          if ((data.leaveRequireExitEntryVisa ?? false) && !data.leaveVisaPeriod.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsTime,
+                              title: context.localizations.visaPeriod,
+                              trailingText: '${data.leaveVisaPeriod ?? ''} ${context.localizations.months}',
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+                        ],
+
+                        // ══════════════════════════════════════════════════
+                        // COMMON FIELDS (both hr.request and hr.leave)
+                        // ══════════════════════════════════════════════════
+
+                        // Status badge
                         if (data.stateDisplay != null) ...[
                           RequestDetailRow(
                             icon: Assets.vectorsPulseLine,
@@ -271,80 +468,8 @@ class SingleRequestScreen extends StatelessWidget {
                           SizedBox(height: AppSpacing.md.h),
                         ],
 
-                        // Shift name
-                        if (data.shiftName != null) ...[
-                          RequestDetailRow(
-                            icon: Assets.vectorsTime,
-                            title: context.localizations.shift,
-                            trailingText: data.shiftName,
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
-                        ],
-
-                        // Time from (hide if 0.0)
-                        if (_hasValidTime(data.timeFrom)) ...[
-                          RequestDetailRow(
-                            icon: Assets.vectorsTime,
-                            title: context.localizations.timeFrom,
-                            trailingText: _decimalHoursToTime(data.timeFrom!),
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
-                        ],
-
-                        // Time to (hide if 0.0)
-                        if (_hasValidTime(data.timeTo)) ...[
-                          RequestDetailRow(
-                            icon: Assets.vectorsTime,
-                            title: context.localizations.timeTo,
-                            trailingText: _decimalHoursToTime(data.timeTo!),
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
-                        ],
-
-                        // Requested duration
-                        if (data.requestedDuration != null) ...[
-                          RequestDetailRow(
-                            icon: Assets.vectorsTime,
-                            title: context.localizations.requestedDuration,
-                            trailingText: _formatDuration(context, data.requestedDuration!),
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
-                        ],
-
-                        // Work mission type
-                        if (data.workMissionType != null) ...[
-                          RequestDetailRow(
-                            icon: Assets.vectorsPulseLine,
-                            title: context.localizations.workMissionTypeLabel,
-                            trailingText: data.workMissionType == 'hours'
-                                ? context.localizations.workMissionTypeHours
-                                : context.localizations.workMissionTypeDays,
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
-                        ],
-
-                        // Mission start date (for days-type work missions)
-                        if (data.missionStartDate != null) ...[
-                          RequestDetailRow(
-                            icon: Assets.vectorsCalendarFill,
-                            title: context.localizations.missionStartDate,
-                            trailingText: _formatDate(data.missionStartDate),
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
-                        ],
-
-                        // Mission end date
-                        if (data.missionEndDate != null) ...[
-                          RequestDetailRow(
-                            icon: Assets.vectorsCalendarFill,
-                            title: context.localizations.missionEndDate,
-                            trailingText: _formatDate(data.missionEndDate),
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
-                        ],
-
-                        // Reason
-                        if (data.reason != null && data.reason!.isNotEmpty) ...[
+                        // Reason (for hr.request) or Description (for hr.leave)
+                        if (isHrRequest && !data.reqReason.isNullOrEmpty) ...[
                           const AppDivider(),
                           SizedBox(height: AppSpacing.md.h),
                           Text(
@@ -360,7 +485,30 @@ class SingleRequestScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(AppSpacing.md.r),
                             ),
                             child: Text(
-                              data.reason!,
+                              data.reqReason!,
+                              style: context.typography.medium16,
+                            ),
+                          ),
+                          SizedBox(height: AppSpacing.md.h),
+                        ],
+
+                        if (isLeaveRequest && !data.leaveDescription.isNullOrEmpty) ...[
+                          const AppDivider(),
+                          SizedBox(height: AppSpacing.md.h),
+                          Text(
+                            context.localizations.notes,
+                            style: context.typography.semiBold16,
+                          ),
+                          SizedBox(height: AppSpacing.sm.h),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(AppSpacing.md.r),
+                            decoration: BoxDecoration(
+                              color: context.colors.surface,
+                              borderRadius: BorderRadius.circular(AppSpacing.md.r),
+                            ),
+                            child: Text(
+                              data.leaveDescription!,
                               style: context.typography.medium16,
                             ),
                           ),
@@ -386,7 +534,7 @@ class SingleRequestScreen extends StatelessWidget {
                   SizedBox(height: AppSpacing.md.h),
 
                   // ── Approval chain card ───────────────────────────────
-                  if (data.managerName != null)
+                  if (!data.reqManagerName.isNullOrEmpty)
                     Container(
                       padding: EdgeInsets.all(AppSpacing.md.r),
                       decoration: BoxDecoration(
@@ -404,7 +552,7 @@ class SingleRequestScreen extends StatelessWidget {
                           ApprovalChainWidget(
                             employees: [
                               ApprovalEmployee(
-                                name: data.managerName!,
+                                name: data.reqManagerName!,
                                 status: data.state == 'approve' || data.state == 'done'
                                     ? ApprovalStatus.approved
                                     : data.state == 'refuse'
@@ -447,7 +595,7 @@ class SingleRequestScreen extends StatelessWidget {
                   label: context.localizations.cancelRequest,
                   overriddenBackgroundColor: context.colors.error,
                   onTap: () {
-                    _showCancelConfirmationDialog(context, data.id);
+                    _showCancelConfirmationDialog(context, data.recordType ?? '', data.id ?? 0);
                   },
                 ),
               ),
@@ -505,36 +653,8 @@ class SingleRequestScreen extends StatelessWidget {
     return '${hours}h ${minutes}m';
   }
 
-  String _getLocalizedRequestType(BuildContext context, String? requestType) {
-    if (requestType == null) return '';
-
-    switch (requestType) {
-      case 'fix_attendance':
-        return context.localizations.attendanceCorrection;
-      case 'work_mission':
-        return context.localizations.workMission;
-      case 'leave_request':
-        return context.localizations.leaveRequest;
-      case 'permission_request':
-        return context.localizations.permissionRequest;
-      case 'late_in':
-        return context.localizations.lateArrival;
-      case 'early_out':
-        return context.localizations.earlyOut;
-      case 'mid_day':
-        return context.localizations.midDay;
-      default:
-        return requestType;
-    }
-  }
-
-  String _formatDate(DateTime? date) {
-    if (date == null) return '';
-    try {
-      return DateFormat('yyyy-MM-dd', 'en').format(date);
-    } on Exception catch (_) {
-      return date.toString();
-    }
+  String _formatDate(String? date) {
+    return date ?? '';
   }
 
   bool _canCancelRequest(String? state) {
@@ -542,8 +662,8 @@ class SingleRequestScreen extends StatelessWidget {
     return state != 'done' && state != 'cancel' && state != 'cancelled' && state != 'refuse' && state != 'approved';
   }
 
-  void _showCancelConfirmationDialog(BuildContext context, int? requestId) {
-    if (requestId == null) return;
+  void _showCancelConfirmationDialog(BuildContext context, String recordType, int recordId) {
+    if (recordType.isNullOrEmpty || recordId == 0) return;
 
     showDialog<void>(
       context: context,
@@ -569,7 +689,7 @@ class SingleRequestScreen extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              context.read<SingleRequestCubit>().cancelRequest(requestId);
+              context.read<SingleRequestCubit>().cancelRequest(recordType, recordId);
             },
             child: Text(
               context.localizations.cancelRequest,

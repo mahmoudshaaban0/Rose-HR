@@ -7,6 +7,7 @@ import 'package:rose_hr/features/home/presentation/cubit/timezone_cubit.dart';
 import 'package:rose_hr/features/home/presentation/widgets/header_shift_section.dart';
 import 'package:rose_hr/features/home/presentation/widgets/holidays_section.dart';
 import 'package:rose_hr/features/home/presentation/widgets/new_request_section.dart';
+import 'package:rose_hr/features/requests/presentation/cubit/pending_manager_requests_cubit.dart';
 import 'package:rose_hr/features/requests/presentation/widgets/team_requests_section.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 
@@ -15,19 +16,27 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<TimezoneCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<TimezoneCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<PendingRequestsCubit>()..getPendingManagerRequests(),
+        ),
+      ],
       child: Builder(
         builder: (context) {
           return Scaffold(
             body: SafeArea(
               child: RefreshIndicator.adaptive(
                 onRefresh: () async {
-                  // Refresh timezone detection from GPS
                   await TimezoneManager.refreshFromGps();
-                  // Also refresh the cubit to update UI with new timezone
                   if (context.mounted) {
                     await context.read<TimezoneCubit>().refreshTimezone();
+                    if (context.mounted) {
+                      await context.read<PendingRequestsCubit>().getPendingManagerRequests();
+                    }
                   }
                 },
                 child: SingleChildScrollView(

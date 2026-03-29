@@ -66,6 +66,8 @@ class Assets {
 
   static const String vectorsLockLine = "assets/vectors/lock-line.svg";
 
+  static const String vectorsNoNotifications = "assets/vectors/no_notifications.svg";
+
   static const String vectorsNoRequests = "assets/vectors/no_requests.svg";
 
   static const String vectorsNotifications = "assets/vectors/notifications.svg";

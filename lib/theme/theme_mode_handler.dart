@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:rose_hr/common/constants/app_strings.dart';
 import 'package:rose_hr/theme/app_theme.dart';
 import 'package:rose_hr/theme/app_theme_scope.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _kThemeMode = 'themeMode';
+const _kAppLocaleCode = 'app_locale_code';
 
 /// {@template theme_scope_widget}
 /// A class which handles all theme processes
@@ -42,6 +44,46 @@ class ThemeScopeWidget extends StatefulWidget {
 /// The state for [ThemeScopeWidget].
 class ThemeScopeWidgetState extends State<ThemeScopeWidget> {
   ThemeMode? _themeMode;
+  Locale _locale = const Locale(AppStrings.arabic);
+
+  /// Currently selected app [Locale] (Arabic or English).
+  Locale get locale => _locale;
+
+  Locale _readLocaleFromPreferences() {
+    final code = widget.preferences.getString(_kAppLocaleCode);
+    if (code == AppStrings.english) {
+      return const Locale(AppStrings.english);
+    }
+    if (code == AppStrings.arabic) {
+      return const Locale(AppStrings.arabic);
+    }
+    // Migrate from API `lang` header storage if present
+    final lang = widget.preferences.getString(AppStrings.lang);
+    if (lang == 'en_US' || lang == AppStrings.english) {
+      return const Locale(AppStrings.english);
+    }
+    return const Locale(AppStrings.arabic);
+  }
+
+  /// Persists and applies the app language (UI + API `lang` preference).
+  Future<void> changeLocale(Locale locale) async {
+    if (_locale == locale) return;
+
+    final languageCode = locale.languageCode;
+    if (languageCode != AppStrings.arabic && languageCode != AppStrings.english) {
+      return;
+    }
+
+    try {
+      final apiLang = languageCode == AppStrings.english ? 'en_US' : 'ar_001';
+      await widget.preferences.setString(_kAppLocaleCode, languageCode);
+      await widget.preferences.setString(AppStrings.lang, apiLang);
+
+      setState(() {
+        _locale = Locale(languageCode);
+      });
+    } on Exception catch (_) {}
+  }
 
   /// Change the theme mode
   Future<void> changeTo(ThemeMode themeMode) async {
@@ -55,6 +97,12 @@ class ThemeScopeWidgetState extends State<ThemeScopeWidget> {
         _themeMode = themeMode;
       });
     } on Exception catch (_) {}
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _locale = _readLocaleFromPreferences();
   }
 
   @override

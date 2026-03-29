@@ -10,10 +10,10 @@ class SingleRequestCubit extends Cubit<SingleRequestState> {
   SingleRequestCubit(this.requestsRepository) : super(const SingleRequestState());
   final RequestsRepository requestsRepository;
 
-  Future<void> getSingleRequest(int requestId) async {
+  Future<void> getSingleRequest(String recordType, int recordId) async {
     if (isClosed) return;
     emit(state.copyWith(status: SingleRequestStatus.loading));
-    final result = await requestsRepository.getSingleRequestById(requestId);
+    final result = await requestsRepository.getSingleRequestById(recordType, recordId);
     switch (result) {
       case Success(:final data):
         if (isClosed) return;
@@ -24,11 +24,11 @@ class SingleRequestCubit extends Cubit<SingleRequestState> {
     }
   }
 
-  Future<void> cancelRequest(int requestId) async {
+  Future<void> cancelRequest(String recordType, int recordId) async {
     if (isClosed) return;
 
     emit(state.copyWith(status: SingleRequestStatus.cancelling));
-    final result = await requestsRepository.cancelRequest(requestId);
+    final result = await requestsRepository.cancelRequest(recordType, recordId);
     switch (result) {
       case Success(:final data):
         if (isClosed) return;
@@ -36,7 +36,7 @@ class SingleRequestCubit extends Cubit<SingleRequestState> {
         if (data.result?.success ?? false) {
           emit(state.copyWith(status: SingleRequestStatus.cancelSuccess));
           // Refresh the request details after successful cancellation
-          await getSingleRequest(requestId);
+          await getSingleRequest(recordType, recordId);
         } else {
           emit(
             state.copyWith(

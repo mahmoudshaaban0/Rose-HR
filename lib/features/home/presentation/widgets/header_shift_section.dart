@@ -24,7 +24,7 @@ class HeaderAndShiftSection extends StatelessWidget {
 
   /// Formats a 24-hour time value to 12-hour format with AM/PM
   String _formatHourTo12Hour(BuildContext context, int? hour) {
-    if (hour == null) return '--:--';
+    if (hour == null) return context.localizations.timeUnavailablePlaceholder;
     final period = hour >= 12 ? context.localizations.timePeriodPm : context.localizations.timePeriodAm;
     final hour12 = hour % 12 == 0 ? 12 : hour % 12;
     return '$hour12:00 $period ';
@@ -37,15 +37,8 @@ class HeaderAndShiftSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => sl<TimezoneCubit>(),
-        ),
-        BlocProvider(
-          create: (context) => sl<HomeCubit>(),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => sl<HomeCubit>(),
       child: Container(
         padding: EdgeInsets.only(bottom: AppSpacing.xxxl.r),
         color: context.colors.containerBackground,
@@ -54,9 +47,24 @@ class HeaderAndShiftSection extends StatelessWidget {
             const HeaderSection(),
             BlocBuilder<TimezoneCubit, TimezoneState>(
               builder: (context, state) {
-                // Default values for initial/loading states
-                final formattedDateTime = state is TimezoneLoaded ? state.getFormattedDateTime() : '...';
-                final cityName = state is TimezoneLoaded ? (state.cityName ?? state.locationName) : '...';
+                // Default values for initial/loading/detecting states
+                final formattedDateTime = state is TimezoneLoaded
+                    ? state.getFormattedDateTime(context: context, locale: context.localizations.localeName)
+                    : context.localizations.loadingEllipsis;
+                final cityName = (state is TimezoneLoaded && !state.isDetecting)
+                    ? (state.cityName ?? state.locationName)
+                    : context.localizations.loadingEllipsis;
+
+                if (state is TimezoneLoading) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey,
+                    highlightColor: Colors.white,
+                    child: SizedBox(
+                      width: 100.w,
+                      height: 100.h,
+                    ),
+                  );
+                }
 
                 return Container(
                   margin: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r),
@@ -111,7 +119,7 @@ class HeaderAndShiftSection extends StatelessWidget {
                               style: context.typography.regular16,
                             ),
                             TextSpan(
-                              text: ' 9:00 ',
+                              text: context.localizations.shiftTimeLeftPlaceholder,
                               style: context.typography.semiBold28,
                             ),
                             TextSpan(
@@ -191,8 +199,8 @@ class HeaderAndShiftSection extends StatelessWidget {
 
   BottomSheetWrapper ordinaryClockInClockOutBottomSheet(BuildContext context) {
     return BottomSheetWrapper(
-      initialSize: 0.35.h,
-      maxChildSize: 0.35.h,
+      initialSize: 0.37.h,
+      maxChildSize: 0.37.h,
       removeAutoScroll: true,
       disableDrag: true,
       useRootNavigator: true,
@@ -242,7 +250,7 @@ class HeaderAndShiftSection extends StatelessWidget {
                           state.isWithinRadius != null &&
                           !state.isWithinRadius!) {
                         return Text(
-                          'خارج النطاق',
+                          context.localizations.outOfRange,
                           style: context.typography.semiBold16.copyWith(
                             color: context.colors.error,
                           ),
@@ -270,7 +278,9 @@ class HeaderAndShiftSection extends StatelessWidget {
                         SizedBox(width: AppSpacing.xs.r),
                         BlocBuilder<TimezoneCubit, TimezoneState>(
                           builder: (context, state) {
-                            final cityName = state is TimezoneLoaded ? (state.cityName ?? state.locationName) : '...';
+                            final cityName = state is TimezoneLoaded
+                                ? (state.cityName ?? state.locationName)
+                                : context.localizations.loadingEllipsis;
                             return Text(
                               cityName,
                               style: context.typography.medium14,
@@ -322,7 +332,9 @@ class HeaderAndShiftSection extends StatelessWidget {
               ),
               BlocBuilder<TimezoneCubit, TimezoneState>(
                 builder: (context, state) {
-                  final date = state is TimezoneLoaded ? state.getFormattedDate() : '...';
+                  final date = state is TimezoneLoaded
+                      ? state.getFormattedDate(locale: context.localizations.localeName)
+                      : context.localizations.loadingEllipsis;
                   return Text(
                     date,
                     style: context.typography.regular14,
@@ -332,7 +344,9 @@ class HeaderAndShiftSection extends StatelessWidget {
               ),
               BlocBuilder<TimezoneCubit, TimezoneState>(
                 builder: (context, state) {
-                  final time = state is TimezoneLoaded ? state.getFormattedTime() : '...';
+                  final time = state is TimezoneLoaded
+                      ? state.getFormattedTime(context: context)
+                      : context.localizations.loadingEllipsis;
                   return Text(
                     time,
                     style: context.typography.semiBold36,
@@ -340,11 +354,6 @@ class HeaderAndShiftSection extends StatelessWidget {
                   );
                 },
               ),
-              // Text(
-              //   'آخر تسجيل حدث 09:23 صباحًا',
-              //   style: context.typography.regular14,
-              //   textAlign: TextAlign.center,
-              // ),
               BlocBuilder<ShiftCubit, ShiftState>(
                 builder: (context, shiftState) {
                   final isLocationLoading = shiftState.locationCheckStatus == LocationCheckStatus.checkingBetweenRadiusLoading;
@@ -378,7 +387,7 @@ class HeaderAndShiftSection extends StatelessWidget {
                             context.pop();
                             SnackbarService.showError(
                               context,
-                              result?.message ?? 'فشلت العملية',
+                              result?.message ?? context.localizations.punchOperationFailed,
                             );
                           }
                         }
@@ -387,7 +396,7 @@ class HeaderAndShiftSection extends StatelessWidget {
                           context.pop();
                           SnackbarService.showError(
                             context,
-                            homeState.error ?? 'حدث خطأ ما',
+                            homeState.error ?? context.localizations.somethingWentWrong,
                           );
                         }
                       }
@@ -412,6 +421,7 @@ class HeaderAndShiftSection extends StatelessWidget {
                         onTap: isDisabled
                             ? null
                             : () async {
+                                final deviceInfo = context.localizations.deviceInfoPlaceholder;
                                 // Get current location
                                 final location = await LocationProvider.getCurrentLocation();
 
@@ -419,8 +429,6 @@ class HeaderAndShiftSection extends StatelessWidget {
                                 final now = DateTime.now();
                                 final actionDatetime =
                                     '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
-
-                                const deviceInfo = 'Device Info'; // Replace with actual device info
 
                                 if (context.mounted) {
                                   await context.read<HomeCubit>().createAttendancePunchIn(
@@ -465,15 +473,15 @@ class ClockInClockOutBottomSheet extends StatelessWidget {
         spacing: AppSpacing.xs.h,
         children: [
           Text(
-            'شكرًا لك',
+            context.localizations.thankYou,
             style: context.typography.regular16,
           ),
           Text(
-            'تم تسجيل بصمتك بنجاح!',
+            context.localizations.fingerprintRecordedSuccessfully,
             style: context.typography.semiBold28,
           ),
           Text(
-            'نتمنى لك يومًا مُثمرًا',
+            context.localizations.wishYouProductiveDay,
             style: context.typography.regular16,
           ),
           SizedBox(height: 30.h),

@@ -8,13 +8,26 @@ class AppSwitch extends StatelessWidget {
   final double? scale;
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Transform.scale(
       scale: scale ?? 0.8,
       child: CupertinoSwitch(
-        activeTrackColor: context.colors.surfaceContainerLow,
-        inactiveTrackColor: context.colors.surfaceContainerLow,
-        inactiveThumbColor: context.colors.onSurface,
-        thumbColor: context.colors.onSurface,
+        applyTheme: false,
+        // ON: brand success track, white thumb (clear “enabled” state)
+        activeTrackColor: colors.success,
+        thumbColor: colors.white,
+        // OFF: muted track + white thumb + light outline so it reads as “off”
+        inactiveTrackColor: colors.surfaceContainerHigh,
+        inactiveThumbColor: colors.white,
+        // Outline only when off — avoids a ring on the green “on” track
+        trackOutlineColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+          if (states.contains(WidgetState.selected)) return null;
+          return colors.outlineVariant;
+        }),
+        trackOutlineWidth: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+          if (states.contains(WidgetState.selected)) return 0;
+          return 1;
+        }),
         value: value,
         onChanged: onChanged,
       ),

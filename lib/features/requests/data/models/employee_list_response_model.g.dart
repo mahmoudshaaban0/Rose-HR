@@ -42,39 +42,169 @@ Map<String, dynamic> _$ListResultToJson(ListResult instance) =>
     };
 
 Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
+  recordType: json['record_type'] as String?,
   id: (json['id'] as num?)?.toInt(),
-  name: json['name'] as String?,
-  requestType: json['request_type'] as String?,
-  requestTypeDisplay: json['request_type_display'] as String?,
-  date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
+  name: const FalseOrStringConverter().fromJson(json['name']),
+  employeeId: (json['employee_id'] as num?)?.toInt(),
+  employeeName: json['employee_name'] as String?,
   state: json['state'] as String?,
   stateDisplay: json['state_display'] as String?,
-  requestedDuration: (json['requested_duration'] as num?)?.toDouble(),
-  partialExcuse: json['partial_excuse'] as bool?,
-  canCancel: json['can_cancel'] as bool?,
-  workMissionType: json['work_mission_type'],
-  missionStartDate: json['mission_start_date'] == null
+  createDate: json['create_date'] == null
       ? null
-      : DateTime.parse(json['mission_start_date'] as String),
-  missionEndDate: json['mission_end_date'] == null
-      ? null
-      : DateTime.parse(json['mission_end_date'] as String),
-  requestedDays: (json['requested_days'] as num?)?.toInt(),
+      : DateTime.parse(json['create_date'] as String),
+  reqRequestType: const FalseOrStringConverter().fromJson(
+    json['req_request_type'],
+  ),
+  reqRequestTypeDisplay: const FalseOrStringConverter().fromJson(
+    json['req_request_type_display'],
+  ),
+  reqDate: const FalseOrStringConverter().fromJson(json['req_date']),
+  reqTimeFrom: const FalseOrStringConverter().fromJson(json['req_time_from']),
+  reqTimeTo: const FalseOrStringConverter().fromJson(json['req_time_to']),
+  reqReason: const FalseOrStringConverter().fromJson(json['req_reason']),
+  reqRequestedDuration: const FalseOrStringConverter().fromJson(
+    json['req_requested_duration'],
+  ),
+  reqPartialExcuse: json['req_partial_excuse'] as bool?,
+  reqManagerId: const FalseOrStringConverter().fromJson(json['req_manager_id']),
+  reqManagerName: const FalseOrStringConverter().fromJson(
+    json['req_manager_name'],
+  ),
+  reqCorrectionType: const FalseOrStringConverter().fromJson(
+    json['req_correction_type'],
+  ),
+  reqFixAttendanceMethod: const FalseOrStringConverter().fromJson(
+    json['req_fix_attendance_method'],
+  ),
+  reqCorrectionTime: const FalseOrStringConverter().fromJson(
+    json['req_correction_time'],
+  ),
+  reqAttendanceLogId: json['req_attendance_log_id'] as bool?,
+  reqWorkMissionType: const FalseOrStringConverter().fromJson(
+    json['req_work_mission_type'],
+  ),
+  reqMissionStartDate: const FalseOrStringConverter().fromJson(
+    json['req_mission_start_date'],
+  ),
+  reqMissionEndDate: const FalseOrStringConverter().fromJson(
+    json['req_mission_end_date'],
+  ),
+  reqRequestedDays: const FalseOrStringConverter().fromJson(
+    json['req_requested_days'],
+  ),
+  reqShiftId: const FalseOrStringConverter().fromJson(json['req_shift_id']),
+  reqShiftName: const FalseOrStringConverter().fromJson(json['req_shift_name']),
+  leaveTypeId: const FalseOrStringConverter().fromJson(json['leave_type_id']),
+  leaveTypeName: const FalseOrStringConverter().fromJson(
+    json['leave_type_name'],
+  ),
+  leaveDateFrom: const FalseOrStringConverter().fromJson(
+    json['leave_date_from'],
+  ),
+  leaveDateTo: const FalseOrStringConverter().fromJson(json['leave_date_to']),
+  leaveNumberOfDays: const FalseOrStringConverter().fromJson(
+    json['leave_number_of_days'],
+  ),
+  leaveDescription: const FalseOrStringConverter().fromJson(
+    json['leave_description'],
+  ),
+  leaveRequireExitEntryVisa: json['leave_require_exit_entry_visa'] as bool?,
+  leaveVisaType: const FalseOrStringConverter().fromJson(
+    json['leave_visa_type'],
+  ),
+  leaveVisaPeriod: const FalseOrStringConverter().fromJson(
+    json['leave_visa_period'],
+  ),
+  leaveVisaNeededBefore: const FalseOrStringConverter().fromJson(
+    json['leave_visa_needed_before'],
+  ),
+  leaveRequireAdvanceSalary: json['leave_require_advance_salary'] as bool?,
+  leaveBereavementType: json['leave_bereavement_type'] as bool?,
+  leaveCanCancel: json['leave_can_cancel'] as bool?,
+  leaveCanApprove: json['leave_can_approve'] as bool?,
 );
 
 Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
+  'record_type': instance.recordType,
   'id': instance.id,
-  'name': instance.name,
-  'request_type': instance.requestType,
-  'request_type_display': instance.requestTypeDisplay,
-  'date': instance.date?.toIso8601String(),
+  'name': const FalseOrStringConverter().toJson(instance.name),
+  'employee_id': instance.employeeId,
+  'employee_name': instance.employeeName,
   'state': instance.state,
   'state_display': instance.stateDisplay,
-  'requested_duration': instance.requestedDuration,
-  'partial_excuse': instance.partialExcuse,
-  'can_cancel': instance.canCancel,
-  'work_mission_type': instance.workMissionType,
-  'mission_start_date': instance.missionStartDate?.toIso8601String(),
-  'mission_end_date': instance.missionEndDate?.toIso8601String(),
-  'requested_days': instance.requestedDays,
+  'create_date': instance.createDate?.toIso8601String(),
+  'req_request_type': const FalseOrStringConverter().toJson(
+    instance.reqRequestType,
+  ),
+  'req_request_type_display': const FalseOrStringConverter().toJson(
+    instance.reqRequestTypeDisplay,
+  ),
+  'req_date': const FalseOrStringConverter().toJson(instance.reqDate),
+  'req_time_from': const FalseOrStringConverter().toJson(instance.reqTimeFrom),
+  'req_time_to': const FalseOrStringConverter().toJson(instance.reqTimeTo),
+  'req_reason': const FalseOrStringConverter().toJson(instance.reqReason),
+  'req_requested_duration': const FalseOrStringConverter().toJson(
+    instance.reqRequestedDuration,
+  ),
+  'req_partial_excuse': instance.reqPartialExcuse,
+  'req_manager_id': const FalseOrStringConverter().toJson(
+    instance.reqManagerId,
+  ),
+  'req_manager_name': const FalseOrStringConverter().toJson(
+    instance.reqManagerName,
+  ),
+  'req_correction_type': const FalseOrStringConverter().toJson(
+    instance.reqCorrectionType,
+  ),
+  'req_fix_attendance_method': const FalseOrStringConverter().toJson(
+    instance.reqFixAttendanceMethod,
+  ),
+  'req_correction_time': const FalseOrStringConverter().toJson(
+    instance.reqCorrectionTime,
+  ),
+  'req_attendance_log_id': instance.reqAttendanceLogId,
+  'req_work_mission_type': const FalseOrStringConverter().toJson(
+    instance.reqWorkMissionType,
+  ),
+  'req_mission_start_date': const FalseOrStringConverter().toJson(
+    instance.reqMissionStartDate,
+  ),
+  'req_mission_end_date': const FalseOrStringConverter().toJson(
+    instance.reqMissionEndDate,
+  ),
+  'req_requested_days': const FalseOrStringConverter().toJson(
+    instance.reqRequestedDays,
+  ),
+  'req_shift_id': const FalseOrStringConverter().toJson(instance.reqShiftId),
+  'req_shift_name': const FalseOrStringConverter().toJson(
+    instance.reqShiftName,
+  ),
+  'leave_type_id': const FalseOrStringConverter().toJson(instance.leaveTypeId),
+  'leave_type_name': const FalseOrStringConverter().toJson(
+    instance.leaveTypeName,
+  ),
+  'leave_date_from': const FalseOrStringConverter().toJson(
+    instance.leaveDateFrom,
+  ),
+  'leave_date_to': const FalseOrStringConverter().toJson(instance.leaveDateTo),
+  'leave_number_of_days': const FalseOrStringConverter().toJson(
+    instance.leaveNumberOfDays,
+  ),
+  'leave_description': const FalseOrStringConverter().toJson(
+    instance.leaveDescription,
+  ),
+  'leave_require_exit_entry_visa': instance.leaveRequireExitEntryVisa,
+  'leave_visa_type': const FalseOrStringConverter().toJson(
+    instance.leaveVisaType,
+  ),
+  'leave_visa_period': const FalseOrStringConverter().toJson(
+    instance.leaveVisaPeriod,
+  ),
+  'leave_visa_needed_before': const FalseOrStringConverter().toJson(
+    instance.leaveVisaNeededBefore,
+  ),
+  'leave_require_advance_salary': instance.leaveRequireAdvanceSalary,
+  'leave_bereavement_type': instance.leaveBereavementType,
+  'leave_can_cancel': instance.leaveCanCancel,
+  'leave_can_approve': instance.leaveCanApprove,
 };

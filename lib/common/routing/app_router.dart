@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rose_hr/theme/theme_ext.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/routing/notifier.dart';
 import 'package:rose_hr/common/widgets/bottom_nav_bar.dart';
@@ -11,15 +10,18 @@ import 'package:rose_hr/features/auth/presentation/screens/login_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/verification_screen.dart';
 import 'package:rose_hr/features/general_settings/presentation/screens/general_settings_screen.dart';
 import 'package:rose_hr/features/holiday_request/presentation/screens/holiday_request_screen.dart';
+import 'package:rose_hr/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:rose_hr/features/permission_request/presentation/screens/permission_request_screen.dart';
 import 'package:rose_hr/features/punch_correction/presentation/cubit/punch_correction_cubit.dart';
 import 'package:rose_hr/features/punch_correction/presentation/screens/correction_time_screen.dart';
 import 'package:rose_hr/features/punch_correction/presentation/screens/punch_correction_screen.dart';
 import 'package:rose_hr/features/requests/data/models/employee_list_response_model.dart';
 import 'package:rose_hr/features/requests/presentation/cubit/requests_cubit.dart';
+import 'package:rose_hr/features/requests/presentation/screens/all_pending_manager_requests_screen.dart';
 import 'package:rose_hr/features/requests/presentation/screens/single_request_screen.dart';
 import 'package:rose_hr/features/splash/presentation/screens/splash_screen.dart';
 import 'package:rose_hr/features/work_mission/presentation/screens/work_mission_screen.dart';
+import 'package:rose_hr/theme/theme_ext.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -106,6 +108,16 @@ class AppRouter {
         name: AppRoutes.generalSettings.name,
         path: AppRoutes.generalSettings.path,
         builder: (context, state) => const GeneralSettingsScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.allPendingManagerRequests.name,
+        path: AppRoutes.allPendingManagerRequests.path,
+        builder: (context, state) => const AllPendingManagerRequestsScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.notifications.name,
+        path: AppRoutes.notifications.path,
+        builder: (context, state) => const NotificationsScreen(),
       ),
     ],
   );

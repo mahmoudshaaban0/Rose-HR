@@ -6,16 +6,6 @@ part of 'work_mission_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-WorkPermissionResponseModel _$WorkPermissionResponseModelFromJson(
-  Map<String, dynamic> json,
-) => WorkPermissionResponseModel(
-  jsonrpc: json['jsonrpc'] as String?,
-  id: json['id'],
-  result: json['result'] == null
-      ? null
-      : PermissionResult.fromJson(json['result'] as Map<String, dynamic>),
-);
-
 Map<String, dynamic> _$WorkPermissionResponseModelToJson(
   WorkPermissionResponseModel instance,
 ) => <String, dynamic>{
@@ -23,16 +13,6 @@ Map<String, dynamic> _$WorkPermissionResponseModelToJson(
   'id': instance.id,
   'result': instance.result,
 };
-
-PermissionResult _$PermissionResultFromJson(Map<String, dynamic> json) =>
-    PermissionResult(
-      success: json['success'] as bool?,
-      statusCode: (json['status_code'] as num?)?.toInt(),
-      message: json['message'] as String?,
-      data: json['data'] == null
-          ? null
-          : Data.fromJson(json['data'] as Map<String, dynamic>),
-    );
 
 Map<String, dynamic> _$PermissionResultToJson(PermissionResult instance) =>
     <String, dynamic>{

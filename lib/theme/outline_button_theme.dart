@@ -15,13 +15,14 @@ class OutlineTextButton extends AppTextButton {
     super.trailing,
     super.appButtonSize,
     this.overriddenBorderColor,
+    this.overriddenBackgroundColor, required size,
   });
 
   final Color? overriddenBorderColor;
-
+  final Color? overriddenBackgroundColor;
   @override
   Color backgroundColor(BuildContext context) {
-    return overriddenBorderColor ?? context.colors.surfaceDim;
+    return overriddenBackgroundColor ?? context.colors.surfaceDim;
   }
 
   @override
@@ -46,6 +47,6 @@ class OutlineTextButton extends AppTextButton {
 
   @override
   BorderSide defaultBorder(BuildContext context) {
-    return const BorderSide(color: Colors.transparent);
+    return BorderSide(color: overriddenBorderColor ?? Colors.transparent);
   }
 }

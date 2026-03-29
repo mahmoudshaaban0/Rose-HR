@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'cancel_request_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class CancelRequestResponseModel {
   CancelRequestResponseModel({
     this.jsonrpc,
@@ -10,7 +10,14 @@ class CancelRequestResponseModel {
     this.result,
   });
 
-  factory CancelRequestResponseModel.fromJson(Map<String, dynamic> json) => _$CancelRequestResponseModelFromJson(json);
+  factory CancelRequestResponseModel.fromJson(Map<String, dynamic> json) {
+    final rawResult = json['result'];
+    return CancelRequestResponseModel(
+      jsonrpc: json['jsonrpc'] as String?,
+      id: json['id'],
+      result: rawResult is Map<String, dynamic> ? CancelResult.fromJson(rawResult) : null,
+    );
+  }
   @JsonKey(name: "jsonrpc")
   String? jsonrpc;
   @JsonKey(name: "id")

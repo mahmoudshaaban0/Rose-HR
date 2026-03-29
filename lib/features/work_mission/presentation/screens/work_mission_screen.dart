@@ -61,7 +61,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
   void _submitWorkMission(BuildContext context, WorkMissionState state) {
     // Validate required fields
     if (state.workMissionTypeId == null) {
-      SnackbarService.showError(context, 'الرجاء اختيار نوع المهمة');
+      SnackbarService.showError(context, context.localizations.pleaseSelectWorkMissionType);
       return;
     }
 
@@ -72,7 +72,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
 
     // Validate attachments (required for work missions)
     if (!_fileUploadCubit.state.hasFiles || !_fileUploadCubit.state.allFilesUploaded) {
-      SnackbarService.showError(context, 'الرجاء إرفاق ملف واحد على الأقل');
+      SnackbarService.showError(context, context.localizations.pleaseAttachAtLeastOneFile);
       return;
     }
 
@@ -80,24 +80,22 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
     if (state.workMissionTypeId == WorkMissionTypeModel.hours.id) {
       // For hours type: validate start time and end time
       if (state.startDate == null || state.endDate == null) {
-        SnackbarService.showError(context, 'الرجاء اختيار وقت البدء والانتهاء');
+        SnackbarService.showError(context, context.localizations.pleaseSelectStartAndEndTime);
         return;
       }
 
-      // Validate time range
-      final startDateTime = DateTime.parse(state.startDate!);
-      final endDateTime = DateTime.parse(state.endDate!);
-      final timeFrom = startDateTime.hour + (startDateTime.minute / 60.0);
-      final timeTo = endDateTime.hour + (endDateTime.minute / 60.0);
+      // Validate time order — end after start (supports overnight spans)
+      final startDT = DateTime.parse(state.startDate!);
+      final endDT = DateTime.parse(state.endDate!);
 
-      if (timeTo <= timeFrom) {
-        SnackbarService.showError(context, 'يجب أن يكون وقت الانتهاء بعد وقت البدء');
+      if (!endDT.isAfter(startDT)) {
+        SnackbarService.showError(context, context.localizations.endTimeMustBeAfterStartTime);
         return;
       }
     } else if (state.workMissionTypeId == WorkMissionTypeModel.days.id) {
       // For days type: validate start date and end date
       if (state.startDate == null || state.endDate == null) {
-        SnackbarService.showError(context, 'الرجاء اختيار تاريخ البدء والانتهاء');
+        SnackbarService.showError(context, context.localizations.pleaseSelectHolidayDatesError);
         return;
       }
 
@@ -105,8 +103,8 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
       final startDate = DateTime.parse(state.startDate!);
       final endDate = DateTime.parse(state.endDate!);
 
-      if (endDate.isBefore(startDate)) {
-        SnackbarService.showError(context, 'يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء');
+      if (startDate.isAfter(endDate)) {
+        SnackbarService.showError(context, context.localizations.missionEndDateMustBeAfterStartDate);
         return;
       }
     }
@@ -115,7 +113,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
     final request = _buildWorkMissionRequest(state);
 
     if (request == null) {
-      SnackbarService.showError(context, 'بيانات طلب المهمة غير صحيحة');
+      SnackbarService.showError(context, context.localizations.invalidWorkMissionRequestData);
       return;
     }
 
@@ -142,21 +140,33 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
         return null;
       }
 
-      // Get today's date for the API
+      // Fallback to today (if user didn't pick a date yet)
       final today = TimezoneHelper.format(
         TimezoneHelper.createTimestamp(DateTime.now()),
         pattern: 'yyyy-MM-dd',
         locale: 'en',
       );
 
-      // Convert times to decimal hours
+      final missionDate = state.date != null
+          ? TimezoneHelper.format(
+              TimezoneHelper.createTimestamp(DateTime.parse(state.date!)),
+              pattern: 'yyyy-MM-dd',
+              locale: 'en',
+            )
+          : today;
+
+      // Convert times to decimal hours (rounded to 2dp to avoid float precision issues)
       final startDateTime = DateTime.parse(state.startDate!);
       final endDateTime = DateTime.parse(state.endDate!);
-      final timeFrom = startDateTime.hour + (startDateTime.minute / 60.0);
-      final timeTo = endDateTime.hour + (endDateTime.minute / 60.0);
+      final timeFrom = double.parse(
+        (startDateTime.hour + (startDateTime.minute / 60.0)).toStringAsFixed(2),
+      );
+      final timeTo = double.parse(
+        (endDateTime.hour + (endDateTime.minute / 60.0)).toStringAsFixed(2),
+      );
 
       return WorkMissionRequestModel.hours(
-        date: today,
+        date: missionDate,
         shiftId: state.shiftId!,
         timeFrom: timeFrom,
         timeTo: timeTo,
@@ -258,7 +268,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                   // Business logic error (e.g., 400 with success: false)
                   SnackbarService.showError(
                     context,
-                    (result?.message ?? 'فشل في إرسال طلب المهمة') as String,
+                    result?.message?.toString() ?? context.localizations.failedToSubmitWorkMissionRequest,
                   );
                 }
               } else if (state.status == WorkMissionStatus.loading) {
@@ -272,15 +282,15 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                 // Network or other errors
                 SnackbarService.showError(
                   context,
-                  state.errorMessage ?? 'فشل في إرسال طلب المهمة',
+                  state.errorMessage ?? context.localizations.failedToSubmitWorkMissionRequest,
                 );
               }
             },
           ),
         ],
         child: Scaffold(
-          appBar: const PrimaryAppBar(
-            title: 'طلب مهمة عمل',
+          appBar: PrimaryAppBar(
+            title: context.localizations.workMissionRequestTitle,
           ),
           body: Builder(
             builder: (context) {
@@ -305,18 +315,17 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                 children: [
                                   BlocBuilder<WorkMissionCubit, WorkMissionState>(
                                     builder: (context, state) {
+                                      final selectedType = WorkMissionTypeModel.values.firstWhereOrNull(
+                                        (e) => e.id == state.workMissionTypeId,
+                                      );
+                                      final typeLabel =
+                                          selectedType?.localizedName(context.localizations) ??
+                                          context.localizations.selectWorkMissionType;
+
                                       return InfoCard(
-                                        title: 'نوع المهمة',
-                                        subtitle: state.workMissionTypeId != null
-                                            ? WorkMissionTypeModel.values
-                                                  .firstWhere((element) => element.id == state.workMissionTypeId)
-                                                  .name
-                                            : 'اختار نوع المهمة',
-                                        value: state.workMissionTypeId != null
-                                            ? WorkMissionTypeModel.values
-                                                  .firstWhere((element) => element.id == state.workMissionTypeId)
-                                                  .name
-                                            : 'اختار نوع المهمة',
+                                        title: context.localizations.workMissionTypeLabel,
+                                        subtitle: typeLabel,
+                                        value: typeLabel,
                                         subTitlestyle: state.workMissionTypeId != null
                                             ? context.typography.regular16.copyWith(color: context.colors.onSurface)
                                             : null,
@@ -331,7 +340,10 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 spacing: AppSpacing.md.h,
                                                 children: [
-                                                  Text('اختار نوع المهمة', style: context.typography.semiBold18),
+                                                  Text(
+                                                    context.localizations.selectWorkMissionType,
+                                                    style: context.typography.semiBold18,
+                                                  ),
                                                   BlocProvider.value(
                                                     value: cubit,
                                                     child: BlocBuilder<WorkMissionCubit, WorkMissionState>(
@@ -361,7 +373,9 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
                                                                     Text(
-                                                                      WorkMissionTypeModel.values[index].name,
+                                                                      WorkMissionTypeModel.values[index].localizedName(
+                                                                        context.localizations,
+                                                                      ),
                                                                       style: context.typography.medium16.copyWith(
                                                                         color:
                                                                             WorkMissionTypeModel.values[index].id ==
@@ -390,67 +404,61 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                       );
                                     },
                                   ),
-                                  // BlocBuilder<WorkMissionCubit, WorkMissionState>(
-                                  //   builder: (context, state) {
-                                  //     final cubit = context.read<WorkMissionCubit>();
-                                  //     final shiftIdCubit = context.read<ShiftIdCubit>();
-                                  //     return InfoCard(
-                                  //       prefixIcon: Assets.vectorsCalendarFill,
-                                  //       title: context.localizations.date,
-                                  //       subtitle: state.date != null
-                                  //           ? TimezoneHelper.format(
-                                  //               TimezoneHelper.createTimestamp(
-                                  //                 AppTimezone.egypt,
-                                  //                 DateTime.parse(state.date!),
-                                  //               ),
-                                  //               locale: 'en',
-                                  //               pattern: 'yyyy-MM-dd',
-                                  //             )
-                                  //           : context.localizations.defaultDate,
-                                  //       value: state.date != null
-                                  //           ? TimezoneHelper.format(
-                                  //               TimezoneHelper.createTimestamp(
-                                  //                 AppTimezone.egypt,
-                                  //                 DateTime.parse(state.date!),
-                                  //               ),
-                                  //               locale: 'en',
-                                  //               pattern: 'yyyy-MM-dd',
-                                  //             )
-                                  //           : context.localizations.defaultDate,
-                                  //       showArrow: false,
-                                  //       subTitlestyle: state.date != null
-                                  //           ? context.typography.regular16.copyWith(color: context.colors.onSurface)
-                                  //           : null,
-                                  //       onTap: () {
-                                  //         AppDatePicker.show(
-                                  //           context,
-                                  //           initialDate: state.date != null
-                                  //               ? DateTime.parse(state.date!)
-                                  //               : TimezoneHelper.now(AppTimezone.egypt),
-                                  //           onDateChanged: (date) {
-                                  //             cubit.selectDate(date);
-                                  //           },
-                                  //           onDateConfirmed: (selectedDate) {
-                                  //             cubit.selectDate(selectedDate);
+                                  BlocBuilder<WorkMissionCubit, WorkMissionState>(
+                                    builder: (context, state) {
+                                      final cubit = context.read<WorkMissionCubit>();
+                                      final shiftIdCubit = context.read<ShiftIdCubit>();
 
-                                  //             // Format date as yyyy-MM-dd for API
-                                  //             final formattedDate = TimezoneHelper.format(
-                                  //               TimezoneHelper.createTimestamp(AppTimezone.egypt, selectedDate),
-                                  //               pattern: 'yyyy-MM-dd',
-                                  //               locale: 'en',
-                                  //             );
+                                      final today = TimezoneHelper.format(
+                                        TimezoneHelper.createTimestamp(DateTime.now()),
+                                        pattern: 'yyyy-MM-dd',
+                                        locale: 'en',
+                                      );
 
-                                  //             // Call getShiftId with formatted date
-                                  //             shiftIdCubit.getShiftId(formattedDate);
+                                      final selectedDate = state.date != null
+                                          ? TimezoneHelper.format(
+                                              TimezoneHelper.createTimestamp(DateTime.parse(state.date!)),
+                                              pattern: 'yyyy-MM-dd',
+                                              locale: 'en',
+                                            )
+                                          : today;
 
-                                  //             AppLogger.instance.logDebug('selected date: ${cubit.state.date}');
-                                  //             AppLogger.instance.logDebug('fetching shift for date: $formattedDate');
-                                  //           },
-                                  //         );
-                                  //       },
-                                  //     );
-                                  //   },
-                                  // ),
+                                      final isHoursMission = state.workMissionTypeId == WorkMissionTypeModel.hours.id;
+
+                                      return Visibility(
+                                        visible: isHoursMission,
+                                        child: InfoCard(
+                                          prefixIcon: Assets.vectorsCalendarFill,
+                                          title: context.localizations.date,
+                                          subtitle: selectedDate,
+                                          value: selectedDate,
+                                          showArrow: false,
+                                          subTitlestyle: context.typography.regular16.copyWith(
+                                            color: context.colors.onSurface,
+                                          ),
+                                          onTap: () {
+                                            AppDatePicker.show(
+                                              context,
+                                              mode: CupertinoDatePickerMode.date,
+                                              initialDate: state.date != null ? DateTime.parse(state.date!) : DateTime.now(),
+                                              onDateChanged: cubit.selectDate,
+                                              onDateConfirmed: (selectedDate) {
+                                                cubit.selectDate(selectedDate);
+
+                                                final formattedDate = TimezoneHelper.format(
+                                                  TimezoneHelper.createTimestamp(selectedDate),
+                                                  pattern: 'yyyy-MM-dd',
+                                                  locale: 'en',
+                                                );
+
+                                                shiftIdCubit.getShiftId(formattedDate);
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
                                   BlocBuilder<ShiftIdCubit, ShiftIdState>(
                                     builder: (context, shiftState) {
                                       return BlocBuilder<WorkMissionCubit, WorkMissionState>(
@@ -489,11 +497,11 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                               prefixIcon: Assets.vectorsTime,
                                               showArrow: false,
                                               title: context.localizations.shift,
-                                              subtitle: selectedShift?.name ?? '-:-:-',
+                                              subtitle: selectedShift?.name ?? context.localizations.shiftNamePlaceholder,
                                               subTitlestyle: selectedShift != null
                                                   ? context.typography.regular16.copyWith(color: context.colors.onSurface)
                                                   : null,
-                                              value: selectedShift?.name ?? '-:-:-',
+                                              value: selectedShift?.name ?? context.localizations.shiftNamePlaceholder,
                                               onTap: () {
                                                 final cubit = context.read<WorkMissionCubit>();
                                                 BottomSheetWrapper(
@@ -535,7 +543,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
                                                                     Text(
-                                                                      shift?.name ?? '-:-:-',
+                                                                      shift?.name ?? context.localizations.shiftNamePlaceholder,
                                                                       style: context.typography.regular16.copyWith(
                                                                         color: isSelected ? context.colors.success : null,
                                                                         fontWeight: isSelected ? FontWeight.bold : null,
@@ -563,63 +571,52 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                   BlocBuilder<WorkMissionCubit, WorkMissionState>(
                                     builder: (context, state) {
                                       final cubit = context.read<WorkMissionCubit>();
+                                      final isDays = state.workMissionTypeId == WorkMissionTypeModel.days.id;
+                                      final startPlaceholder = isDays
+                                          ? context.localizations.selectStartDate
+                                          : context.localizations.pleaseSelectStartTime;
+
                                       return InfoCard(
                                         prefixIcon: Assets.vectorsCalendarFill,
-                                        title: 'تبدأ من:',
+                                        title: context.localizations.startsFrom,
                                         subtitle: state.startDate != null
                                             ? TimezoneHelper.format(
                                                 TimezoneHelper.createTimestamp(
                                                   DateTime.parse(state.startDate!),
                                                 ),
                                                 locale: 'en',
-                                                pattern: state.workMissionTypeId == WorkMissionTypeModel.days.id
-                                                    ? 'yyyy-MM-dd'
-                                                    : 'hh:mm a',
+                                                pattern: isDays ? 'yyyy-MM-dd' : 'hh:mm a',
                                               )
-                                            : 'اختر تاريخ البدء',
+                                            : startPlaceholder,
                                         value: state.startDate != null
                                             ? TimezoneHelper.format(
                                                 TimezoneHelper.createTimestamp(
                                                   DateTime.parse(state.startDate!),
                                                 ),
                                                 locale: 'en',
-                                                pattern: state.workMissionTypeId == WorkMissionTypeModel.days.id
-                                                    ? 'yyyy-MM-dd'
-                                                    : 'hh:mm a',
+                                                pattern: isDays ? 'yyyy-MM-dd' : 'hh:mm a',
                                               )
-                                            : 'اختر تاريخ البدء',
+                                            : startPlaceholder,
                                         showArrow: false,
                                         subTitlestyle: state.startDate != null
                                             ? context.typography.regular16.copyWith(color: context.colors.onSurface)
                                             : null,
                                         onTap: () {
+                                          final isHours = state.workMissionTypeId == WorkMissionTypeModel.hours.id;
                                           AppDatePicker.show(
-                                            mode: state.workMissionTypeId == WorkMissionTypeModel.days.id
-                                                ? CupertinoDatePickerMode.date
-                                                : CupertinoDatePickerMode.time,
+                                            mode: isHours ? CupertinoDatePickerMode.time : CupertinoDatePickerMode.date,
                                             context,
                                             initialDate: state.startDate != null
                                                 ? DateTime.parse(state.startDate!)
                                                 : TimezoneHelper.now(),
-                                            onDateChanged: (date) {
-                                              if (state.workMissionTypeId == WorkMissionTypeModel.days.id) {
-                                                cubit.selectStartDate(date);
-                                              } else {
-                                                cubit.selectStartTime(date);
-                                              }
-                                            },
+                                            // For time mode: don't update on scroll — only save on confirm
+                                            onDateChanged: isHours ? null : cubit.selectStartDate,
                                             onDateConfirmed: (selectedDate) {
-                                              if (state.workMissionTypeId == WorkMissionTypeModel.days.id) {
-                                                cubit.selectStartDate(selectedDate);
-                                              } else {
+                                              if (isHours) {
                                                 cubit.selectStartTime(selectedDate);
+                                              } else {
+                                                cubit.selectStartDate(selectedDate);
                                               }
-                                              final formattedDate = TimezoneHelper.format(
-                                                TimezoneHelper.createTimestamp(selectedDate),
-                                                pattern: 'yyyy-MM-dd',
-                                                locale: 'en',
-                                              );
-                                              AppLogger.instance.logDebug('selected start date: $formattedDate');
                                             },
                                           );
                                         },
@@ -629,40 +626,40 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                   BlocBuilder<WorkMissionCubit, WorkMissionState>(
                                     builder: (context, state) {
                                       final cubit = context.read<WorkMissionCubit>();
+                                      final isDays = state.workMissionTypeId == WorkMissionTypeModel.days.id;
+                                      final endPlaceholder = isDays
+                                          ? context.localizations.selectEndDate
+                                          : context.localizations.pleaseSelectEndTime;
+
                                       return InfoCard(
                                         prefixIcon: Assets.vectorsCalendarFill,
-                                        title: 'تنتهي في:',
+                                        title: context.localizations.endsAt,
                                         subtitle: state.endDate != null
                                             ? TimezoneHelper.format(
                                                 TimezoneHelper.createTimestamp(
                                                   DateTime.parse(state.endDate!),
                                                 ),
                                                 locale: 'en',
-                                                pattern: state.workMissionTypeId == WorkMissionTypeModel.days.id
-                                                    ? 'yyyy-MM-dd'
-                                                    : 'hh:mm a',
+                                                pattern: isDays ? 'yyyy-MM-dd' : 'hh:mm a',
                                               )
-                                            : 'اختر تاريخ النهاية',
+                                            : endPlaceholder,
                                         value: state.endDate != null
                                             ? TimezoneHelper.format(
                                                 TimezoneHelper.createTimestamp(
                                                   DateTime.parse(state.endDate!),
                                                 ),
                                                 locale: 'en',
-                                                pattern: state.workMissionTypeId == WorkMissionTypeModel.days.id
-                                                    ? 'yyyy-MM-dd'
-                                                    : 'hh:mm a',
+                                                pattern: isDays ? 'yyyy-MM-dd' : 'hh:mm a',
                                               )
-                                            : 'اختر تاريخ النهاية',
+                                            : endPlaceholder,
                                         showArrow: false,
                                         subTitlestyle: state.endDate != null
                                             ? context.typography.regular16.copyWith(color: context.colors.onSurface)
                                             : null,
                                         onTap: () {
+                                          final isHours = state.workMissionTypeId == WorkMissionTypeModel.hours.id;
                                           AppDatePicker.show(
-                                            mode: state.workMissionTypeId == WorkMissionTypeModel.days.id
-                                                ? CupertinoDatePickerMode.date
-                                                : CupertinoDatePickerMode.time,
+                                            mode: isHours ? CupertinoDatePickerMode.time : CupertinoDatePickerMode.date,
                                             context,
                                             initialDate: state.endDate != null
                                                 ? DateTime.parse(state.endDate!)
@@ -670,66 +667,24 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                             minimumYear: state.startDate != null
                                                 ? DateTime.parse(state.startDate!).year
                                                 : DateTime.now().year - 100,
-                                            onDateChanged: (date) {
-                                              if (state.workMissionTypeId == WorkMissionTypeModel.days.id) {
-                                                cubit.selectEndDate(date);
-                                              } else {
-                                                cubit.selectEndTime(date);
-                                              }
-                                            },
+                                            // For time mode: don't update on scroll — only save on confirm
+                                            onDateChanged: isHours ? null : cubit.selectEndDate,
                                             onDateConfirmed: (selectedDate) {
-                                              if (state.workMissionTypeId == WorkMissionTypeModel.days.id) {
-                                                cubit.selectEndDate(selectedDate);
-                                              } else {
+                                              if (isHours) {
                                                 cubit.selectEndTime(selectedDate);
+                                              } else {
+                                                cubit.selectEndDate(selectedDate);
                                               }
-                                              final formattedDate = TimezoneHelper.format(
-                                                TimezoneHelper.createTimestamp(selectedDate),
-                                                pattern: state.workMissionTypeId == WorkMissionTypeModel.days.id
-                                                    ? 'yyyy-MM-dd'
-                                                    : 'hh:mm a',
-                                                locale: 'en',
-                                              );
-                                              AppLogger.instance.logDebug('selected end date: $formattedDate');
                                             },
                                           );
                                         },
                                       );
                                     },
                                   ),
-
-                                  // InfoCard(
-                                  //   title: 'الخدمات الإضافية',
-                                  //   subtitle: 'حدد الخدمات التي تريدها',
-                                  //   value: 'الخدمات الإضافية',
-                                  //   onTap: () {},
-                                  // ),
                                 ],
                               ),
                             ),
 
-                            // Container(
-                            //   padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w),
-                            //   decoration: BoxDecoration(
-                            //     color: context.colors.containerBackground,
-                            //     borderRadius: BorderRadius.circular(AppSpacing.lg.r),
-                            //   ),
-                            //   child: Column(
-                            //     children: [
-                            //       Row(
-                            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //         children: [
-                            //           Text('تذكرة الطيران', style: context.typography.semiBold16),
-                            //           Transform.scale(
-                            //             scale: 0.8,
-                            //             child: Switch.adaptive(value: true, onChanged: (value) {}),
-                            //           ),
-                            //           // enable or disable
-                            //         ],
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
                             Container(
                               padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.md.w),
                               decoration: BoxDecoration(
@@ -743,7 +698,7 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                   AppTextField(
                                     title: context.localizations.notes,
                                     controller: _reasonController,
-                                    hintTextLabel: 'أكتب ملاحظات المهمة إن وجدت...',
+                                    hintTextLabel: context.localizations.workMissionNotesHint,
                                     maxLines: 4,
                                   ),
                                   Text(

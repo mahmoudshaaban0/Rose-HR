@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'attendance_summary_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class AttendanceSummary {
   AttendanceSummary({
     this.jsonrpc,
@@ -10,7 +10,14 @@ class AttendanceSummary {
     this.result,
   });
 
-  factory AttendanceSummary.fromJson(Map<String, dynamic> json) => _$AttendanceSummaryFromJson(json);
+  factory AttendanceSummary.fromJson(Map<String, dynamic> json) {
+    final rawResult = json['result'];
+    return AttendanceSummary(
+      jsonrpc: json['jsonrpc'] as String?,
+      id: json['id'],
+      result: rawResult is Map<String, dynamic> ? AttendanceResult.fromJson(rawResult) : null,
+    );
+  }
   @JsonKey(name: "jsonrpc")
   String? jsonrpc;
   @JsonKey(name: "id")
@@ -21,7 +28,7 @@ class AttendanceSummary {
   Map<String, dynamic> toJson() => _$AttendanceSummaryToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class AttendanceResult {
   AttendanceResult({
     this.success,
@@ -30,7 +37,18 @@ class AttendanceResult {
     this.data,
   });
 
-  factory AttendanceResult.fromJson(Map<String, dynamic> json) => _$AttendanceResultFromJson(json);
+  factory AttendanceResult.fromJson(Map<String, dynamic> json) {
+    final rawData = json['data'];
+    return AttendanceResult(
+      success: json['success'] as bool?,
+      statusCode: (json['status_code'] as num?)?.toInt(),
+      message: json['message'] as String?,
+      data: rawData is List
+          ? rawData.map((e) => Datum.fromJson(e as Map<String, dynamic>)).toList()
+          : null,
+    );
+  }
+
   @JsonKey(name: "success")
   bool? success;
   @JsonKey(name: "status_code")
