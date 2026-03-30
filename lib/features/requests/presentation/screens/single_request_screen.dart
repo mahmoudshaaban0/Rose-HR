@@ -659,7 +659,13 @@ class SingleRequestScreen extends StatelessWidget {
 
   bool _canCancelRequest(String? state) {
     // Can cancel if the request is not done, cancelled, or refused
-    return state != 'done' && state != 'cancel' && state != 'cancelled' && state != 'refuse' && state != 'approved';
+    return state != 'done' &&
+        state != 'cancel' &&
+        state != 'cancelled' &&
+        state != 'refuse' &&
+        state != 'approved' &&
+        state != 'rejected' &&
+        state != 'validate';
   }
 
   void _showCancelConfirmationDialog(BuildContext context, String recordType, int recordId) {

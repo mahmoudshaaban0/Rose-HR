@@ -83,7 +83,10 @@ class CorrectionTimeWidget extends StatelessWidget {
               ),
               if (correctionTime != null) ...[
                 SizedBox(width: AppSpacing.xs.w),
-                Icon(CupertinoIcons.arrow_left, size: 14.r, color: context.colors.onSurface),
+                if (context.localizations.localeName == 'ar')
+                  Icon(CupertinoIcons.arrow_left, size: 14.r, color: context.colors.onSurface)
+                else
+                  Icon(CupertinoIcons.arrow_right, size: 14.r, color: context.colors.onSurface),
                 SizedBox(width: AppSpacing.xs.w),
                 Text(
                   correctionTime ?? '--:--',
