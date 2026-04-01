@@ -134,7 +134,7 @@ class WorkHoursSection extends StatelessWidget {
               // Absence: show badge on attendance, placeholders for the rest
               if (isAbsence) {
                 return Column(
-                  children: [ 
+                  children: [
                     Row(
                       children: [
                         Expanded(

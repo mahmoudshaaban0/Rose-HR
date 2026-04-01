@@ -190,7 +190,7 @@ class AllPendingManagerRequestsScreen extends StatelessWidget {
                                   label: isActionLoading ? '' : context.localizations.rejectRequest,
                                   size: AppButtonSize.xxLarge,
                                   overriddenBorderColor: context.colors.onSurface,
-                                  overriddenBackgroundColor: context.colors.white,
+                                  overriddenBackgroundColor: context.isDarkMode ? context.colors.surface : context.colors.white,
                                   leading: isActionLoading
                                       ? (iconColor) => SizedBox(
                                           width: 20.w,

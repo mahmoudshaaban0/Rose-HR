@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/features/general_settings/presentation/widgets/general_settings_language_tile.dart';
 import 'package:rose_hr/features/general_settings/presentation/widgets/general_settings_notifications_tile.dart';
+import 'package:rose_hr/features/general_settings/presentation/widgets/general_settings_theme_tile.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
 class GeneralSettingsScreen extends StatelessWidget {
@@ -17,7 +18,7 @@ class GeneralSettingsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             GeneralSettingsLanguageTile(),
-            // GeneralSettingsThemeTile(),
+            GeneralSettingsThemeTile(),
             GeneralSettingsNotificationsTile(),
           ],
         ),

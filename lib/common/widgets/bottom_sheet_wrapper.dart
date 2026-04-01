@@ -140,7 +140,7 @@ class _BottomSheetWrapperState extends State<BottomSheetWrapper> {
               )
             : BorderRadius.circular(25),
         child: ColoredBox(
-          color: widget.useSolidBackground ? context.colors.surface : Colors.transparent,
+          color: widget.useSolidBackground ? context.colors.surface : context.colors.containerBackground,
           child: Column(
             children: [
               Align(
@@ -159,7 +159,7 @@ class _BottomSheetWrapperState extends State<BottomSheetWrapper> {
                 builder: (context, setState) {
                   return Container(
                     decoration: BoxDecoration(
-                      color: context.colors.surface,
+                      color: context.colors.containerBackground,
                       border: Border.all(
                         color: context.colors.surface,
                         width: 0,

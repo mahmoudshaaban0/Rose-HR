@@ -161,7 +161,15 @@ class HeaderAndShiftSection extends StatelessWidget {
       if (data == LocationPermissionStatus.granted) {
         if (!context.mounted) return;
 
-        await ordinaryClockInClockOutBottomSheet(context).callSheet(context);
+        BottomSheetWrapper(
+          initialSize: 0.37.h,
+          maxChildSize: 0.37.h,
+          removeAutoScroll: true,
+          disableDrag: true,
+          useRootNavigator: true,
+          child: const ClockInClockOutBottomSheet(clockImage: Assets.rastersFingerPrintRegistered),
+        ).callSheet(context);
+        // await ordinaryClockInClockOutBottomSheet(context).callSheet(context);
       }
     }
   }
@@ -479,6 +487,7 @@ class ClockInClockOutBottomSheet extends StatelessWidget {
           Text(
             context.localizations.fingerprintRecordedSuccessfully,
             style: context.typography.semiBold28,
+            textAlign: TextAlign.center,
           ),
           Text(
             context.localizations.wishYouProductiveDay,
@@ -487,6 +496,7 @@ class ClockInClockOutBottomSheet extends StatelessWidget {
           SizedBox(height: 30.h),
           Image.asset(
             clockImage,
+            colorBlendMode: BlendMode.srcIn,
             fit: BoxFit.cover,
           ),
         ],

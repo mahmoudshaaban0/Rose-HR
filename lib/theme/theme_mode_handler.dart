@@ -110,7 +110,7 @@ class ThemeScopeWidgetState extends State<ThemeScopeWidget> {
     super.didChangeDependencies();
 
     try {
-      final themeModeIndex = widget.preferences.getInt(_kThemeMode) ?? 0;
+      final themeModeIndex = widget.preferences.getInt(_kThemeMode) ?? 1;
       final themeMode = ThemeMode.values[themeModeIndex];
 
       _themeMode = themeMode;

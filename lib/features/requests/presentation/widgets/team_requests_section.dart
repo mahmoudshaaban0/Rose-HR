@@ -270,7 +270,7 @@ class _TeamRequestExpansionTileState extends State<_TeamRequestExpansionTile> {
             SizedBox(height: AppSpacing.md.h),
             PrimaryTextButton(
               appButtonSize: AppButtonSize.xxLarge,
-              label: 'قبول الطلب',
+              label: context.localizations.approveRequest,
               onTap: widget.isActionLoading
                   ? null
                   : () {
