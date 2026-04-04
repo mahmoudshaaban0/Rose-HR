@@ -146,7 +146,7 @@ class FileUploadWidget extends StatelessWidget {
         horizontal: AppSpacing.xl.w,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xffFDFAF6),
+        color: context.colors.fileItemBackground,
         borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
         border: Border.all(color: context.colors.dividerColor),
       ),

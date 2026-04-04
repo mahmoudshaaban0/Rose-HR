@@ -316,17 +316,25 @@ class _PerShiftWorkHours extends StatelessWidget {
               child: _InfoCard(
                 label: context.localizations.attendance,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      formatTimeToArabic(shift.checkInTime),
-                      style: context.typography.semiBold16,
+                    Expanded(
+                      child: Text(
+                        formatTimeToArabic(shift.checkInTime),
+                        style: context.typography.semiBold16,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
+                    SizedBox(width: AppSpacing.xs.w),
                     if (shift.hasLateIn)
-                      _Badge(
-                        label: context.localizations.lateAttendance,
-                        color: context.colors.error,
-                        background: context.colors.errorBadgeBackground,
+                      Flexible(
+                        child: Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: _Badge(
+                            label: context.localizations.lateAttendance,
+                            color: context.colors.error,
+                            background: context.colors.errorBadgeBackground,
+                          ),
+                        ),
                       ),
                   ],
                 ),
@@ -337,17 +345,26 @@ class _PerShiftWorkHours extends StatelessWidget {
               child: _InfoCard(
                 label: context.localizations.leave,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      formatTimeToArabic(shift.checkOutTime),
-                      style: context.typography.semiBold16,
+                    Expanded(
+                      child: Text(
+                        formatTimeToArabic(shift.checkOutTime),
+                        style: context.typography.semiBold16,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
+                    SizedBox(width: AppSpacing.xs.w),
                     if (shift.hasEarlyOut)
-                      _Badge(
-                        label: context.localizations.earlyCheckout,
-                        color: context.colors.error,
-                        background: context.colors.errorBadgeBackground,
+                      Flexible(
+                        child: Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: _Badge(
+                            label: context.localizations.earlyCheckout,
+                            color: context.colors.error,
+                            background: context.colors.errorBadgeBackground,
+                          ),
+                        ),
                       ),
                   ],
                 ),
@@ -447,6 +464,9 @@ class _Badge extends StatelessWidget {
       child: Text(
         label,
         style: context.typography.medium12.copyWith(color: color),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        softWrap: false,
       ),
     );
   }

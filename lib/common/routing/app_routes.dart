@@ -14,6 +14,7 @@ enum AppRoutes {
   singleRequest('/single-request', 'Single Request'),
   generalSettings('/general-settings', 'General Settings'),
   allPendingManagerRequests('/all-pending-manager-requests', 'All Pending Manager Requests'),
+  singleTeamRequest('/single-team-request', 'Single Team Request'),
   notifications('/notifications', 'Notifications');
 
   const AppRoutes(this.path, this.name);

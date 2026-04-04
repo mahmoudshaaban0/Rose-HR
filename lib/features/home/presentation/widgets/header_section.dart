@@ -42,7 +42,7 @@ class HeaderSection extends StatelessWidget {
                 width: 18.r,
                 height: 18.r,
                 path: Assets.vectorsNotifications,
-                color: ColorFilter.mode(context.colors.onSurface, BlendMode.srcIn),
+                color: context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null,
               ),
             ),
     );

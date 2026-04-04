@@ -434,6 +434,33 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selectCorrectionReason => 'أختر سبب تصحيح البصمة';
 
   @override
+  String get punchCorrectionReasonForgottenFingerprint => 'نسيان البصمة';
+
+  @override
+  String get punchCorrectionReasonMobileAppIssue => 'مشكلة في تطبيق الجوال';
+
+  @override
+  String get punchCorrectionReasonFingerprintIssue => 'مشكلة في البصمة';
+
+  @override
+  String get punchCorrectionReasonInternetIssue => 'مشكلة في الإتصال بالإنترنت';
+
+  @override
+  String get punchCorrectionReasonRemoteWork => 'العمل عن بعد';
+
+  @override
+  String get punchCorrectionReasonShiftSwap => 'تبديل الدوام مع موظف آخر';
+
+  @override
+  String get punchCorrectionReasonExtraWork => 'عمل إضافي بعد فترة بصمة الخروج';
+
+  @override
+  String get punchCorrectionReasonSiteVisit => 'زيارة موقع خارجي';
+
+  @override
+  String get punchCorrectionReasonOther => 'أخرى';
+
+  @override
   String get anErrorOccurred => 'حدث خطأ ما';
 
   @override
@@ -571,6 +598,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get visaType => 'نوع التأشيرة';
+
+  @override
+  String get visaTypeSingleEntry => 'تأشيرة دخول واحد';
+
+  @override
+  String get visaTypeMultipleEntry => 'تأشيرة دخول متعدد';
 
   @override
   String get selectVisaType => 'اختر نوع التأشيرة';

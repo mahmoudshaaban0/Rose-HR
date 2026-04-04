@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rose_hr/common/constants/app_strings.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
@@ -19,9 +20,9 @@ class AccountMenuItem extends StatelessWidget {
     this.subtitle,
     this.showDivider = true,
   }) : assert(
-          (iconPath != null) != (leading != null),
-          'Provide exactly one of iconPath or leading',
-        );
+         (iconPath != null) != (leading != null),
+         'Provide exactly one of iconPath or leading',
+       );
 
   final String? iconPath;
   final Widget? leading;
@@ -42,11 +43,13 @@ class AccountMenuItem extends StatelessWidget {
             horizontal: AppSpacing.sm.w,
           ),
           horizontalTitleGap: AppSpacing.sm.w,
-          leading: leading ??
+          leading:
+              leading ??
               AppVectorGraphic(
                 path: iconPath!,
                 width: 18.r,
                 height: 18.r,
+                color: context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null,
               ),
           title: Text(
             title,
@@ -65,7 +68,11 @@ class AccountMenuItem extends StatelessWidget {
                   ),
                 )
               : null,
-          trailing: Icon(CupertinoIcons.chevron_left, size: 18.r, color: context.colors.iconSubtle),
+          trailing: Icon(
+            context.localizations.localeName == AppStrings.english ? CupertinoIcons.chevron_right : CupertinoIcons.chevron_left,
+            size: 18.r,
+            color: context.colors.iconSubtle,
+          ),
         ),
         if (showDivider) const AppDivider(),
       ],

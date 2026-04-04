@@ -49,8 +49,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
           title: context.localizations.home,
           textStyle: context.typography.semiBold14,
           activeForegroundColor: context.colors.onSurface,
-          icon: const AppVectorGraphic(path: Assets.vectorsHomeActive),
-          inactiveIcon: const AppVectorGraphic(path: Assets.vectorsHomeInActive),
+          icon: AppVectorGraphic(
+            path: Assets.vectorsHomeActive,
+            color: context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null,
+          ),
+          inactiveIcon: const AppVectorGraphic(
+            path: Assets.vectorsHomeInActive,
+          ),
         ),
       ),
       PersistentTabConfig(
@@ -60,7 +65,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
           textStyle: context.typography.semiBold14,
           activeForegroundColor: context.colors.onSurface,
           inactiveIcon: const AppVectorGraphic(path: Assets.vectorsAttendanceInActive),
-          icon: const AppVectorGraphic(path: Assets.vectorsAttendanceActive),
+          icon: AppVectorGraphic(
+            path: Assets.vectorsAttendanceActive,
+            color: context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null,
+          ),
         ),
       ),
       PersistentTabConfig(
@@ -78,6 +86,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             path: Assets.vectorsRequestsActive,
             width: 14.w,
             height: 14.h,
+            color: context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null,
           ),
         ),
       ),
@@ -88,7 +97,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
           textStyle: context.typography.semiBold14,
           activeForegroundColor: context.colors.onSurface,
           inactiveIcon: const AppVectorGraphic(path: Assets.vectorsAccountInActive),
-          icon: const AppVectorGraphic(path: Assets.vectorsAccountActive),
+          icon: AppVectorGraphic(
+            path: Assets.vectorsAccountActive,
+            color: context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null,
+          ),
         ),
       ),
     ];

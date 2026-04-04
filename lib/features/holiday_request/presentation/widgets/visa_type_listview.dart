@@ -41,7 +41,7 @@ class _VisaTypeListViewState extends State<VisaTypeListView> {
                     return InkWell(
                       onTap: () {
                         context.read<HolidayRequestCubit>().selectVisaType(
-                          visaType.name,
+                          visaType.label(context.localizations),
                           visaType.id,
                         );
                         context.pop();
@@ -55,7 +55,7 @@ class _VisaTypeListViewState extends State<VisaTypeListView> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              visaType.name,
+                              visaType.label(context.localizations),
                               style: isSelected ? context.typography.medium16 : context.typography.regular16,
                             ),
                             if (isSelected) const AppVectorGraphic(path: Assets.vectorsCheckline),

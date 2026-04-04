@@ -55,6 +55,7 @@ class CurrentRequests extends StatelessWidget {
           if (data == null || data.isEmpty) {
             return NoRequestsWidget(
               title: context.localizations.noCurrentRequestsUntilNow,
+              onRefresh: () => context.read<RequestsCubit>().getEmployeeList(),
             );
           }
 
@@ -73,6 +74,7 @@ class CurrentRequests extends StatelessWidget {
           if (currentRequests.isEmpty) {
             return NoRequestsWidget(
               title: context.localizations.noCurrentRequestsUntilNow,
+              onRefresh: () => context.read<RequestsCubit>().getEmployeeList(),
             );
           }
 

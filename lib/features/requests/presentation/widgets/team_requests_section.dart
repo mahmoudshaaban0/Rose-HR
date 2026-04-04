@@ -118,6 +118,7 @@ class TeamRequestsSection extends StatelessWidget {
                     _TeamRequestExpansionTile(
                       item: item,
                       isActionLoading: state.status == PendingRequestsStatus.actionLoading && state.activeRequestId == item.id,
+                      pendingRequestsCubit: context.read<PendingRequestsCubit>(),
                       onApprove: () => context.read<PendingRequestsCubit>().approveRequest(
                         recordType: item.recordType ?? 'hr.request',
                         requestId: item.id ?? 0,
@@ -161,12 +162,14 @@ class _TeamRequestExpansionTile extends StatefulWidget {
   const _TeamRequestExpansionTile({
     required this.item,
     required this.isActionLoading,
+    required this.pendingRequestsCubit,
     required this.onApprove,
     required this.onReject,
   });
 
   final PendingRequestItem item;
   final bool isActionLoading;
+  final PendingRequestsCubit pendingRequestsCubit;
   final VoidCallback onApprove;
   final VoidCallback onReject;
 
@@ -175,8 +178,6 @@ class _TeamRequestExpansionTile extends StatefulWidget {
 }
 
 class _TeamRequestExpansionTileState extends State<_TeamRequestExpansionTile> {
-  bool _isExpanded = true;
-
   @override
   Widget build(BuildContext context) {
     final requestTitle = _getRequestTitle(context);
@@ -187,7 +188,13 @@ class _TeamRequestExpansionTileState extends State<_TeamRequestExpansionTile> {
     return Column(
       children: [
         InkWell(
-          onTap: () => setState(() => _isExpanded = !_isExpanded),
+          onTap: () => context.push(
+            AppRoutes.singleTeamRequest.path,
+            extra: {
+              'item': widget.item,
+              'cubit': widget.pendingRequestsCubit,
+            },
+          ),
           borderRadius: BorderRadius.circular(AppSpacing.md.r),
           child: Padding(
             padding: EdgeInsets.all(AppSpacing.md.r),

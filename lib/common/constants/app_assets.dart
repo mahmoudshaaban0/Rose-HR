@@ -26,6 +26,8 @@ class Assets {
 
   static const String rastersFingerPrintRegistered = "assets/rasters/finger_print_registered.png";
 
+  static const String rastersFingerprintregisteredDark = "assets/rasters/fingerprintregistered_dark.png";
+
   static const String rastersLoginBackgrooundImage = "assets/rasters/login_backgroound_image.png";
 
   static const String vectorsAccountActive = "assets/vectors/accountActive.svg";

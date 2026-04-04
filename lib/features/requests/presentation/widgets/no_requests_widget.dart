@@ -4,21 +4,26 @@ import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
 class NoRequestsWidget extends StatelessWidget {
-  const NoRequestsWidget({required this.title, super.key});
+  const NoRequestsWidget({
+    required this.title,
+    required this.onRefresh,
+    super.key,
+  });
+
   final String title;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator.adaptive(
       color: context.colors.onSurface,
-      onRefresh: () async {
-        return Future.delayed(const Duration(seconds: 1));
-      },
-      child: SingleChildScrollView(
+      onRefresh: onRefresh,
+      child: CustomScrollView(
+        // Required so pull-to-refresh works when there is no overflow (empty state in TabBarView).
         physics: const AlwaysScrollableScrollPhysics(),
-        child: Align(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.7,
+        slivers: [
+          SliverFillRemaining(
+            hasScrollBody: false,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -26,11 +31,12 @@ class NoRequestsWidget extends StatelessWidget {
                 Text(
                   title,
                   style: context.typography.semiBold18,
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

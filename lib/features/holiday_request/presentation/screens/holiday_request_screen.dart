@@ -112,6 +112,7 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                             path: Assets.vectorsTrash,
                             width: 16.w,
                             height: 16.h,
+                            color: context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null,
                           ),
                         ),
                       ),

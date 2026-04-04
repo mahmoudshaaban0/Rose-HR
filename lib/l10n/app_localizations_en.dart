@@ -436,6 +436,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectCorrectionReason => 'Select correction reason';
 
   @override
+  String get punchCorrectionReasonForgottenFingerprint => 'Forgot fingerprint';
+
+  @override
+  String get punchCorrectionReasonMobileAppIssue => 'Mobile app issue';
+
+  @override
+  String get punchCorrectionReasonFingerprintIssue =>
+      'Fingerprint device issue';
+
+  @override
+  String get punchCorrectionReasonInternetIssue => 'Internet connection issue';
+
+  @override
+  String get punchCorrectionReasonRemoteWork => 'Remote work';
+
+  @override
+  String get punchCorrectionReasonShiftSwap =>
+      'Shift swap with another employee';
+
+  @override
+  String get punchCorrectionReasonExtraWork => 'Overtime after clock-out';
+
+  @override
+  String get punchCorrectionReasonSiteVisit => 'External site visit';
+
+  @override
+  String get punchCorrectionReasonOther => 'Other';
+
+  @override
   String get anErrorOccurred => 'An error occurred';
 
   @override
@@ -576,6 +605,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get visaType => 'Visa Type';
+
+  @override
+  String get visaTypeSingleEntry => 'Single entry visa';
+
+  @override
+  String get visaTypeMultipleEntry => 'Multiple entry visa';
 
   @override
   String get selectVisaType => 'Select visa type';

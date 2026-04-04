@@ -17,8 +17,11 @@ import 'package:rose_hr/features/punch_correction/presentation/screens/correctio
 import 'package:rose_hr/features/punch_correction/presentation/screens/punch_correction_screen.dart';
 import 'package:rose_hr/features/requests/data/models/employee_list_response_model.dart';
 import 'package:rose_hr/features/requests/presentation/cubit/requests_cubit.dart';
+import 'package:rose_hr/features/requests/presentation/cubit/pending_manager_requests_cubit.dart';
+import 'package:rose_hr/features/requests/data/models/pending_manager_requests_response_model.dart';
 import 'package:rose_hr/features/requests/presentation/screens/all_pending_manager_requests_screen.dart';
 import 'package:rose_hr/features/requests/presentation/screens/single_request_screen.dart';
+import 'package:rose_hr/features/requests/presentation/screens/single_team_request_screen.dart';
 import 'package:rose_hr/features/splash/presentation/screens/splash_screen.dart';
 import 'package:rose_hr/features/work_mission/presentation/screens/work_mission_screen.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -97,6 +100,26 @@ class AppRouter {
             return SingleRequestScreen(request: extra['request'] as Datum, parentRequestsCubit: extra['cubit'] as RequestsCubit?);
           }
           // If extra is not Datum, navigate back or show error
+          return Scaffold(
+            body: Center(
+              child: Text(context.localizations.invalidRequestData),
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        name: AppRoutes.singleTeamRequest.name,
+        path: AppRoutes.singleTeamRequest.path,
+        builder: (context, state) {
+          final extra = state.extra;
+          if (extra is Map<String, dynamic> &&
+              extra['item'] is PendingRequestItem &&
+              extra['cubit'] is PendingRequestsCubit) {
+            return SingleTeamRequestScreen(
+              item: extra['item'] as PendingRequestItem,
+              pendingRequestsCubit: extra['cubit'] as PendingRequestsCubit,
+            );
+          }
           return Scaffold(
             body: Center(
               child: Text(context.localizations.invalidRequestData),

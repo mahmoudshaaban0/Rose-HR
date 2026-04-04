@@ -30,7 +30,7 @@ class _PaymentTypeListviewState extends State<PaymentTypeListview> {
               return InkWell(
                 onTap: () {
                   context.read<PermissionRequestCubit>().sendPermsissionType(
-                    permissionTypes[index].name,
+                    permissionTypes[index].label(context.localizations),
                     permissionTypes[index].id,
                   );
                   context.pop();
@@ -41,7 +41,7 @@ class _PaymentTypeListviewState extends State<PaymentTypeListview> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        permissionTypes[index].name,
+                        permissionTypes[index].label(context.localizations),
                         style: state.permissionTypeId == permissionTypes[index].id
                             ? context.typography.medium16
                             : context.typography.regular16,

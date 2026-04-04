@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/snackbar_service.dart';
+import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
@@ -100,147 +102,161 @@ class AllPendingManagerRequestsScreen extends StatelessWidget {
 
                   return Padding(
                     padding: EdgeInsets.symmetric(vertical: AppSpacing.sm.h),
-                    child: Container(
-                      padding: EdgeInsets.all(AppSpacing.md.r),
-                      decoration: BoxDecoration(
-                        color: context.colors.containerBackground,
-                        borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                    child: InkWell(
+                      onTap: () => context.pushNamed(
+                        AppRoutes.singleTeamRequest.name,
+                        extra: {
+                          'item': item,
+                          'cubit': context.read<PendingRequestsCubit>(),
+                        },
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          // Employee Name
-                          Row(
-                            children: [
-                              const AppVectorGraphic(path: Assets.vectorsPersonalInformationIcon),
-                              SizedBox(width: AppSpacing.md.w),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item.employeeName ?? '--',
-                                      style: context.typography.semiBold18,
-                                    ),
-                                    if (item.stateDisplay != null) ...[
-                                      SizedBox(height: AppSpacing.xxs.h),
+                      child: Container(
+                        padding: EdgeInsets.all(AppSpacing.md.r),
+                        decoration: BoxDecoration(
+                          color: context.colors.containerBackground,
+                          borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // Employee Name
+                            Row(
+                              children: [
+                                const AppVectorGraphic(path: Assets.vectorsPersonalInformationIcon),
+                                SizedBox(width: AppSpacing.md.w),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
                                       Text(
-                                        item.stateDisplay!,
-                                        style: context.typography.regular14.copyWith(
-                                          color: context.colors.onSurfaceVariant,
-                                        ),
+                                        item.employeeName ?? '--',
+                                        style: context.typography.semiBold18,
                                       ),
+                                      if (item.stateDisplay != null) ...[
+                                        SizedBox(height: AppSpacing.xxs.h),
+                                        Text(
+                                          item.stateDisplay!,
+                                          style: context.typography.regular14.copyWith(
+                                            color: context.colors.onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ],
                                     ],
-                                  ],
+                                  ),
                                 ),
+                              ],
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                            const AppDivider(),
+                            SizedBox(height: AppSpacing.md.h),
+                            // Request Number
+                            _buildLineItem(
+                              context: context,
+                              icon: Assets.vectorsHashtag,
+                              title: context.localizations.requestNumber,
+                              trailingTitle: item.name ?? '--',
+                              trailingTitleColor: context.colors.onSurface,
+                            ),
+                            SizedBox(height: AppSpacing.sm.h),
+
+                            // Create Date
+                            _buildLineItem(
+                              context: context,
+                              icon: Assets.vectorsTime,
+                              title: context.localizations.dateCreated,
+                              trailingTitle: _formatDateTime(item.createDate),
+                              trailingTitleColor: context.colors.onSurfaceVariant,
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                            // Request Type
+                            _buildLineItem(
+                              context: context,
+                              icon: Assets.vectorsRequestsActive,
+                              title: context.localizations.requestType,
+                              trailingTitle: requestType,
+                              trailingTitleColor: context.colors.onSurface,
+                            ),
+
+                            SizedBox(height: AppSpacing.sm.h),
+
+                            // Request Date
+                            _buildLineItem(
+                              context: context,
+                              icon: Assets.vectorsCalendarFill,
+                              title: context.localizations.date,
+                              trailingTitle: requestDate,
+                              trailingTitleColor: context.colors.onSurface,
+                            ),
+                            SizedBox(height: AppSpacing.sm.h),
+
+                            const AppDivider(),
+                            SizedBox(height: AppSpacing.md.h),
+
+                            // Action Buttons
+                            GestureDetector(
+                              onTap: () {},
+                              behavior: HitTestBehavior.opaque,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlineTextButton(
+                                      label: isActionLoading ? '' : context.localizations.rejectRequest,
+                                      size: AppButtonSize.xxLarge,
+                                      overriddenBorderColor: context.colors.onSurface,
+                                      overriddenBackgroundColor: context.isDarkMode
+                                          ? context.colors.surface
+                                          : context.colors.white,
+                                      leading: isActionLoading
+                                          ? (iconColor) => SizedBox(
+                                              width: 20.w,
+                                              height: 20.h,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2.r,
+                                                color: iconColor,
+                                              ),
+                                            )
+                                          : null,
+                                      onTap: isActionLoading
+                                          ? null
+                                          : () {
+                                              context.read<PendingRequestsCubit>().rejectRequest(
+                                                recordType: item.recordType ?? 'hr.request',
+                                                requestId: item.id ?? 0,
+                                              );
+                                            },
+                                    ),
+                                  ),
+                                  SizedBox(width: AppSpacing.md.w),
+                                  Expanded(
+                                    child: PrimaryTextButton(
+                                      overriddenBackgroundColor: context.colors.onSurface,
+                                      label: isActionLoading ? '' : context.localizations.approveRequest,
+                                      leading: isActionLoading
+                                          ? (iconColor) => SizedBox(
+                                              width: 20.w,
+                                              height: 20.h,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2.r,
+                                                color: iconColor,
+                                              ),
+                                            )
+                                          : null,
+                                      onTap: isActionLoading
+                                          ? null
+                                          : () {
+                                              context.read<PendingRequestsCubit>().approveRequest(
+                                                recordType: item.recordType ?? 'hr.request',
+                                                requestId: item.id ?? 0,
+                                                approvalType: item.pendingOn ?? 'manager',
+                                              );
+                                            },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
-                          const AppDivider(),
-                          SizedBox(height: AppSpacing.md.h),
-                          // Request Number
-                          _buildLineItem(
-                            context: context,
-                            icon: Assets.vectorsHashtag,
-                            title: context.localizations.requestNumber,
-                            trailingTitle: item.name ?? '--',
-                            trailingTitleColor: context.colors.onSurface,
-                          ),
-                          SizedBox(height: AppSpacing.sm.h),
-
-                          // Create Date
-                          _buildLineItem(
-                            context: context,
-                            icon: Assets.vectorsTime,
-                            title: context.localizations.dateCreated,
-                            trailingTitle: _formatDateTime(item.createDate),
-                            trailingTitleColor: context.colors.onSurfaceVariant,
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
-                          // Request Type
-                          _buildLineItem(
-                            context: context,
-                            icon: Assets.vectorsRequestsActive,
-                            title: context.localizations.requestType,
-                            trailingTitle: requestType,
-                            trailingTitleColor: context.colors.onSurface,
-                          ),
-
-                          SizedBox(height: AppSpacing.sm.h),
-
-                          // Request Date
-                          _buildLineItem(
-                            context: context,
-                            icon: Assets.vectorsCalendarFill,
-                            title: context.localizations.date,
-                            trailingTitle: requestDate,
-                            trailingTitleColor: context.colors.onSurface,
-                          ),
-                          SizedBox(height: AppSpacing.sm.h),
-
-                          const AppDivider(),
-                          SizedBox(height: AppSpacing.md.h),
-
-                          // Action Buttons
-                          Row(
-                            children: [
-                              Expanded(
-                                child: OutlineTextButton(
-                                  label: isActionLoading ? '' : context.localizations.rejectRequest,
-                                  size: AppButtonSize.xxLarge,
-                                  overriddenBorderColor: context.colors.onSurface,
-                                  overriddenBackgroundColor: context.isDarkMode ? context.colors.surface : context.colors.white,
-                                  leading: isActionLoading
-                                      ? (iconColor) => SizedBox(
-                                          width: 20.w,
-                                          height: 20.h,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2.r,
-                                            color: iconColor,
-                                          ),
-                                        )
-                                      : null,
-
-                                  onTap: isActionLoading
-                                      ? null
-                                      : () {
-                                          context.read<PendingRequestsCubit>().rejectRequest(
-                                            recordType: item.recordType ?? 'hr.request',
-                                            requestId: item.id ?? 0,
-                                          );
-                                        },
-                                ),
-                              ),
-                              SizedBox(width: AppSpacing.md.w),
-                              Expanded(
-                                child: PrimaryTextButton(
-                                  overriddenBackgroundColor: context.colors.onSurface,
-                                  label: isActionLoading ? '' : context.localizations.approveRequest,
-                                  leading: isActionLoading
-                                      ? (iconColor) => SizedBox(
-                                          width: 20.w,
-                                          height: 20.h,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2.r,
-                                            color: iconColor,
-                                          ),
-                                        )
-                                      : null,
-                                  onTap: isActionLoading
-                                      ? null
-                                      : () {
-                                          context.read<PendingRequestsCubit>().approveRequest(
-                                            recordType: item.recordType ?? 'hr.request',
-                                            requestId: item.id ?? 0,
-                                            approvalType: item.pendingOn ?? 'manager',
-                                          );
-                                        },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );

@@ -667,11 +667,12 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
 
                                 return InfoCard(
                                   title: context.localizations.reason,
-                                  subtitle: selectedReason?.name ?? context.localizations.forgotFingerprint,
+                                  subtitle:
+                                      selectedReason?.label(context.localizations) ?? context.localizations.forgotFingerprint,
                                   subTitlestyle: selectedReason != null
                                       ? context.typography.regular16.copyWith(color: context.colors.onSurface)
                                       : null,
-                                  value: selectedReason?.name ?? context.localizations.enterDetailsHere,
+                                  value: selectedReason?.label(context.localizations) ?? context.localizations.enterDetailsHere,
                                   onTap: () {
                                     BottomSheetWrapper(
                                       initialSize: 0.5.h,
@@ -714,7 +715,7 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                             children: [
                                                               Text(
-                                                                punchCorrectionReasons[index].name,
+                                                                punchCorrectionReasons[index].label(context.localizations),
                                                                 style: context.typography.regular16.copyWith(
                                                                   color: isSelected ? context.colors.onSurface : null,
                                                                   fontWeight: isSelected ? FontWeight.w600 : null,

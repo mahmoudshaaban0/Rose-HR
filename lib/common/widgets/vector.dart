@@ -21,16 +21,13 @@ class AppVectorGraphic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColorFilter = color ??
-        (context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null);
-
     return VectorGraphic(
       loader: AssetBytesLoader(path),
       width: width,
       height: height,
       semanticsLabel: semanticLabel,
       fit: boxFit,
-      colorFilter: effectiveColorFilter,
+      colorFilter: color,
     );
   }
 }

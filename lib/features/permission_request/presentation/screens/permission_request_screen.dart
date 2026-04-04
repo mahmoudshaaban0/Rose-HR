@@ -820,6 +820,24 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                           Transform.scale(
                                             scale: 1.4,
                                             child: CupertinoCheckbox(
+                                              checkColor: context.isDarkMode ? context.colors.white : context.colors.surface,
+                                              fillColor: WidgetStateProperty.resolveWith((states) {
+                                                if (states.contains(WidgetState.focused)) {
+                                                  return context.isLightMode ? context.colors.black : context.colors.black;
+                                                } else if (states.contains(WidgetState.disabled)) {
+                                                  return context.isLightMode
+                                                      ? context.colors.onSurface
+                                                      : context.colors.surfaceVariant;
+                                                } else if (states.contains(WidgetState.selected)) {
+                                                  return context.isLightMode
+                                                      ? context.colors.onSurface
+                                                      : context.colors.surfaceVariant;
+                                                } else {
+                                                  return context.isLightMode
+                                                      ? context.colors.surface
+                                                      : context.colors.surfaceVariant;
+                                                }
+                                              }),
                                               value: state.partialExcuse,
                                               onChanged: (value) {
                                                 cubit.togglePartialExcuse(value ?? false);
@@ -830,7 +848,6 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                                   cubit.selectRequestedDuration(null);
                                                 }
                                               },
-                                              activeColor: context.colors.onSurface,
                                             ),
                                           ),
                                           SizedBox(width: AppSpacing.sm.w),

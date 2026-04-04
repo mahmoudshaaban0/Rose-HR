@@ -43,11 +43,12 @@ class HomeScreen extends StatelessWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
                     spacing: AppSpacing.md.h,
-                    children: const [
-                      HeaderAndShiftSection(),
-                      NewRequestSection(),
-                      TeamRequestsSection(),
-                      HolidaysSection(),
+                    children: [
+                      const HeaderAndShiftSection(),
+                      const NewRequestSection(),
+                      const TeamRequestsSection(),
+                      const HolidaysSection(),
+                      SizedBox(height: AppSpacing.md.h),
                     ],
                   ),
                 ),

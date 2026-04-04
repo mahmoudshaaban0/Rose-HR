@@ -161,15 +161,7 @@ class HeaderAndShiftSection extends StatelessWidget {
       if (data == LocationPermissionStatus.granted) {
         if (!context.mounted) return;
 
-        BottomSheetWrapper(
-          initialSize: 0.37.h,
-          maxChildSize: 0.37.h,
-          removeAutoScroll: true,
-          disableDrag: true,
-          useRootNavigator: true,
-          child: const ClockInClockOutBottomSheet(clockImage: Assets.rastersFingerPrintRegistered),
-        ).callSheet(context);
-        // await ordinaryClockInClockOutBottomSheet(context).callSheet(context);
+        await ordinaryClockInClockOutBottomSheet(context).callSheet(context);
       }
     }
   }
@@ -251,7 +243,7 @@ class HeaderAndShiftSection extends StatelessWidget {
                         return Text(
                           context.localizations.inRange,
                           style: context.typography.semiBold16.copyWith(
-                            color: context.colors.error,
+                            color: context.colors.success,
                           ),
                         );
                       } else if (state.locationCheckStatus == LocationCheckStatus.checkedBetweenRadiusSuccessfully &&
@@ -381,12 +373,16 @@ class HeaderAndShiftSection extends StatelessWidget {
                           if (context.mounted) {
                             context.pop();
                             BottomSheetWrapper(
-                              initialSize: 0.35.h,
-                              maxChildSize: 0.35.h,
+                              initialSize: 0.37.h,
+                              maxChildSize: 0.37.h,
                               removeAutoScroll: true,
                               disableDrag: true,
                               useRootNavigator: true,
-                              child: const ClockInClockOutBottomSheet(clockImage: Assets.rastersFingerPrintRegistered),
+                              child: ClockInClockOutBottomSheet(
+                                clockImage: context.isDarkMode
+                                    ? Assets.rastersFingerprintregisteredDark
+                                    : Assets.rastersFingerPrintRegistered,
+                              ),
                             ).callSheet(context);
                           }
                         } else {

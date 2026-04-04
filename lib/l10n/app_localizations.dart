@@ -932,6 +932,60 @@ abstract class AppLocalizations {
   /// **'Select correction reason'**
   String get selectCorrectionReason;
 
+  /// No description provided for @punchCorrectionReasonForgottenFingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot fingerprint'**
+  String get punchCorrectionReasonForgottenFingerprint;
+
+  /// No description provided for @punchCorrectionReasonMobileAppIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile app issue'**
+  String get punchCorrectionReasonMobileAppIssue;
+
+  /// No description provided for @punchCorrectionReasonFingerprintIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Fingerprint device issue'**
+  String get punchCorrectionReasonFingerprintIssue;
+
+  /// No description provided for @punchCorrectionReasonInternetIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Internet connection issue'**
+  String get punchCorrectionReasonInternetIssue;
+
+  /// No description provided for @punchCorrectionReasonRemoteWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote work'**
+  String get punchCorrectionReasonRemoteWork;
+
+  /// No description provided for @punchCorrectionReasonShiftSwap.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift swap with another employee'**
+  String get punchCorrectionReasonShiftSwap;
+
+  /// No description provided for @punchCorrectionReasonExtraWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime after clock-out'**
+  String get punchCorrectionReasonExtraWork;
+
+  /// No description provided for @punchCorrectionReasonSiteVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'External site visit'**
+  String get punchCorrectionReasonSiteVisit;
+
+  /// No description provided for @punchCorrectionReasonOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get punchCorrectionReasonOther;
+
   /// No description provided for @anErrorOccurred.
   ///
   /// In en, this message translates to:
@@ -1207,6 +1261,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Visa Type'**
   String get visaType;
+
+  /// No description provided for @visaTypeSingleEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Single entry visa'**
+  String get visaTypeSingleEntry;
+
+  /// No description provided for @visaTypeMultipleEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple entry visa'**
+  String get visaTypeMultipleEntry;
 
   /// No description provided for @selectVisaType.
   ///
