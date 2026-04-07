@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rose_hr/common/helpers/timezone_helper.dart';
 import 'package:rose_hr/common/utility/logger.dart';
 import 'package:rose_hr/common/widgets/app_radio_button.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
@@ -10,6 +11,7 @@ import 'package:rose_hr/features/punch_correction/data/models/attendance_method_
 import 'package:rose_hr/features/punch_correction/presentation/cubit/punch_correction_cubit.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CorrectionTimeScreen extends StatefulWidget {
   const CorrectionTimeScreen({required this.cubit, super.key});
@@ -20,7 +22,45 @@ class CorrectionTimeScreen extends StatefulWidget {
 }
 
 class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
-  bool isManualTime = false;
+  @override
+  void initState() {
+    super.initState();
+    // Fetch attendance logs for today's date by default, or the selected date
+    _fetchLogsForCurrentDate();
+  }
+
+  void _fetchLogsForCurrentDate() {
+    final state = widget.cubit.state;
+    final dateToFetch = state.date != null
+        ? TimezoneHelper.format(
+            TimezoneHelper.createTimestamp(DateTime.parse(state.date!)),
+            pattern: 'yyyy-MM-dd',
+            locale: 'en',
+          )
+        : TimezoneHelper.format(
+            TimezoneHelper.createTimestamp(TimezoneHelper.now()),
+            pattern: 'yyyy-MM-dd',
+            locale: 'en',
+          );
+    widget.cubit.fetchAttendanceLogs(dateToFetch);
+  }
+
+  String _formatTimeOnly(DateTime dateTime) {
+    // Convert to local timezone using TimezoneHelper and format as time only
+    final localTime = TimezoneHelper.toLocalTimezone(dateTime);
+    return TimezoneHelper.format(
+      localTime,
+      pattern: 'hh:mm a',
+      locale: 'en',
+    );
+  }
+
+  double _dateTimeToDecimalHours(DateTime dateTime) {
+    // Convert to local timezone to get correct hour/minute
+    final localTime = TimezoneHelper.toLocalTimezone(dateTime);
+    return localTime.hour + (localTime.minute / 60.0);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
@@ -63,22 +103,22 @@ class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
                                     );
                                   },
                                 ),
-                                // const AppDivider(),
-                                // BlocBuilder<PunchCorrectionCubit, PunchCorrectionState>(
-                                //   builder: (context, state) {
-                                //     return AppRadioButton<String>(
-                                //       value: AttendanceMethod.attendanceLog.id,
-                                //       groupValue: state.attendanceMethod,
-                                //       onChanged: (value) {
-                                //         if (value != null) {
-                                //           AppLogger.instance.logDebug('selected attendance method: $value');
-                                //           context.read<PunchCorrectionCubit>().selectAttendanceMethod(value);
-                                //         }
-                                //       },
-                                //       label: context.localizations.selectFromRecordedFingerprints,
-                                //     );
-                                //   },
-                                // ),
+                                const AppDivider(),
+                                BlocBuilder<PunchCorrectionCubit, PunchCorrectionState>(
+                                  builder: (context, state) {
+                                    return AppRadioButton<String>(
+                                      value: AttendanceMethod.attendanceLog.id,
+                                      groupValue: state.attendanceMethod,
+                                      onChanged: (value) {
+                                        if (value != null) {
+                                          AppLogger.instance.logDebug('selected attendance method: $value');
+                                          context.read<PunchCorrectionCubit>().selectAttendanceMethod(value);
+                                        }
+                                      },
+                                      label: context.localizations.selectFromRecordedFingerprints,
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                           ),
@@ -94,26 +134,88 @@ class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
                                 BlocBuilder<PunchCorrectionCubit, PunchCorrectionState>(
                                   builder: (context, state) {
                                     if (state.attendanceMethod == AttendanceMethod.attendanceLog.id) {
+                                      // Show loading shimmer
+                                      if (state.attendanceLogsStatus == AttendanceLogsStatus.loading) {
+                                        return Shimmer.fromColors(
+                                          baseColor: context.colors.surfaceVariant,
+                                          highlightColor: context.colors.containerBackground,
+                                          child: Column(
+                                            children: List.generate(
+                                              3,
+                                              (index) => Padding(
+                                                padding: EdgeInsets.symmetric(vertical: AppSpacing.md.h),
+                                                child: Container(
+                                                  height: 40.h,
+                                                  decoration: BoxDecoration(
+                                                    color: context.colors.containerBackground,
+                                                    borderRadius: BorderRadius.circular(AppSpacing.md.r),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+
+                                      // Show error message
+                                      if (state.attendanceLogsStatus == AttendanceLogsStatus.error) {
+                                        return Center(
+                                          child: Text(
+                                            state.errorMessage ?? context.localizations.anErrorOccurred,
+                                            style: context.typography.regular16.copyWith(
+                                              color: context.colors.error,
+                                            ),
+                                          ),
+                                        );
+                                      }
+
+                                      // Show attendance logs
+                                      final logs = state.attendanceLogs?.result?.data ?? [];
+
+                                      if (logs.isEmpty) {
+                                        return Center(
+                                          child: Text(
+                                            context.localizations.noData,
+                                            style: context.typography.regular16.copyWith(
+                                              color: context.colors.onSurfaceVariant,
+                                            ),
+                                          ),
+                                        );
+                                      }
+
                                       return ListView.separated(
                                         shrinkWrap: true,
                                         physics: const NeverScrollableScrollPhysics(),
-                                        itemCount: 5,
+                                        itemCount: logs.length,
                                         separatorBuilder: (context, index) {
                                           return const AppDivider();
                                         },
                                         itemBuilder: (context, index) {
+                                          final log = logs[index];
+                                          final logTime = log.actionDatetime;
+                                          if (logTime == null) return const SizedBox.shrink();
+
+                                          final decimalHours = _dateTimeToDecimalHours(logTime);
+
                                           return Padding(
                                             padding: EdgeInsets.symmetric(vertical: AppSpacing.lg.h),
-                                            child: AppRadioButton<bool>(
-                                              value: true,
-                                              groupValue: isManualTime,
+                                            child: AppRadioButton<int>(
+                                              value: log.id ?? 0,
+                                              groupValue: state.attendanceLogId,
                                               labelStyle: context.typography.regular18.copyWith(
                                                 color: context.colors.onSurface,
                                               ),
                                               onChanged: (value) {
-                                                setState(() {});
+                                                if (value != null && log.id != null) {
+                                                  context.read<PunchCorrectionCubit>().selectLogTime(
+                                                    decimalHours,
+                                                    log.id!,
+                                                  );
+                                                  // Go back to previous screen after selection
+                                                  Navigator.of(context).pop();
+                                                }
                                               },
-                                              label: '11:30',
+                                              label: _formatTimeOnly(logTime),
                                             ),
                                           );
                                         },
@@ -128,17 +230,15 @@ class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
                                               locale: const Locale('en', 'US'),
                                               child: CupertinoDatePicker(
                                                 onDateTimeChanged: (DateTime date) {
-                                                  // Calculate duration in hours from the selected time
                                                   final duration = date.hour + (date.minute / 60.0);
                                                   final cubit = context.read<PunchCorrectionCubit>();
-                                                  // Use startTime for check-in, endTime for check-out
                                                   if (cubit.state.correctionType == 'in') {
                                                     cubit.selectStartTime(duration);
                                                   } else if (cubit.state.correctionType == 'out') {
                                                     cubit.selectEndTime(duration);
                                                   }
                                                 },
-                                                initialDateTime: DateTime(2000, 1, 1, 0, 30), // Start at 0:30 (0.5 hours)
+                                                initialDateTime: DateTime(2000, 1, 1, 0, 30),
                                                 mode: CupertinoDatePickerMode.time,
                                               ),
                                             ),
@@ -147,11 +247,10 @@ class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
                                         cancelButton: CupertinoButton(
                                           onPressed: () {
                                             final cubit = context.read<PunchCorrectionCubit>();
-                                            // Set default time if none selected
                                             if (cubit.state.correctionType == 'in' && state.startTime == null) {
-                                              cubit.selectStartTime(0.5); // Default to 30 minutes
+                                              cubit.selectStartTime(0.5);
                                             } else if (cubit.state.correctionType == 'out' && state.endTime == null) {
-                                              cubit.selectEndTime(0.5); // Default to 30 minutes
+                                              cubit.selectEndTime(0.5);
                                             }
                                             Navigator.of(context).pop();
                                           },
@@ -169,14 +268,6 @@ class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.r),
-                  //   child: PrimaryTextButton(
-                  //     label: context.localizations.submit,
-                  //     onTap: () {},
-                  //     appButtonSize: AppButtonSize.xxLarge,
-                  //   ),
-                  // ),
                 ],
               ),
             ),

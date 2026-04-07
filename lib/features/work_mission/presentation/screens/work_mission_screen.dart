@@ -252,8 +252,8 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                   // Show success bottom sheet
                   BottomSheetWrapper(
                     closeBottomSheetOnDrag: false,
-                    initialSize: .4.h,
-                    maxChildSize: .4.h,
+                    initialSize: .42.h,
+                    maxChildSize: .42.h,
                     removeAutoScroll: true,
                     disableDrag: true,
                     useRootNavigator: true,
@@ -658,15 +658,19 @@ class _WorkMissionScreenState extends State<WorkMissionScreen> {
                                             : null,
                                         onTap: () {
                                           final isHours = state.workMissionTypeId == WorkMissionTypeModel.hours.id;
+                                          final startDT = state.startDate != null ? DateTime.parse(state.startDate!) : null;
+                                          final currentEnd = state.endDate != null ? DateTime.parse(state.endDate!) : null;
+                                          // initialDate must not be before startDT
+                                          final initialEnd =
+                                              (currentEnd != null && startDT != null && currentEnd.isBefore(startDT))
+                                              ? startDT
+                                              : (currentEnd ?? startDT ?? TimezoneHelper.now());
                                           AppDatePicker.show(
                                             mode: isHours ? CupertinoDatePickerMode.time : CupertinoDatePickerMode.date,
                                             context,
-                                            initialDate: state.endDate != null
-                                                ? DateTime.parse(state.endDate!)
-                                                : TimezoneHelper.now(),
-                                            minimumYear: state.startDate != null
-                                                ? DateTime.parse(state.startDate!).year
-                                                : DateTime.now().year - 100,
+                                            initialDate: initialEnd,
+                                            minimumDate: isHours ? null : startDT,
+                                            minimumYear: startDT != null ? startDT.year : DateTime.now().year - 100,
                                             // For time mode: don't update on scroll — only save on confirm
                                             onDateChanged: isHours ? null : cubit.selectEndDate,
                                             onDateConfirmed: (selectedDate) {

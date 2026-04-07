@@ -95,27 +95,25 @@ class _ApprovalEmployeeItem extends StatelessWidget {
         ),
         SizedBox(width: AppSpacing.md.w),
         // Employee info
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(top: 4.h, bottom: showConnector ? 0 : 4.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  employee.name,
-                  style: context.typography.medium14.copyWith(
-                    color: context.colors.onSurface,
-                  ),
+        Padding(
+          padding: EdgeInsets.only(top: 10.h),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                employee.name,
+                style: context.typography.medium14.copyWith(
+                  color: context.colors.onSurface,
                 ),
-                SizedBox(height: 2.h),
-                Text(
-                  _getStatusText(context, employee.status),
-                  style: context.typography.regular12.copyWith(
-                    color: statusColor,
-                  ),
-                ),
-              ],
-            ),
+              ),
+              // SizedBox(height: 2.h),
+              // Text(
+              //   _getStatusText(context, employee.status),
+              //   style: context.typography.regular12.copyWith(
+              //     color: statusColor,
+              //   ),
+              // ),
+            ],
           ),
         ),
       ],

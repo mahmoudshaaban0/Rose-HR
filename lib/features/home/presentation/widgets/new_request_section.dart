@@ -42,7 +42,7 @@ class NewRequestSection extends StatelessWidget {
                 },
               ),
               RequestItem(
-                title: context.localizations.leaveRequest,
+                title: context.localizations.holidayRequest,
                 onTap: () {
                   context.pushNamed(AppRoutes.holidayRequest.name);
                 },

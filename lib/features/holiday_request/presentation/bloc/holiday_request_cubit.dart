@@ -49,7 +49,23 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
 
   void selectStartDate(DateTime date) {
     if (isClosed) return;
-    emit(state.copyWith(startDate: date.toIso8601String()));
+    final updatedStartDate = date.toIso8601String();
+
+    // Keep the date range valid if the start date moves after the selected end date.
+    if (state.endDate != null) {
+      final currentEndDate = DateTime.parse(state.endDate!);
+      if (currentEndDate.isBefore(date)) {
+        emit(
+          state.copyWith(
+            startDate: updatedStartDate,
+            endDate: updatedStartDate,
+          ),
+        );
+        return;
+      }
+    }
+
+    emit(state.copyWith(startDate: updatedStartDate));
   }
 
   void selectEndDate(DateTime date) {
@@ -118,6 +134,16 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
       }
 
       if (state.startDate == null || state.endDate == null) {
+        emit(
+          state.copyWith(
+            status: HolidayRequestStatus.submitError,
+            errorMessage: 'pleaseSelectHolidayDatesError',
+          ),
+        );
+        return;
+      }
+
+      if (DateTime.parse(state.endDate!).isBefore(DateTime.parse(state.startDate!))) {
         emit(
           state.copyWith(
             status: HolidayRequestStatus.submitError,

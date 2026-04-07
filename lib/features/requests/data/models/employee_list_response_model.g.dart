@@ -79,7 +79,7 @@ Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
   reqCorrectionTime: const FalseOrStringConverter().fromJson(
     json['req_correction_time'],
   ),
-  reqAttendanceLogId: json['req_attendance_log_id'] as bool?,
+  reqAttendanceLogId: json['req_attendance_log_id'],
   reqWorkMissionType: const FalseOrStringConverter().fromJson(
     json['req_work_mission_type'],
   ),

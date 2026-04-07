@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rose_hr/common/networking/result.dart';
+import 'package:rose_hr/features/attendance/data/models/attendance_logs_response_model.dart';
+import 'package:rose_hr/features/attendance/data/repositories/attendance_repository.dart';
 import 'package:rose_hr/features/permission_request/data/models/permission_request_model.dart';
 import 'package:rose_hr/features/punch_correction/data/models/punch_correction_request_model.dart';
 import 'package:rose_hr/features/punch_correction/data/models/punch_correction_response_model.dart';
@@ -9,8 +11,10 @@ import 'package:rose_hr/features/punch_correction/data/repositories/punch_correc
 part 'punch_correction_state.dart';
 
 class PunchCorrectionCubit extends Cubit<PunchCorrectionState> {
-  PunchCorrectionCubit(this.punchCorrectionRepository) : super(const PunchCorrectionState(attendanceMethod: 'manual'));
+  PunchCorrectionCubit(this.punchCorrectionRepository, this.attendanceRepository)
+      : super(const PunchCorrectionState(attendanceMethod: 'manual'));
   final PunchCorrectionRepository punchCorrectionRepository;
+  final AttendanceRepository attendanceRepository;
 
   void selectDate(DateTime date) {
     if (isClosed) return;
@@ -87,6 +91,43 @@ class PunchCorrectionCubit extends Cubit<PunchCorrectionState> {
   void selectAttendanceLogId(int attendanceLogId) {
     if (isClosed) return;
     emit(state.copyWith(attendanceLogId: attendanceLogId));
+  }
+
+  void selectLogTime(double logTime, int logId) {
+    if (isClosed) return;
+    emit(state.copyWith(selectedLogTime: logTime, attendanceLogId: logId));
+    // Also set the start/end time based on correction type
+    if (state.correctionType == 'in') {
+      emit(state.copyWith(startTime: logTime));
+    } else if (state.correctionType == 'out') {
+      emit(state.copyWith(endTime: logTime));
+    }
+  }
+
+  Future<void> fetchAttendanceLogs(String date) async {
+    if (isClosed) return;
+    emit(state.copyWith(attendanceLogsStatus: AttendanceLogsStatus.loading));
+
+    final result = await attendanceRepository.getAttendanceLogs(date);
+
+    switch (result) {
+      case Success(:final data):
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            attendanceLogsStatus: AttendanceLogsStatus.success,
+            attendanceLogs: data,
+          ),
+        );
+      case Error(:final failure):
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            attendanceLogsStatus: AttendanceLogsStatus.error,
+            errorMessage: failure.message,
+          ),
+        );
+    }
   }
 
   Future<void> submitPunchCorrection({

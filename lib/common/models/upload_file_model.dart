@@ -117,7 +117,7 @@ class UploadFileModel extends Equatable {
     fileType,
     mimeType,
     size,
-    base64Data,
+    base64Data != null,
     uploadStatus,
     uploadProgress,
     errorMessage,

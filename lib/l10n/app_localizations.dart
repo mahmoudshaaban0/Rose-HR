@@ -224,11 +224,11 @@ abstract class AppLocalizations {
   /// **'Work Mission'**
   String get workMission;
 
-  /// No description provided for @leaveRequest.
+  /// No description provided for @holidayRequest.
   ///
   /// In en, this message translates to:
-  /// **'Leave Request'**
-  String get leaveRequest;
+  /// **'Holiday Request'**
+  String get holidayRequest;
 
   /// No description provided for @permissionRequest.
   ///
@@ -871,6 +871,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'hour'**
   String get hour;
+
+  /// No description provided for @minute.
+  ///
+  /// In en, this message translates to:
+  /// **'minute'**
+  String get minute;
 
   /// No description provided for @enterPermissionReasonHere.
   ///

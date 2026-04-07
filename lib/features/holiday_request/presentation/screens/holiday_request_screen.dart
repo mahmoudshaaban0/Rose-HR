@@ -7,15 +7,13 @@ import 'package:rose_hr/common/cubits/file_upload/file_upload_cubit.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/timezone_helper.dart';
 import 'package:rose_hr/common/helpers/snackbar_service.dart';
-import 'package:rose_hr/common/models/upload_file_model.dart';
 import 'package:rose_hr/common/widgets/app_datepicker.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/common/widgets/bottom_sheet_wrapper.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/common/widgets/info_card.dart';
 import 'package:rose_hr/common/widgets/success_request_bottomsheet.dart';
-import 'package:rose_hr/common/widgets/upload_file_placholder.dart';
-import 'package:rose_hr/common/widgets/upload_source_bottom_sheet.dart';
+import 'package:rose_hr/common/widgets/file_upload_widget.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/holiday_request/presentation/bloc/holiday_request_cubit.dart';
 import 'package:rose_hr/features/holiday_request/presentation/widgets/leave_type_listview.dart';
@@ -51,145 +49,6 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
     super.dispose();
   }
 
-  /// Build a single file item with progress indicator
-  Widget _buildFileItem(BuildContext context, UploadFileModel file) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: AppSpacing.md.h,
-        horizontal: AppSpacing.xl.w,
-      ),
-      decoration: BoxDecoration(
-        color: context.colors.fileItemBackground,
-        borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
-        border: Border.all(color: context.colors.dividerColor),
-      ),
-      child: Row(
-        children: [
-          // File icon or loading indicator
-          if (file.isUploading)
-            SizedBox(
-              width: 24.r,
-              height: 24.r,
-              child: CircularProgressIndicator(
-                strokeWidth: 2.r,
-                value: file.uploadProgress,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  context.colors.success,
-                ),
-              ),
-            )
-          else
-            AppVectorGraphic(
-              path: file.isPdf ? Assets.vectorsPdf : Assets.vectorsImage,
-              width: 30.r,
-              height: 30.r,
-            ),
-          SizedBox(width: AppSpacing.md.w),
-
-          // File details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        file.name,
-                        style: context.typography.medium16,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SizedBox(width: AppSpacing.xs.w),
-                    if (!file.isUploading)
-                      InkWell(
-                        onTap: () => _fileUploadCubit.removeFile(file.id),
-                        child: Padding(
-                          padding: EdgeInsets.all(AppSpacing.xs.r),
-                          child: AppVectorGraphic(
-                            path: Assets.vectorsTrash,
-                            width: 16.w,
-                            height: 16.h,
-                            color: context.isDarkMode ? ColorFilter.mode(context.colors.white, BlendMode.srcIn) : null,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                SizedBox(height: AppSpacing.xxs.h),
-                _buildFileStatus(context, file),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Build file status text (size and upload status)
-  Widget _buildFileStatus(BuildContext context, UploadFileModel file) {
-    if (file.isUploading) {
-      return Row(
-        spacing: AppSpacing.xs.w,
-        children: [
-          Text(
-            '${(file.uploadProgress * 100).toInt()}%',
-            style: context.typography.regular14.copyWith(
-              color: context.colors.containerBorder,
-            ),
-          ),
-          Text(
-            context.localizations.uploading,
-            style: context.typography.regular14.copyWith(
-              color: context.colors.containerBorder,
-            ),
-          ),
-        ],
-      );
-    }
-
-    if (file.hasError) {
-      return Text(
-        file.errorMessage ?? context.localizations.uploadFailed,
-        style: context.typography.regular14.copyWith(
-          color: context.colors.error,
-        ),
-      );
-    }
-
-    if (file.isUploadComplete) {
-      return Row(
-        spacing: AppSpacing.xs.w,
-        children: [
-          Text(
-            file.formattedSize,
-            style: context.typography.regular14.copyWith(
-              color: context.colors.containerBorder,
-            ),
-          ),
-          const AppVectorGraphic(
-            path: Assets.vectorsSelectBoxRight,
-            width: 16,
-            height: 16,
-          ),
-          Text(
-            context.localizations.uploadedSuccessfully,
-            style: context.typography.regular14,
-          ),
-        ],
-      );
-    }
-
-    return Text(
-      file.formattedSize,
-      style: context.typography.regular14.copyWith(
-        color: context.colors.containerBorder,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -197,7 +56,16 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
       child: BlocListener<HolidayRequestCubit, HolidayRequestState>(
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
-          if (state.status == HolidayRequestStatus.submitted) {
+          if (state.status == HolidayRequestStatus.submitting) {
+            showDialog<void>(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => const Center(child: CircularProgressIndicator.adaptive()),
+            );
+          } else if (state.status == HolidayRequestStatus.submitted) {
+            // Dismiss loading dialog
+            Navigator.of(context, rootNavigator: true).pop();
+
             // Check if the business logic succeeded
             final result = state.holidayRequestResponseModel?.result;
 
@@ -205,8 +73,8 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
               // Show success bottom sheet
               BottomSheetWrapper(
                 closeBottomSheetOnDrag: false,
-                initialSize: .4.h,
-                maxChildSize: .4.h,
+                initialSize: .42.h,
+                maxChildSize: .42.h,
                 removeAutoScroll: true,
                 disableDrag: true,
                 useRootNavigator: true,
@@ -223,6 +91,8 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
               );
             }
           } else if (state.status == HolidayRequestStatus.submitError) {
+            // Dismiss loading dialog
+            Navigator.of(context, rootNavigator: true).pop();
             // Network or other errors
             SnackbarService.showError(
               context,
@@ -352,6 +222,9 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                               )
                                             : null,
                                         onTap: () {
+                                          final minimumEndDate = state.startDate != null
+                                              ? DateTime.parse(state.startDate!)
+                                              : null;
                                           AppDatePicker.show(
                                             context,
                                             mode: CupertinoDatePickerMode.date,
@@ -362,6 +235,7 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                                     state.startDate!,
                                                   )
                                                 : TimezoneHelper.now(),
+                                            minimumDate: minimumEndDate,
                                             minimumYear: state.startDate != null
                                                 ? DateTime.parse(
                                                     state.startDate!,
@@ -594,44 +468,17 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                       context.read<HolidayRequestCubit>().updateDescription(value);
                                     },
                                   ),
-                                  BlocBuilder<FileUploadCubit, FileUploadState>(
-                                    bloc: _fileUploadCubit,
-                                    builder: (context, fileUploadState) {
-                                      // Hide upload area when uploading or when files exist
-                                      final shouldShowUploadArea =
-                                          !fileUploadState.isAnyFileUploading && fileUploadState.files.isEmpty;
-
-                                      return Column(
-                                        spacing: AppSpacing.md.w,
-                                        children: [
-                                          // Upload area - only show when no files are uploading or uploaded
-                                          if (shouldShowUploadArea)
-                                            Material(
-                                              color: Colors.transparent,
-                                              child: UploadFilePlacholder(
-                                                onTap: () {
-                                                  showUploadSourceSheet(
-                                                    context,
-                                                    onChooseImages: () => _fileUploadCubit.pickFiles(
-                                                      fileType: FilePickerType.image,
-                                                    ),
-                                                    onChooseFiles: () => _fileUploadCubit.pickFiles(
-                                                      fileType: FilePickerType.pdf,
-                                                    ),
-                                                  );
-                                                },
-                                                isMaxFilesReached: fileUploadState.isMaxFilesReached,
-                                              ),
-                                            ),
-
-                                          // Show uploaded files
-                                          ...fileUploadState.files.map(
-                                            (file) => _buildFileItem(context, file),
-                                          ),
-                                        ],
-                                      );
-                                    },
+                                  Align(
+                                    alignment: context.localizations.localeName == 'ar'
+                                        ? Alignment.centerRight
+                                        : Alignment.centerLeft,
+                                    child: Text(
+                                      context.localizations.attachments,
+                                      style: context.typography.medium16,
+                                      textAlign: TextAlign.start,
+                                    ),
                                   ),
+                                  FileUploadWidget(cubit: _fileUploadCubit),
                                 ],
                               ),
                             ),

@@ -74,7 +74,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get workMission => 'مهمة عمل';
 
   @override
-  String get leaveRequest => 'طلب إجازة';
+  String get holidayRequest => 'طلب إجازة';
 
   @override
   String get permissionRequest => 'طلب استئذان';
@@ -401,6 +401,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get hour => 'ساعة';
+
+  @override
+  String get minute => 'دقيقة';
 
   @override
   String get enterPermissionReasonHere => 'أكتب سبب الإستئذان إن وجد...';

@@ -1,5 +1,6 @@
 import 'package:rose_hr/common/constants/env.dart';
 import 'package:rose_hr/common/networking/api_consumer.dart';
+import 'package:rose_hr/features/attendance/data/models/attendance_logs_response_model.dart';
 import 'package:rose_hr/features/attendance/data/models/attendance_summary_details_response_model.dart';
 import 'package:rose_hr/features/attendance/data/models/attendance_summary_response_model.dart';
 
@@ -30,5 +31,17 @@ class AttendanceDataSource {
       },
     );
     return AttendanceSummaryDetailsResponseModel.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<AttendanceLogsResponseModel> getAttendanceLogs(String date) async {
+    final response = await apiConsumer.post(
+      Env.attendanceLogs,
+      body: {
+        "params": {
+          "date": date,
+        },
+      },
+    );
+    return AttendanceLogsResponseModel.fromJson(response as Map<String, dynamic>);
   }
 }

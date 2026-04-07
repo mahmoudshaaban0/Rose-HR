@@ -291,7 +291,17 @@ class _PerShiftWorkHours extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final numericDiff = shift.totalLateTimeValue;
-    final formattedDiff = formatHoursToArabic(shift.totalLateTime);
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final formattedDiff = formatHoursToArabic(
+      shift.totalLateTime,
+      useArabicNumerals: isArabic,
+      hourSingular: context.localizations.hour,
+      hourDual: isArabic ? 'ساعتان' : context.localizations.hours,
+      hourPlural: context.localizations.hours,
+      minuteSingular: context.localizations.minute,
+      minuteDual: isArabic ? 'دقيقتان' : context.localizations.minutes,
+      minutePlural: context.localizations.minutes,
+    );
 
     final String displayDiff;
     final Color diffColor;
@@ -319,7 +329,12 @@ class _PerShiftWorkHours extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        formatTimeToArabic(shift.checkInTime),
+                        formatTimeToArabic(
+                          shift.checkInTime,
+                          useArabicNumerals: Localizations.localeOf(context).languageCode == 'ar',
+                          amLabel: context.localizations.timePeriodAm,
+                          pmLabel: context.localizations.timePeriodPm,
+                        ),
                         style: context.typography.semiBold16,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -349,7 +364,12 @@ class _PerShiftWorkHours extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        formatTimeToArabic(shift.checkOutTime),
+                        formatTimeToArabic(
+                          shift.checkOutTime,
+                          useArabicNumerals: Localizations.localeOf(context).languageCode == 'ar',
+                          amLabel: context.localizations.timePeriodAm,
+                          pmLabel: context.localizations.timePeriodPm,
+                        ),
                         style: context.typography.semiBold16,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -380,7 +400,16 @@ class _PerShiftWorkHours extends StatelessWidget {
               child: _InfoCard(
                 label: context.localizations.workHours,
                 child: Text(
-                  formatHoursToArabic(shift.totalWorkTime),
+                  formatHoursToArabic(
+                    shift.totalWorkTime,
+                    useArabicNumerals: Localizations.localeOf(context).languageCode == 'ar',
+                    hourSingular: context.localizations.hour,
+                    hourDual: Localizations.localeOf(context).languageCode == 'ar' ? 'ساعتان' : context.localizations.hours,
+                    hourPlural: context.localizations.hours,
+                    minuteSingular: context.localizations.minute,
+                    minuteDual: Localizations.localeOf(context).languageCode == 'ar' ? 'دقيقتان' : context.localizations.minutes,
+                    minutePlural: context.localizations.minutes,
+                  ),
                   style: context.typography.semiBold16,
                 ),
               ),

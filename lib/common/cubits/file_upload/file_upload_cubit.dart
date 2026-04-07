@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rose_hr/common/models/upload_file_model.dart';
 import 'package:rose_hr/common/utility/logger.dart';
@@ -175,7 +176,7 @@ class FileUploadCubit extends Cubit<FileUploadState> {
     }
   }
 
-  /// Encode files to base64
+  /// Encode files to base64 using a background isolate to avoid UI jank.
   Future<void> _encodeFilesToBase64(List<UploadFileModel> filesToEncode) async {
     if (isClosed) return;
 
@@ -183,21 +184,12 @@ class FileUploadCubit extends Cubit<FileUploadState> {
 
     for (final file in filesToEncode) {
       try {
-        // Update file status to uploading
         _updateFileStatus(file.id, UploadStatus.uploading, progress: 0);
 
-        // Read file and convert to base64
-        final fileBytes = await File(file.path).readAsBytes();
-        final base64String = base64Encode(fileBytes);
+        final base64String = await compute(_readAndEncode, file.path);
 
-        // Simulate progress for better UX
-        for (var progress = 0.2; progress <= 1.0; progress += 0.2) {
-          await Future<void>.delayed(const Duration(milliseconds: 100));
-          if (isClosed) return;
-          _updateFileStatus(file.id, UploadStatus.uploading, progress: progress);
-        }
+        if (isClosed) return;
 
-        // Update file with base64 data and mark as success
         _updateFile(
           file.id,
           file.copyWith(
@@ -222,6 +214,12 @@ class FileUploadCubit extends Cubit<FileUploadState> {
 
     if (isClosed) return;
     emit(state.copyWith(status: FileUploadStatus.success));
+  }
+
+  /// Top-level function for isolate: reads file bytes and returns base64.
+  static String _readAndEncode(String filePath) {
+    final bytes = File(filePath).readAsBytesSync();
+    return base64Encode(bytes);
   }
 
   /// Update file status and progress

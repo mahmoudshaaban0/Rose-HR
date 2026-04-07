@@ -15,9 +15,7 @@ class AttendanceSummaryDetailsResponseModel {
     return AttendanceSummaryDetailsResponseModel(
       jsonrpc: json['jsonrpc'] as String?,
       id: json['id'],
-      result: rawResult is Map<String, dynamic>
-          ? AttendanceSummaryDetailsResult.fromJson(rawResult)
-          : null,
+      result: rawResult is Map<String, dynamic> ? AttendanceSummaryDetailsResult.fromJson(rawResult) : null,
     );
   }
   @JsonKey(name: "jsonrpc")

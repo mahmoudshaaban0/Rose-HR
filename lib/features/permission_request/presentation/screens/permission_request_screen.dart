@@ -44,9 +44,6 @@ String _formatHoursAndMinutes(double decimalHours, AppLocalizations l10n) {
   return '$minutes ${l10n.minutes}';
 }
 
-/// Preset partial excuse durations: value sent to backend (decimal hours). Labels built as "30 minutes", "1 hour", etc.
-const List<double> _partialExcusePresetHours = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4];
-
 class PermissionRequestScreen extends StatefulWidget {
   const PermissionRequestScreen({super.key});
 
@@ -261,8 +258,8 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                   // Show success bottom sheet
                   BottomSheetWrapper(
                     closeBottomSheetOnDrag: false,
-                    initialSize: .4.h,
-                    maxChildSize: .4.h,
+                    initialSize: .42.h,
+                    maxChildSize: .42.h,
                     removeAutoScroll: true,
                     disableDrag: true,
                     useRootNavigator: true,
@@ -282,6 +279,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                 }
               } else if (state.status == PermissionRequestStatus.loading) {
                 showDialog<void>(
+                  barrierDismissible: false,
                   context: context,
                   builder: (context) => const Center(child: CircularProgressIndicator.adaptive()),
                 );
@@ -863,38 +861,51 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                       ),
                                     ),
 
-                                    // Show duration preset list when partial excuse is checked
+                                    // Show duration picker when partial excuse is checked
                                     if (state.partialExcuse)
                                       InkWell(
                                         onTap: () {
+                                          // Initialise picker from current state (default 30 min)
+                                          final initialTotalMinutes = state.requestedDuration != null
+                                              ? (state.requestedDuration! * 60).round()
+                                              : 30;
+                                          var pickedDuration = Duration(minutes: initialTotalMinutes);
+
                                           showCupertinoModalPopup<void>(
                                             context: context,
                                             builder: (BuildContext modalContext) {
                                               return CupertinoActionSheet(
-                                                actions: _partialExcusePresetHours.map<Widget>(
-                                                  (double decimalHours) {
-                                                    final label = _formatHoursAndMinutes(
-                                                      decimalHours,
-                                                      context.localizations,
-                                                    );
-                                                    return CupertinoActionSheetAction(
-                                                      onPressed: () {
-                                                        cubit.selectRequestedDuration(decimalHours);
-                                                        Navigator.of(modalContext).pop();
+                                                actions: [
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: context.isLightMode ? null : context.colors.surfaceVariant,
+                                                      borderRadius: BorderRadius.circular(AppSpacing.lg.r),
+                                                    ),
+                                                    height: 200.h,
+                                                    child: CupertinoTimerPicker(
+                                                      mode: CupertinoTimerPickerMode.hm,
+                                                      initialTimerDuration: Duration(minutes: initialTotalMinutes),
+                                                      onTimerDurationChanged: (Duration d) {
+                                                        pickedDuration = d;
                                                       },
-                                                      child: Text(
-                                                        label,
-                                                        style: context.typography.regular16.copyWith(
-                                                          color: context.colors.onSurface,
-                                                        ),
-                                                      ),
-                                                    );
+                                                    ),
+                                                  ),
+                                                ],
+                                                cancelButton: CupertinoButton(
+                                                  color: context.isLightMode ? null : context.colors.surfaceVariant,
+                                                  onPressed: () {
+                                                    final totalMinutes = pickedDuration.inMinutes;
+                                                    if (totalMinutes > 0) {
+                                                      // Convert to decimal hours float (e.g. 90 min → 1.5)
+                                                      final decimalHours = totalMinutes / 60.0;
+                                                      cubit.selectRequestedDuration(decimalHours);
+                                                    }
+                                                    Navigator.of(modalContext).pop();
                                                   },
-                                                ).toList(),
-                                                cancelButton: CupertinoActionSheetAction(
-                                                  isDefaultAction: true,
-                                                  onPressed: () => Navigator.of(modalContext).pop(),
-                                                  child: Text(context.localizations.cancel, style: context.typography.regular16),
+                                                  child: Text(
+                                                    context.localizations.done,
+                                                    style: context.typography.regular16,
+                                                  ),
                                                 ),
                                               );
                                             },
@@ -906,7 +917,7 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                context.localizations.enterTimeManually,
+                                                context.localizations.requestedDuration,
                                                 style: context.typography.regular16.copyWith(
                                                   color: context.colors.onSurface,
                                                 ),

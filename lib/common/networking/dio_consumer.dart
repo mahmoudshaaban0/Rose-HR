@@ -40,9 +40,9 @@ class DioConsumer implements ApiConsumer {
       ..baseUrl = Env.baseUrl
       ..responseType = ResponseType.json
       ..followRedirects = false
-      ..connectTimeout = const Duration(seconds: 30)
-      ..receiveTimeout = const Duration(seconds: 30)
-      ..sendTimeout = const Duration(seconds: 30)
+      ..connectTimeout = const Duration(seconds: 120)
+      ..receiveTimeout = const Duration(seconds: 120)
+      ..sendTimeout = const Duration(seconds: 120)
       ..validateStatus = (status) {
         return status! < StatusCode.internalServerError;
       };
@@ -78,17 +78,26 @@ class DioConsumer implements ApiConsumer {
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
+      dynamic data;
+      if (formDataIsEnabled) {
+        data = FormData.fromMap(body!);
+      } else if (body != null) {
+        data = await compute(_jsonEncodeBody, body);
+      }
+
       final response = await client.post<dynamic>(
-        // token
         path,
         queryParameters: queryParameters,
-        data: formDataIsEnabled ? FormData.fromMap(body!) : body,
+        data: data,
+        options: data is String ? Options(contentType: 'application/json') : null,
       );
       return _handleResponseAsJson(response);
     } on DioException catch (error) {
       _handleDioError(error);
     }
   }
+
+  static String _jsonEncodeBody(Map<String, dynamic> body) => jsonEncode(body);
 
   @override
   Future<dynamic> put(

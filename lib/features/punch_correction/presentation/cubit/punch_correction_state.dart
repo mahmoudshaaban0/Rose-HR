@@ -2,6 +2,8 @@ part of 'punch_correction_cubit.dart';
 
 enum PunchCorrectionStatus { initial, loading, success, error }
 
+enum AttendanceLogsStatus { initial, loading, success, error }
+
 class PunchCorrectionState extends Equatable {
   const PunchCorrectionState({
     this.status = PunchCorrectionStatus.initial,
@@ -15,6 +17,9 @@ class PunchCorrectionState extends Equatable {
     this.endTime,
     this.attendanceLogId,
     this.punchCorrectionResponseModel,
+    this.attendanceLogsStatus = AttendanceLogsStatus.initial,
+    this.attendanceLogs,
+    this.selectedLogTime,
   });
   final PunchCorrectionStatus status;
   final String? errorMessage;
@@ -27,6 +32,10 @@ class PunchCorrectionState extends Equatable {
   final double? endTime;
   final int? attendanceLogId;
   final PunchCorrectionResponseModel? punchCorrectionResponseModel;
+  final AttendanceLogsStatus attendanceLogsStatus;
+  final AttendanceLogsResponseModel? attendanceLogs;
+  final double? selectedLogTime;
+
   @override
   List<Object?> get props => [
     status,
@@ -40,6 +49,9 @@ class PunchCorrectionState extends Equatable {
     endTime,
     attendanceLogId,
     punchCorrectionResponseModel,
+    attendanceLogsStatus,
+    attendanceLogs,
+    selectedLogTime,
   ];
 
   PunchCorrectionState copyWith({
@@ -54,6 +66,9 @@ class PunchCorrectionState extends Equatable {
     double? endTime,
     int? attendanceLogId,
     PunchCorrectionResponseModel? punchCorrectionResponseModel,
+    AttendanceLogsStatus? attendanceLogsStatus,
+    AttendanceLogsResponseModel? attendanceLogs,
+    double? selectedLogTime,
   }) {
     return PunchCorrectionState(
       status: status ?? this.status,
@@ -67,6 +82,9 @@ class PunchCorrectionState extends Equatable {
       endTime: endTime ?? this.endTime,
       attendanceLogId: attendanceLogId ?? this.attendanceLogId,
       punchCorrectionResponseModel: punchCorrectionResponseModel ?? this.punchCorrectionResponseModel,
+      attendanceLogsStatus: attendanceLogsStatus ?? this.attendanceLogsStatus,
+      attendanceLogs: attendanceLogs ?? this.attendanceLogs,
+      selectedLogTime: selectedLogTime ?? this.selectedLogTime,
     );
   }
 }

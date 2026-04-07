@@ -43,9 +43,7 @@ class AttendanceResult {
       success: json['success'] as bool?,
       statusCode: (json['status_code'] as num?)?.toInt(),
       message: json['message'] as String?,
-      data: rawData is List
-          ? rawData.map((e) => Datum.fromJson(e as Map<String, dynamic>)).toList()
-          : null,
+      data: rawData is List ? rawData.map((e) => Datum.fromJson(e as Map<String, dynamic>)).toList() : null,
     );
   }
 

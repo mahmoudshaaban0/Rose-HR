@@ -141,7 +141,7 @@ class CurrentRequests extends StatelessWidget {
       case 'work_mission':
         return context.localizations.workMission;
       case 'leave_request':
-        return context.localizations.leaveRequest;
+        return context.localizations.holidayRequest;
       case 'permission_request':
         return context.localizations.permissionRequest;
       case 'late_in':

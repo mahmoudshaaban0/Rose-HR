@@ -93,14 +93,24 @@ String? extractTimeFromDateTime(dynamic value) {
   return str;
 }
 
-/// Converts time from API format (list or string) to Arabic time format
-/// The backend sends times in UTC, so this function converts to local timezone first
+/// Converts time from API format (list or string) to Arabic time format.
+/// The backend sends times in UTC, so this function converts to local timezone first.
+///
+/// Pass [amLabel] and [pmLabel] from your localization context so the period
+/// string is always displayed in the correct locale (e.g. "AM" in English,
+/// "صباحًا" in Arabic). When omitted the Arabic strings are used as a fallback.
+///
 /// Examples:
-/// - [05:00:00] or "05:00:00" (UTC) → "٥ صباحاً" (local time)
-/// - [14:00:00] or "14:00:00" (UTC) → "٢ مساءاً" (local time)
-/// - [00:30:00] or "00:30:00" (UTC) → "١٢:٣٠ صباحاً" (local time)
-/// - "2026-01-15 13:38:19" (UTC) → "١:٣٨ مساءاً" (local time)
-String formatTimeToArabic(dynamic timeData) {
+/// - [05:00:00] or "05:00:00" (UTC) → "٥ صباحًا" (local time)
+/// - [14:00:00] or "14:00:00" (UTC) → "٢ مساءً" (local time)
+/// - [00:30:00] or "00:30:00" (UTC) → "١٢:٣٠ صباحًا" (local time)
+/// - "2026-01-15 13:38:19" (UTC) → "١:٣٨ مساءً" (local time)
+String formatTimeToArabic(
+  dynamic timeData, {
+  bool useArabicNumerals = true,
+  String amLabel = 'صباحًا',
+  String pmLabel = 'مساءً',
+}) {
   try {
     // Extract time string from list or use directly if string
     String? timeString;
@@ -119,33 +129,34 @@ String formatTimeToArabic(dynamic timeData) {
     final hour = int.parse(parts[0]);
     final minute = int.parse(parts[1]);
 
-    // Determine period (صباحاً/مساءاً)
+    // Determine period using the injected localized labels
     final String period;
     final int displayHour;
 
     if (hour == 0) {
       displayHour = 12;
-      period = 'صباحاً';
+      period = amLabel;
     } else if (hour < 12) {
       displayHour = hour;
-      period = 'صباحاً';
+      period = amLabel;
     } else if (hour == 12) {
       displayHour = 12;
-      period = 'مساءاً';
+      period = pmLabel;
     } else {
       displayHour = hour - 12;
-      period = 'مساءاً';
+      period = pmLabel;
     }
 
-    // Convert numbers to Arabic numerals
-    final arabicHour = _convertToArabicNumerals(displayHour.toString());
+    final hourStr = displayHour.toString();
+    final minuteStr = minute.toString().padLeft(2, '0');
 
-    // If minutes are zero, show only hour
+    final displayHourStr = useArabicNumerals ? _convertToArabicNumerals(hourStr) : hourStr;
+
     if (minute == 0) {
-      return '$arabicHour $period';
+      return '$displayHourStr $period';
     } else {
-      final arabicMinute = _convertToArabicNumerals(minute.toString().padLeft(2, '0'));
-      return '$arabicHour:$arabicMinute $period';
+      final displayMinuteStr = useArabicNumerals ? _convertToArabicNumerals(minuteStr) : minuteStr;
+      return '$displayHourStr:$displayMinuteStr $period';
     }
   } on Exception catch (e) {
     AppLogger.instance.logError('Error in formatTimeToArabic: $e');
@@ -153,15 +164,33 @@ String formatTimeToArabic(dynamic timeData) {
   }
 }
 
-/// Converts decimal hours to Arabic hours and minutes format.
+/// Converts decimal hours to a human-readable duration string.
+///
+/// Pass the localized label strings so the output respects the active locale.
+/// When [useArabicNumerals] is true (default), numbers are rendered as Arabic-Indic
+/// digits (٥, ١٠, …); pass false for Western digits (5, 10, …).
+///
+/// Arabic plural forms are handled via [hourSingular] / [hourDual] / [hourPlural]
+/// and the equivalent minute variants. English only uses [hourSingular] and
+/// [minuteSingular] (e.g. "1 hour 30 minutes").
 ///
 /// Handles all API shapes:
-/// - String "0.0" / "0"   → "--:--"  (no data)
-/// - String "5.83"        → "٥ ساعات ٤٩ دقيقة"
-/// - num    7.9           → "٧ ساعات ٥٤ دقيقة"
-/// - List   [1.1]         → "١ ساعة ٦ دقائق"
-/// - null / false         → "--"
-String formatHoursToArabic(dynamic hoursData) {
+/// - String "0.0" / "0"  → "--:--"  (no data)
+/// - String "5.83"       → "5 hours 49 minutes"  (en) / "٥ ساعات ٤٩ دقيقة" (ar)
+/// - num    7.9          → "7 hours 54 minutes"  (en) / "٧ ساعات ٥٤ دقيقة" (ar)
+/// - null / false        → "--"
+String formatHoursToArabic(
+  dynamic hoursData, {
+  bool useArabicNumerals = true,
+  // Hour labels
+  String hourSingular = 'ساعة',
+  String hourDual = 'ساعتان',
+  String hourPlural = 'ساعات',
+  // Minute labels
+  String minuteSingular = 'دقيقة',
+  String minuteDual = 'دقيقتان',
+  String minutePlural = 'دقائق',
+}) {
   try {
     // Unwrap list
     final raw = hoursData is List && hoursData.isNotEmpty ? hoursData.first : hoursData;
@@ -191,23 +220,23 @@ String formatHoursToArabic(dynamic hoursData) {
     final parts = <String>[];
 
     if (hours > 0) {
-      final arabicHours = _convertToArabicNumerals(hours.toString());
+      final hourStr = useArabicNumerals ? _convertToArabicNumerals(hours.toString()) : hours.toString();
       final hourWord = hours == 1
-          ? 'ساعة'
+          ? hourSingular
           : hours == 2
-          ? 'ساعتان'
-          : 'ساعات';
-      parts.add('$arabicHours $hourWord');
+          ? hourDual
+          : hourPlural;
+      parts.add('$hourStr $hourWord');
     }
 
     if (minutes > 0) {
-      final arabicMinutes = _convertToArabicNumerals(minutes.toString());
+      final minuteStr = useArabicNumerals ? _convertToArabicNumerals(minutes.toString()) : minutes.toString();
       final minuteWord = minutes == 1
-          ? 'دقيقة'
+          ? minuteSingular
           : minutes == 2
-          ? 'دقيقتان'
-          : 'دقائق';
-      parts.add('$arabicMinutes $minuteWord');
+          ? minuteDual
+          : minutePlural;
+      parts.add('$minuteStr $minuteWord');
     }
 
     if (parts.isEmpty) return '--:--';
@@ -219,33 +248,47 @@ String formatHoursToArabic(dynamic hoursData) {
   }
 }
 
-/// Converts decimal hours to time format (HH:mm) and formats to Arabic
+/// Converts decimal hours to time format (HH:mm) and formats it.
+///
+/// Pass [amLabel] and [pmLabel] from your localization context so the period
+/// string is always displayed in the correct locale. When omitted, falls back
+/// to Arabic or English strings depending on [useArabic].
+///
 /// Examples:
-/// - 11.5 → "١١:٣٠ صباحاً" (Arabic)
-/// - 14.75 → "٢:٤٥ مساءاً" (Arabic)
-/// - 0.5 → "١٢:٣٠ صباحاً" (Arabic)
-String formatDecimalHoursToTime(double hours, {bool useArabic = true}) {
+/// - 11.5  → "١١:٣٠ صباحًا" (Arabic) / "11:30 AM" (English)
+/// - 14.75 → "٢:٤٥ مساءً"  (Arabic) / "2:45 PM"  (English)
+/// - 0.5   → "١٢:٣٠ صباحًا" (Arabic) / "12:30 AM" (English)
+String formatDecimalHoursToTime(
+  double hours, {
+  bool useArabic = true,
+  String? amLabel,
+  String? pmLabel,
+}) {
   try {
     // Calculate hours and minutes
     final hoursPart = hours.floor();
     final minutesPart = ((hours - hoursPart) * 60).round();
 
-    // Determine period (صباحاً/مساءاً or AM/PM)
+    // Resolve period labels: prefer injected localized strings, then fallback.
+    final resolvedAm = amLabel ?? (useArabic ? 'صباحًا' : 'AM');
+    final resolvedPm = pmLabel ?? (useArabic ? 'مساءً' : 'PM');
+
+    // Determine period
     final String period;
     final int displayHour;
 
     if (hoursPart == 0) {
       displayHour = 12;
-      period = useArabic ? 'صباحاً' : 'AM';
+      period = resolvedAm;
     } else if (hoursPart < 12) {
       displayHour = hoursPart;
-      period = useArabic ? 'صباحاً' : 'AM';
+      period = resolvedAm;
     } else if (hoursPart == 12) {
       displayHour = 12;
-      period = useArabic ? 'مساءاً' : 'PM';
+      period = resolvedPm;
     } else {
       displayHour = hoursPart - 12;
-      period = useArabic ? 'مساءاً' : 'PM';
+      period = resolvedPm;
     }
 
     // Format the time string
@@ -253,7 +296,6 @@ String formatDecimalHoursToTime(double hours, {bool useArabic = true}) {
     final minuteStr = minutesPart.toString().padLeft(2, '0');
 
     if (useArabic) {
-      // Convert to Arabic numerals
       final arabicHour = _convertToArabicNumerals(hourStr);
       final arabicMinute = _convertToArabicNumerals(minuteStr);
       return '$arabicHour:$arabicMinute $period';

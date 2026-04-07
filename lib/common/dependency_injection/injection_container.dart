@@ -121,7 +121,7 @@ Future<void> init() async {
       () => ShiftIdCubit(sl<PermissionRequestRepository>()),
     )
     ..registerFactory<PunchCorrectionCubit>(
-      () => PunchCorrectionCubit(sl<PunchCorrectionRepository>()),
+      () => PunchCorrectionCubit(sl<PunchCorrectionRepository>(), sl<AttendanceRepository>()),
     )
     ..registerFactory<FileUploadCubit>(FileUploadCubit.new)
     ..registerFactory<WorkMissionCubit>(
@@ -154,7 +154,7 @@ Future<void> init() async {
     ..registerLazySingleton<AppIntercepters>(AppIntercepters.new)
     ..registerLazySingleton<PrettyDioLogger>(
       () => PrettyDioLogger(
-        requestBody: true,
+        requestBody: false,
         requestHeader: true,
         responseHeader: true,
       ),

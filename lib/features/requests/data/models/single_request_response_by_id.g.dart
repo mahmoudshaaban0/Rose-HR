@@ -61,7 +61,7 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   reqCorrectionTime: const FalseOrStringConverter().fromJson(
     json['req_correction_time'],
   ),
-  reqAttendanceLogId: json['req_attendance_log_id'] as bool?,
+  reqAttendanceLogId: json['req_attendance_log_id'],
   reqWorkMissionType: const FalseOrStringConverter().fromJson(
     json['req_work_mission_type'],
   ),

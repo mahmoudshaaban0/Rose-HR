@@ -38,6 +38,7 @@ class AppDatePicker {
     BuildContext context, {
     required ValueChanged<DateTime> onDateConfirmed,
     DateTime? initialDate,
+    DateTime? minimumDate,
     int? minimumYear,
     int? maximumYear,
     ValueChanged<DateTime>? onDateChanged,
@@ -45,7 +46,12 @@ class AppDatePicker {
     String? buttonText,
     CupertinoDatePickerMode? mode,
   }) async {
-    var tempSelectedDate = initialDate ?? TimezoneHelper.now();
+    // Clamp initialDate so it's never before minimumDate
+    final effectiveInitial = (initialDate != null && minimumDate != null && initialDate.isBefore(minimumDate))
+        ? minimumDate
+        : (initialDate ?? TimezoneHelper.now());
+
+    var tempSelectedDate = effectiveInitial;
 
     await showCupertinoModalPopup<void>(
       context: context,
@@ -64,11 +70,12 @@ class AppDatePicker {
                 child: CupertinoDatePicker(
                   maximumYear: maximumYear ?? DateTime.now().year,
                   minimumYear: minimumYear ?? (DateTime.now().year - 100),
+                  minimumDate: minimumDate,
                   onDateTimeChanged: (DateTime date) {
                     tempSelectedDate = date;
                     onDateChanged?.call(date);
                   },
-                  initialDateTime: initialDate ?? TimezoneHelper.now(),
+                  initialDateTime: effectiveInitial,
                   mode: mode ?? CupertinoDatePickerMode.date,
                 ),
               ),

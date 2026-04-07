@@ -294,8 +294,8 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                   // Show success bottom sheet
                   BottomSheetWrapper(
                     closeBottomSheetOnDrag: false,
-                    initialSize: .4.h,
-                    maxChildSize: .4.h,
+                    initialSize: .42.h,
+                    maxChildSize: .42.h,
                     removeAutoScroll: true,
                     disableDrag: true,
                     useRootNavigator: true,
@@ -408,9 +408,12 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                               // Call getShiftId with formatted date
                                               shiftIdCubit.getShiftId(formattedDate);
 
+                                              // Fetch attendance logs for the selected date
+                                              cubit.fetchAttendanceLogs(formattedDate);
+
                                               Navigator.of(modalContext).pop();
-                                              AppLogger.instance.logDebug('selected date: //${cubit.state.date}');
-                                              AppLogger.instance.logDebug('fetching shift for date: ');
+                                              AppLogger.instance.logDebug('selected date: ${cubit.state.date}');
+                                              AppLogger.instance.logDebug('fetching shift for date: $formattedDate');
                                             },
                                             child: Text(context.localizations.done, style: context.typography.regular16),
                                           ),
@@ -551,7 +554,12 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
 
                                     // Determine which time to display:
                                     // If late-in exists (not 0), show late-in duration; otherwise show check-in time
-                                    final displayTime = formatTimeToArabic(checkInTime);
+                                    final displayTime = formatTimeToArabic(
+                                      checkInTime,
+                                      useArabicNumerals: Localizations.localeOf(context).languageCode == 'ar',
+                                      amLabel: context.localizations.timePeriodAm,
+                                      pmLabel: context.localizations.timePeriodPm,
+                                    );
 
                                     final isCheckInSelected = punchCorrectionState.correctionType == CorrectionType.checkIn.id;
 
@@ -560,6 +568,8 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                         ? formatDecimalHoursToTime(
                                             punchCorrectionState.startTime!,
                                             useArabic: Localizations.localeOf(context).languageCode == 'ar',
+                                            amLabel: context.localizations.timePeriodAm,
+                                            pmLabel: context.localizations.timePeriodPm,
                                           )
                                         : null;
 
@@ -614,7 +624,12 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
 
                                     // Determine which time to display:
                                     // If early-out exists (not 0), show early-out duration; otherwise show check-out time
-                                    final displayTime = formatTimeToArabic(checkOutTime);
+                                    final displayTime = formatTimeToArabic(
+                                      checkOutTime,
+                                      useArabicNumerals: Localizations.localeOf(context).languageCode == 'ar',
+                                      amLabel: context.localizations.timePeriodAm,
+                                      pmLabel: context.localizations.timePeriodPm,
+                                    );
 
                                     final isCheckOutSelected = punchCorrectionState.correctionType == CorrectionType.checkOut.id;
 
@@ -623,6 +638,8 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                         ? formatDecimalHoursToTime(
                                             punchCorrectionState.endTime!,
                                             useArabic: Localizations.localeOf(context).languageCode == 'ar',
+                                            amLabel: context.localizations.timePeriodAm,
+                                            pmLabel: context.localizations.timePeriodPm,
                                           )
                                         : null;
 

@@ -183,7 +183,7 @@ class Data {
   @JsonKey(name: "req_correction_time")
   String? reqCorrectionTime;
   @JsonKey(name: "req_attendance_log_id")
-  bool? reqAttendanceLogId;
+  dynamic reqAttendanceLogId;
   @FalseOrStringConverter()
   @JsonKey(name: "req_work_mission_type")
   String? reqWorkMissionType;

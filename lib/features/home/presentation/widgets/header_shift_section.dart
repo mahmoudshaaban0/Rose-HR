@@ -303,7 +303,7 @@ class HeaderAndShiftSection extends StatelessWidget {
                         vertical: AppSpacing.xl.r,
                       ),
                       decoration: BoxDecoration(
-                        color: context.colors.containerBackground,
+                        color: context.colors.surfaceContainerLow,
                         borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
                       ),
                       child: Text(

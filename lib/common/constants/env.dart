@@ -54,4 +54,6 @@ final class Env {
   static String approveRequest = _Env.approveRequest;
   @EnviedField(varName: 'rejectRequest', obfuscate: true)
   static String rejectRequest = _Env.rejectRequest;
+  @EnviedField(varName: 'attendanceLogs', obfuscate: true)
+  static String attendanceLogs = _Env.attendanceLogs;
 }

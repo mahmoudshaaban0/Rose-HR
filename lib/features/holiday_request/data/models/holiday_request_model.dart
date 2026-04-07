@@ -102,6 +102,6 @@ class AttachmentModel {
 
   @override
   String toString() {
-    return 'AttachmentModel(mimetype: $mimetype, name: $name, data: $data)';
+    return 'AttachmentModel(mimetype: $mimetype, name: $name, data: [${data.length} chars])';
   }
 }

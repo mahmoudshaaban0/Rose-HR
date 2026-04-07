@@ -73,7 +73,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workMission => 'Work Mission';
 
   @override
-  String get leaveRequest => 'Leave Request';
+  String get holidayRequest => 'Holiday Request';
 
   @override
   String get permissionRequest => 'Permission Request';
@@ -401,6 +401,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hour => 'hour';
+
+  @override
+  String get minute => 'minute';
 
   @override
   String get enterPermissionReasonHere =>
