@@ -17,6 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_launcher_icons: ^0.14.4
   flutter_localizations:
     sdk: flutter
   flutter_screenutil: ^5.9.3
@@ -43,7 +44,6 @@ dependencies:
   table_calendar: ^3.1.2
   timezone: ^0.9.4
   vector_graphics: ^1.1.19
-
   webview_flutter: ^4.13.1
 
 dev_dependencies:
@@ -87,12 +87,22 @@ flutter:
         - asset: assets/fonts/GraphikArabic-Super.ttf
           weight: 900
 
+flutter_launcher_icons:
+  ios: true
+  android: true
+  image_path_ios: "assets/icons/ios-app-icon.png"
+  image_path_android: "assets/icons/android-app-icon.png"
+  adaptive_icon_background: "assets/icons/android-app-icon-background.png"
+  adaptive_icon_foreground: "assets/icons/android-app-icon-forground.png"
+  remove_alpha_ios: true
+
 flutter_assets:
   assets_path:
     - assets/vectors/
     - assets/rasters/
     - assets/fonts/
     - assets/lotties/
+    - assets/icons/
   output_path: lib/common/constants
   filename: app_assets.dart
   field_prefix: null

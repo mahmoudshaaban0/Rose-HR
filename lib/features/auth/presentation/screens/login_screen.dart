@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   spacing: AppSpacing.md.h,
                   children: [
-                    Expanded(child: Image.asset(Assets.rastersLoginBackgrooundImage)),
+                    Expanded(child: Image.asset(Assets.rastersLoginBackgroundImage)),
                     Container(
                       padding: EdgeInsets.all(AppSpacing.md.h),
                       decoration: BoxDecoration(

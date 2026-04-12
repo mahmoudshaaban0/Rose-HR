@@ -18,6 +18,16 @@ class Assets {
 
   static const String fontsGraphikArabicThin = "assets/fonts/GraphikArabic-Thin.ttf";
 
+  static const String iconsAndroidAppIcon = "assets/icons/android-app-icon.png";
+
+  static const String iconsAndroidAppIconBackground = "assets/icons/android-app-icon-background.png";
+
+  static const String iconsAndroidAppIconForground = "assets/icons/android-app-icon-forground.png";
+
+  static const String iconsIosAppIcon = "assets/icons/ios-app-icon.png";
+
+  static const String iconsRoseHrLogoAndText = "assets/icons/rose_hr_logo_and_text.png";
+
   static const String lottiesLoading = "assets/lotties/loading.json";
 
   static const String lottiesLoadingAnimation = "assets/lotties/loading_animation.json";
@@ -28,7 +38,7 @@ class Assets {
 
   static const String rastersFingerprintregisteredDark = "assets/rasters/fingerprintregistered_dark.png";
 
-  static const String rastersLoginBackgrooundImage = "assets/rasters/login_backgroound_image.png";
+  static const String rastersLoginBackgroundImage = "assets/rasters/login_background_image.png";
 
   static const String vectorsAccountActive = "assets/vectors/accountActive.svg";
 
