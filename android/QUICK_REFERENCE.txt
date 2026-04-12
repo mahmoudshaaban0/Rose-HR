@@ -1,0 +1,68 @@
+╔════════════════════════════════════════════════════════════════╗
+║          ROSE HR - UPLOAD KEYSTORE QUICK REFERENCE            ║
+╚════════════════════════════════════════════════════════════════╝
+
+📁 KEYSTORE LOCATION
+   /Users/mahmoud/Desktop/Rose HR/rose_hr/android/upload-keystore.jks
+
+🔑 KEY ALIAS
+   upload
+
+📋 CREDENTIALS
+   See: android/key.properties
+   Backup: android/KEYSTORE_CREDENTIALS_BACKUP.txt
+
+🔐 SHA-1 FINGERPRINT (for Play Console)
+   B4:4B:0B:2C:1E:BE:26:F3:C9:F3:E4:D7:89:B5:13:F4:BE:63:B9:D1
+
+🔐 SHA-256 FINGERPRINT
+   16:56:01:B9:3E:B3:4D:67:7F:B7:64:52:B6:F4:DD:DA:C5:EC:43:43:09:05:1D:37:37:84:44:ED:DD:12:F1:09
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🏗️  BUILD COMMANDS
+
+   Release APK:
+   $ flutter build apk --release
+   
+   Release App Bundle (for Play Store):
+   $ flutter build appbundle --release
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📦 OUTPUT LOCATIONS
+
+   APK:  build/app/outputs/flutter-apk/app-release.apk
+   AAB:  build/app/outputs/bundle/release/app-release.aab
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  CRITICAL SECURITY REMINDERS
+
+   1. BACKUP the keystore file immediately!
+   2. SAVE credentials in password manager
+   3. NEVER commit key.properties to git
+   4. DELETE KEYSTORE_CREDENTIALS_BACKUP.txt after backing up
+   5. If lost, you CANNOT update your app on Play Store
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📱 APP DETAILS
+
+   Package Name:  com.roseholding.hr
+   Version Code:  1
+   Version Name:  1.0.0
+   Min SDK:       21 (Android 5.0)
+   Target SDK:    35 (Android 14)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 VERIFY KEYSTORE
+
+   $ keytool -list -v -keystore android/upload-keystore.jks
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📖 Full Documentation: android/KEYSTORE_SETUP_README.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
