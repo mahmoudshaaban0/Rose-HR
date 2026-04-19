@@ -15,7 +15,7 @@ HolidayRequestModel _$HolidayRequestModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$HolidayRequestModelToJson(
   HolidayRequestModel instance,
-) => <String, dynamic>{'params': instance.params.toJson()};
+) => <String, dynamic>{'params': instance.params};
 
 HolidayRequestParams _$HolidayRequestParamsFromJson(
   Map<String, dynamic> json,
@@ -33,6 +33,7 @@ HolidayRequestParams _$HolidayRequestParamsFromJson(
   attachmentIds: (json['attachment_ids'] as List<dynamic>?)
       ?.map((e) => AttachmentModel.fromJson(e as Map<String, dynamic>))
       .toList(),
+  compensationForDay: json['compensation_for_day'] as String?,
 );
 
 Map<String, dynamic> _$HolidayRequestParamsToJson(
@@ -48,7 +49,8 @@ Map<String, dynamic> _$HolidayRequestParamsToJson(
   'visa_period': ?instance.visaPeriod,
   'visa_needed_before': ?instance.visaNeededBefore,
   'bereavement_type': ?instance.bereavementType,
-  'attachment_ids': ?instance.attachmentIds?.map((e) => e.toJson()).toList(),
+  'attachment_ids': ?instance.attachmentIds,
+  'compensation_for_day': ?instance.compensationForDay,
 };
 
 AttachmentModel _$AttachmentModelFromJson(Map<String, dynamic> json) =>

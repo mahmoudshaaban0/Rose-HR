@@ -26,6 +26,7 @@
      "permissionRequest": "طلب استئذان",
      "accuredLeaveBalance": "رصيد الإجازة المستحق",
      "timeLeftUntilYourShiftEnds": "تبقى على نهاية دوامك",
+     "shiftEnded": "انتهى الدوام",
      "hours": "ساعات ",
      "minutes": "دقائق",
      "inRange": "داخل النطاق",
@@ -195,6 +196,8 @@
     "selectEndDate": "اختر تاريخ النهاية",
     "wantAdvanceSalary": "هل ترغب في استلام الراتب مُقدمًا؟",
     "airTicket": "تذكرة الطيران",
+    "visaEnterOut": "تأشيرة خروج و عودة",
+    "punch": "بصمة",
     "visaType": "نوع التأشيرة",
     "visaTypeSingleEntry": "تأشيرة دخول واحد",
     "visaTypeMultipleEntry": "تأشيرة دخول متعدد",
@@ -214,6 +217,9 @@
         }
       }
     },
+    "compensationDay": "يوم التعويض",
+    "selectCompensationDay": "اختر يوم التعويض",
+    "pleaseSelectCompensationDay": "يرجى اختيار يوم التعويض للإجازة التعويضية",
     "noLeaveTypesAvailable": "لا توجد أنواع إجازات متاحة",
     "dayOff": "يوم راحة",
     "enjoyYourHoliday": "استمتع في عطلتك، لبداية اسبوع مُثمر",
@@ -274,5 +280,8 @@
     "description": "الملاحظات",
     "days": "أيام",
     "months": "أشهر",
-    "dateCreated": "تاريخ الإنشاء"
+    "dateCreated": "تاريخ الإنشاء",
+    "attendanceLogs": "سجلات الحضور",
+    "fingerprintScan": "مسح البصمة",
+    "noAttendanceLogsFound": "لا توجد سجلات حضور لهذا اليوم"
 }

@@ -132,28 +132,28 @@ class CurrentRequests extends StatelessWidget {
     );
   }
 
-  String _getLocalizedRequestType(BuildContext context, String? requestType) {
-    if (requestType == null) return '';
+  // String _getLocalizedRequestType(BuildContext context, String? requestType) {
+  //   if (requestType == null) return '';
 
-    switch (requestType) {
-      case 'fix_attendance':
-        return context.localizations.attendanceCorrection;
-      case 'work_mission':
-        return context.localizations.workMission;
-      case 'leave_request':
-        return context.localizations.holidayRequest;
-      case 'permission_request':
-        return context.localizations.permissionRequest;
-      case 'late_in':
-        return context.localizations.lateArrival;
-      case 'early_out':
-        return context.localizations.earlyOut;
-      case 'mid_day':
-        return context.localizations.midDay;
-      default:
-        return requestType;
-    }
-  }
+  //   switch (requestType) {
+  //     case 'fix_attendance':
+  //       return context.localizations.attendanceCorrection;
+  //     case 'work_mission':
+  //       return context.localizations.workMission;
+  //     case 'leave_request':
+  //       return context.localizations.holidayRequest;
+  //     case 'permission_request':
+  //       return context.localizations.permissionRequest;
+  //     case 'late_in':
+  //       return context.localizations.lateArrival;
+  //     case 'early_out':
+  //       return context.localizations.earlyOut;
+  //     case 'mid_day':
+  //       return context.localizations.midDay;
+  //     default:
+  //       return requestType;
+  //   }
+  // }
 
   String _formatDate(String? date) {
     return date ?? '';

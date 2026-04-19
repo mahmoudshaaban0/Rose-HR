@@ -86,6 +86,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get timeLeftUntilYourShiftEnds => 'تبقى على نهاية دوامك';
 
   @override
+  String get shiftEnded => 'انتهى الدوام';
+
+  @override
   String get hours => 'ساعات ';
 
   @override
@@ -600,6 +603,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get airTicket => 'تذكرة الطيران';
 
   @override
+  String get visaEnterOut => 'تأشيرة خروج و عودة';
+
+  @override
+  String get punch => 'بصمة';
+
+  @override
   String get visaType => 'نوع التأشيرة';
 
   @override
@@ -636,6 +645,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String visaMonths(String months) {
     return '$months أشهر';
   }
+
+  @override
+  String get compensationDay => 'يوم التعويض';
+
+  @override
+  String get selectCompensationDay => 'اختر يوم التعويض';
+
+  @override
+  String get pleaseSelectCompensationDay =>
+      'يرجى اختيار يوم التعويض للإجازة التعويضية';
 
   @override
   String get noLeaveTypesAvailable => 'لا توجد أنواع إجازات متاحة';
@@ -810,4 +829,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dateCreated => 'تاريخ الإنشاء';
+
+  @override
+  String get attendanceLogs => 'سجلات الحضور';
+
+  @override
+  String get fingerprintScan => 'مسح البصمة';
+
+  @override
+  String get noAttendanceLogsFound => 'لا توجد سجلات حضور لهذا اليوم';
 }

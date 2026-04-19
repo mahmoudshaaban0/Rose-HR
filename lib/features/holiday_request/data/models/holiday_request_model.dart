@@ -34,6 +34,7 @@ class HolidayRequestParams {
     this.visaNeededBefore,
     this.bereavementType,
     this.attachmentIds,
+    this.compensationForDay,
   });
 
   factory HolidayRequestParams.fromJson(Map<String, dynamic> json) => _$HolidayRequestParamsFromJson(json);
@@ -71,11 +72,14 @@ class HolidayRequestParams {
   @JsonKey(name: 'attachment_ids', includeIfNull: false)
   final List<AttachmentModel>? attachmentIds;
 
+  @JsonKey(name: 'compensation_for_day', includeIfNull: false)
+  final String? compensationForDay;
+
   Map<String, dynamic> toJson() => _$HolidayRequestParamsToJson(this);
 
   @override
   String toString() {
-    return 'HolidayRequestParams(leaveTypeId: $leaveTypeId, dateFrom: $dateFrom, dateTo: $dateTo, requireAdvanceSalary: $requireAdvanceSalary, requireExitEntryVisa: $requireExitEntryVisa, description: $description, visaType: $visaType, visaPeriod: $visaPeriod, visaNeededBefore: $visaNeededBefore, bereavementType: $bereavementType, attachmentIds: $attachmentIds)';
+    return 'HolidayRequestParams(leaveTypeId: $leaveTypeId, dateFrom: $dateFrom, dateTo: $dateTo, requireAdvanceSalary: $requireAdvanceSalary, requireExitEntryVisa: $requireExitEntryVisa, description: $description, visaType: $visaType, visaPeriod: $visaPeriod, visaNeededBefore: $visaNeededBefore, bereavementType: $bereavementType, attachmentIds: $attachmentIds, compensationForDay: $compensationForDay)';
   }
 }
 

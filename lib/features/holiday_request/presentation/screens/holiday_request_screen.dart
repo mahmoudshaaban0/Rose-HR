@@ -248,6 +248,57 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                       );
                                     },
                                   ),
+                                  BlocBuilder<HolidayRequestCubit, HolidayRequestState>(
+                                    builder: (context, state) {
+                                      final cubit = context.read<HolidayRequestCubit>();
+                                      // Check if selected leave type is compensatory leave
+                                      final isCompensatoryLeave =
+                                          state.selectedLeaveTypeName != null &&
+                                          (state.selectedLeaveTypeName!.toLowerCase().contains('compensatory') ||
+                                              state.selectedLeaveTypeName!.toLowerCase().contains('compensation') ||
+                                              state.selectedLeaveTypeName!.contains('تعويضية'));
+
+                                      if (!isCompensatoryLeave) {
+                                        return const SizedBox.shrink();
+                                      }
+
+                                      return InfoCard(
+                                        title: context.localizations.compensationDay,
+                                        subtitle: state.compensationForDay != null
+                                            ? TimezoneHelper.format(
+                                                TimezoneHelper.createTimestamp(
+                                                  DateTime.parse(
+                                                    state.compensationForDay!,
+                                                  ),
+                                                ),
+                                                locale: 'en',
+                                                pattern: 'yyyy-MM-dd',
+                                              )
+                                            : context.localizations.selectCompensationDay,
+                                        value: state.compensationForDay ?? context.localizations.selectCompensationDay,
+                                        prefixIcon: Assets.vectorsCalendarFill,
+                                        showArrow: false,
+                                        subTitlestyle: state.compensationForDay != null
+                                            ? context.typography.regular16.copyWith(
+                                                color: context.colors.onSurface,
+                                              )
+                                            : null,
+                                        onTap: () {
+                                          AppDatePicker.show(
+                                            context,
+                                            mode: CupertinoDatePickerMode.date,
+                                            initialDate: state.compensationForDay != null
+                                                ? DateTime.parse(
+                                                    state.compensationForDay!,
+                                                  )
+                                                : TimezoneHelper.now(),
+                                            onDateChanged: cubit.selectCompensationForDay,
+                                            onDateConfirmed: cubit.selectCompensationForDay,
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
                                 ],
                               ),
                             ),
@@ -327,7 +378,7 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              context.localizations.airTicket,
+                                              context.localizations.visaEnterOut,
                                               style: context.typography.semiBold16,
                                             ),
                                             Transform.scale(
@@ -489,7 +540,18 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                     BlocBuilder<HolidayRequestCubit, HolidayRequestState>(
                       builder: (context, state) {
                         final isLoading = state.status == HolidayRequestStatus.submitting;
-                        final canSubmit = state.selectedLeaveTypeId != null && state.startDate != null && state.endDate != null;
+                        
+                        // Check if selected leave type is compensatory leave
+                        final isCompensatoryLeave =
+                            state.selectedLeaveTypeName != null &&
+                            (state.selectedLeaveTypeName!.toLowerCase().contains('compensatory') ||
+                                state.selectedLeaveTypeName!.toLowerCase().contains('compensation') ||
+                                state.selectedLeaveTypeName!.contains('تعويضية'));
+                        
+                        final canSubmit = state.selectedLeaveTypeId != null && 
+                            state.startDate != null && 
+                            state.endDate != null &&
+                            (!isCompensatoryLeave || state.compensationForDay != null);
 
                         return isLoading
                             ? Center(

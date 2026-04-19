@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rose_hr/theme/theme_ext.dart';
 import 'package:vector_graphics/vector_graphics_compat.dart';
 
 class AppVectorGraphic extends StatelessWidget {

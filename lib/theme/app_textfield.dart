@@ -152,7 +152,7 @@ class AppTextField extends StatelessWidget {
           cursorColor: context.inputTheme.focusedTextDefault,
           cursorHeight: 16,
           onTapOutside: (event) {
-            FocusScope.of(context).unfocus();
+            FocusManager.instance.primaryFocus?.unfocus();
           },
           decoration: InputDecoration(
             contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

@@ -2,11 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/constants/app_strings.dart';
 import 'package:rose_hr/common/helpers/app_manager.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
-import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
 class SplashScreen extends StatefulWidget {

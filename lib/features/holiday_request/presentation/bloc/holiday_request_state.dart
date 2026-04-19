@@ -19,6 +19,7 @@ class HolidayRequestState extends Equatable {
     this.visaPeriod,
     this.visaDate,
     this.description,
+    this.compensationForDay,
   });
 
   final HolidayRequestStatus status;
@@ -36,6 +37,7 @@ class HolidayRequestState extends Equatable {
   final String? visaPeriod;
   final String? visaDate;
   final String? description;
+  final String? compensationForDay;
 
   @override
   List<Object?> get props => [
@@ -54,6 +56,7 @@ class HolidayRequestState extends Equatable {
     visaPeriod,
     visaDate,
     description,
+    compensationForDay,
   ];
 
   HolidayRequestState copyWith({
@@ -72,6 +75,7 @@ class HolidayRequestState extends Equatable {
     Object? visaPeriod = _undefined,
     Object? visaDate = _undefined,
     Object? description = _undefined,
+    Object? compensationForDay = _undefined,
   }) {
     return HolidayRequestState(
       status: status ?? this.status,
@@ -89,6 +93,7 @@ class HolidayRequestState extends Equatable {
       visaPeriod: visaPeriod == _undefined ? this.visaPeriod : visaPeriod as String?,
       visaDate: visaDate == _undefined ? this.visaDate : visaDate as String?,
       description: description == _undefined ? this.description : description as String?,
+      compensationForDay: compensationForDay == _undefined ? this.compensationForDay : compensationForDay as String?,
     );
   }
 }

@@ -39,11 +39,18 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
           selectedLeaveTypeId: leaveTypeId,
           advanceSalary: false,
           airTicket: false,
+          compensationForDay: null,
         ),
       );
     } else {
       if (isClosed) return;
-      emit(state.copyWith(selectedLeaveTypeName: leaveTypeName, selectedLeaveTypeId: leaveTypeId));
+      emit(
+        state.copyWith(
+          selectedLeaveTypeName: leaveTypeName,
+          selectedLeaveTypeId: leaveTypeId,
+          compensationForDay: null,
+        ),
+      );
     }
   }
 
@@ -112,6 +119,11 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
     emit(state.copyWith(visaDate: date.toIso8601String()));
   }
 
+  void selectCompensationForDay(DateTime date) {
+    if (isClosed) return;
+    emit(state.copyWith(compensationForDay: date.toIso8601String()));
+  }
+
   void updateDescription(String description) {
     if (isClosed) return;
     emit(state.copyWith(description: description.isEmpty ? null : description));
@@ -153,6 +165,22 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
         return;
       }
 
+      // Validate compensation day for compensatory leave
+      final isCompensatoryLeave = state.selectedLeaveTypeName != null &&
+          (state.selectedLeaveTypeName!.toLowerCase().contains('compensatory') ||
+              state.selectedLeaveTypeName!.toLowerCase().contains('compensation') ||
+              state.selectedLeaveTypeName!.contains('تعويضية'));
+
+      if (isCompensatoryLeave && state.compensationForDay == null) {
+        emit(
+          state.copyWith(
+            status: HolidayRequestStatus.submitError,
+            errorMessage: 'pleaseSelectCompensationDay',
+          ),
+        );
+        return;
+      }
+
       // Format dates as yyyy-MM-dd
       final formattedStartDate = TimezoneHelper.format(
         TimezoneHelper.createTimestamp(
@@ -176,6 +204,18 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
         formattedVisaDate = TimezoneHelper.format(
           TimezoneHelper.createTimestamp(
             DateTime.parse(state.visaDate!),
+          ),
+          pattern: 'yyyy-MM-dd',
+          locale: 'en',
+        );
+      }
+
+      // Format compensation day if provided
+      String? formattedCompensationForDay;
+      if (state.compensationForDay != null) {
+        formattedCompensationForDay = TimezoneHelper.format(
+          TimezoneHelper.createTimestamp(
+            DateTime.parse(state.compensationForDay!),
           ),
           pattern: 'yyyy-MM-dd',
           locale: 'en',
@@ -207,6 +247,7 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
           visaPeriod: state.airTicket ? state.visaPeriod : null,
           visaNeededBefore: formattedVisaDate,
           attachmentIds: attachments,
+          compensationForDay: formattedCompensationForDay,
         ),
       );
 

@@ -59,20 +59,19 @@ class _ApprovalEmployeeItem extends StatelessWidget {
   final ApprovalEmployee employee;
   final bool showConnector;
 
-  Color _getStatusColor(BuildContext context, ApprovalStatus status) {
-    switch (status) {
-      case ApprovalStatus.approved:
-        return context.colors.success;
-      case ApprovalStatus.rejected:
-        return context.colors.error;
-      case ApprovalStatus.pending:
-        return context.colors.statusPendingText;
-    }
-  }
+  // Color _getStatusColor(BuildContext context, ApprovalStatus status) {
+  //   switch (status) {
+  //     case ApprovalStatus.approved:
+  //       return context.colors.success;
+  //     case ApprovalStatus.rejected:
+  //       return context.colors.error;
+  //     case ApprovalStatus.pending:
+  //       return context.colors.statusPendingText;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = _getStatusColor(context, employee.status);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,14 +119,14 @@ class _ApprovalEmployeeItem extends StatelessWidget {
     );
   }
 
-  String _getStatusText(BuildContext context, ApprovalStatus status) {
-    switch (status) {
-      case ApprovalStatus.approved:
-        return context.localizations.done;
-      case ApprovalStatus.rejected:
-        return context.localizations.cancel;
-      case ApprovalStatus.pending:
-        return context.localizations.requestStatus;
-    }
-  }
+  // String _getStatusText(BuildContext context, ApprovalStatus status) {
+  //   switch (status) {
+  //     case ApprovalStatus.approved:
+  //       return context.localizations.done;
+  //     case ApprovalStatus.rejected:
+  //       return context.localizations.cancel;
+  //     case ApprovalStatus.pending:
+  //       return context.localizations.requestStatus;
+  //   }
+  // }
 }

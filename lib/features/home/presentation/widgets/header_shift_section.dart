@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,8 +21,21 @@ import 'package:rose_hr/theme/primary_text_button.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 import 'package:shimmer/shimmer.dart';
 
-class HeaderAndShiftSection extends StatelessWidget {
+class HeaderAndShiftSection extends StatefulWidget {
   const HeaderAndShiftSection({super.key});
+
+  @override
+  State<HeaderAndShiftSection> createState() => _HeaderAndShiftSectionState();
+}
+
+class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
+  Timer? _countdownTimer;
+
+  @override
+  void dispose() {
+    _countdownTimer?.cancel();
+    super.dispose();
+  }
 
   /// Formats a 24-hour time value to 12-hour format with AM/PM
   String _formatHourTo12Hour(BuildContext context, int? hour) {
@@ -35,112 +50,186 @@ class HeaderAndShiftSection extends StatelessWidget {
     return '${_formatHourTo12Hour(context, shiftHourFrom)} - ${_formatHourTo12Hour(context, shiftHourTo)}';
   }
 
+  /// Calculates time remaining until shift end
+  /// Returns a map with hours, minutes, and isEnded status
+  /// Returns null if shift data is unavailable
+  Map<String, dynamic>? _calculateTimeRemaining(int? shiftHourTo) {
+    if (shiftHourTo == null) return null;
+
+    final now = DateTime.now();
+    final shiftEnd = DateTime(now.year, now.month, now.day, shiftHourTo);
+
+    // If shift end time has passed today, it means the shift ends tomorrow (night shift)
+    final targetShiftEnd = shiftEnd.isBefore(now) ? shiftEnd.add(const Duration(days: 1)) : shiftEnd;
+
+    final difference = targetShiftEnd.difference(now);
+
+    // If difference is negative, shift has ended
+    if (difference.isNegative) {
+      return {
+        'hours': 0,
+        'minutes': 0,
+        'isEnded': true,
+      };
+    }
+
+    // If difference is more than 24 hours, data is likely invalid
+    if (difference.inHours > 24) {
+      return null;
+    }
+
+    return {
+      'hours': difference.inHours,
+      'minutes': difference.inMinutes.remainder(60),
+      'isEnded': false,
+    };
+  }
+
+  /// Formats the countdown display with localized labels
+  String _formatCountdown(BuildContext context, Map<String, dynamic>? timeRemaining) {
+    if (timeRemaining == null) {
+      return context.localizations.timeUnavailablePlaceholder;
+    }
+
+    final hours = timeRemaining['hours'] ?? 0;
+    final minutes = timeRemaining['minutes'] ?? 0;
+
+    // Always show hours and minutes format for consistency
+    // When shift ends, shows "0 Hours 0 Minutes"
+    return '$hours ${context.localizations.hours} $minutes ${context.localizations.minutes}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<HomeCubit>(),
-      child: Container(
-        padding: EdgeInsets.only(bottom: AppSpacing.xxxl.r),
-        color: context.colors.containerBackground,
-        child: Column(
-          children: [
-            const HeaderSection(),
-            BlocBuilder<TimezoneCubit, TimezoneState>(
-              builder: (context, state) {
-                // Default values for initial/loading/detecting states
-                final formattedDateTime = state is TimezoneLoaded
-                    ? state.getFormattedDateTime(context: context, locale: context.localizations.localeName)
-                    : context.localizations.loadingEllipsis;
-                final cityName = (state is TimezoneLoaded && !state.isDetecting)
-                    ? (state.cityName ?? state.locationName)
-                    : context.localizations.loadingEllipsis;
-
-                if (state is TimezoneLoading) {
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey,
-                    highlightColor: Colors.white,
-                    child: SizedBox(
-                      width: 100.w,
-                      height: 100.h,
-                    ),
-                  );
+      create: (context) => sl<ShiftCubit>()..getCurrentShift(),
+      child: Builder(
+        builder: (context) {
+          // Start countdown timer when shift data is loaded
+          context.read<ShiftCubit>().stream.listen((state) {
+            if (state.status == ShiftStatus.success && _countdownTimer == null) {
+              _countdownTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+                if (mounted) {
+                  setState(() {
+                    // Timer triggers rebuild every 30 seconds to update countdown
+                  });
                 }
+              });
+            }
+          });
 
-                return Container(
-                  margin: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSpacing.lg.r,
-                    vertical: AppSpacing.xl.r,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(AppSpacing.lg.r),
-                    color: context.colors.surface,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: AppSpacing.md.h,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            formattedDateTime,
-                            style: context.typography.regular14,
+          return BlocProvider(
+            create: (context) => sl<HomeCubit>(),
+            child: Container(
+              padding: EdgeInsets.only(bottom: AppSpacing.xxxl.r),
+              color: context.colors.containerBackground,
+              child: Column(
+                children: [
+                  const HeaderSection(),
+                  BlocBuilder<TimezoneCubit, TimezoneState>(
+                    builder: (context, state) {
+                      // Default values for initial/loading/detecting states
+                      final formattedDateTime = state is TimezoneLoaded
+                          ? state.getFormattedDateTime(context: context, locale: context.localizations.localeName)
+                          : context.localizations.loadingEllipsis;
+                      final cityName = (state is TimezoneLoaded && !state.isDetecting)
+                          ? (state.cityName ?? state.locationName)
+                          : context.localizations.loadingEllipsis;
+
+                      if (state is TimezoneLoading) {
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey,
+                          highlightColor: Colors.white,
+                          child: SizedBox(
+                            width: 100.w,
+                            height: 100.h,
                           ),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: AppSpacing.xs.r,
-                              vertical: AppSpacing.xxs.r,
-                            ),
-                            decoration: BoxDecoration(
-                              color: context.colors.surface,
-                              borderRadius: BorderRadius.circular(AppSpacing.sm.r),
-                              border: Border.all(color: context.colors.containerBorder),
-                            ),
-                            child: Row(
+                        );
+                      }
+
+                      return Container(
+                        margin: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg.r,
+                          vertical: AppSpacing.xl.r,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(AppSpacing.lg.r),
+                          color: context.colors.surface,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          spacing: AppSpacing.md.h,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const AppVectorGraphic(path: Assets.vectorsLocationIcon),
-                                SizedBox(width: AppSpacing.xs.r),
                                 Text(
-                                  cityName,
-                                  style: context.typography.medium12,
+                                  formattedDateTime,
+                                  style: context.typography.regular14,
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.xs.r,
+                                    vertical: AppSpacing.xxs.r,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: context.colors.surface,
+                                    borderRadius: BorderRadius.circular(AppSpacing.sm.r),
+                                    border: Border.all(color: context.colors.containerBorder),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const AppVectorGraphic(path: Assets.vectorsLocationIcon),
+                                      SizedBox(width: AppSpacing.xs.r),
+                                      Text(
+                                        cityName,
+                                        style: context.typography.medium12,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                      Text.rich(
-                        textAlign: TextAlign.center,
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: context.localizations.timeLeftUntilYourShiftEnds,
-                              style: context.typography.regular16,
+                            // Dynamic countdown based on shift
+                            BlocBuilder<ShiftCubit, ShiftState>(
+                              builder: (context, shiftState) {
+                                final shiftData = shiftState.currentShiftResponse?.result?.data;
+                                final timeRemaining = _calculateTimeRemaining(shiftData?.shiftHourTo);
+                                final countdownText = _formatCountdown(context, timeRemaining);
+
+                                return Text.rich(
+                                  textAlign: TextAlign.center,
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: context.localizations.timeLeftUntilYourShiftEnds,
+                                        style: context.typography.regular16,
+                                      ),
+                                      TextSpan(
+                                        text: '\n $countdownText',
+                                        style: context.typography.medium18,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
-                            TextSpan(
-                              text: context.localizations.shiftTimeLeftPlaceholder,
-                              style: context.typography.semiBold28,
-                            ),
-                            TextSpan(
-                              text: context.localizations.hours,
-                              style: context.typography.regular16,
+                            PrimaryTextButton(
+                              appButtonSize: AppButtonSize.xxLarge,
+                              label: context.localizations.clockInClockOut,
+                              onTap: () => _handleClockInOut(context),
                             ),
                           ],
                         ),
-                      ),
-                      PrimaryTextButton(
-                        appButtonSize: AppButtonSize.xxLarge,
-                        label: context.localizations.clockInClockOut,
-                        onTap: () => _handleClockInOut(context),
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                );
-              },
+                ],
+              ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

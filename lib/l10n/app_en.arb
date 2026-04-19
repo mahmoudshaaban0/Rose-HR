@@ -25,6 +25,7 @@
     "permissionRequest": "Permission Request",
     "accuredLeaveBalance": "Accured Leave Balance",
     "timeLeftUntilYourShiftEnds": "Time left until your shift ends",
+    "shiftEnded": "Shift Ended",
     "hours": "Hours",
     "minutes": "Minutes",
     "inRange": "In Range",
@@ -194,6 +195,8 @@
     "selectEndDate": "Select end date",
     "wantAdvanceSalary": "Do you want to receive salary in advance?",
     "airTicket": "Air Ticket",
+    "visaEnterOut": "Exit/Entry Visa",
+    "punch": "Punch",
     "visaType": "Visa Type",
     "visaTypeSingleEntry": "Single entry visa",
     "visaTypeMultipleEntry": "Multiple entry visa",
@@ -213,6 +216,9 @@
         }
       }
     },
+    "compensationDay": "Compensation Day",
+    "selectCompensationDay": "Select compensation day",
+    "pleaseSelectCompensationDay": "Please select compensation day for compensatory leave",
     "noLeaveTypesAvailable": "No leave types available",
     "dayOff": "Day off",
     "enjoyYourHoliday": "Enjoy your holiday for a productive week start",
@@ -273,5 +279,8 @@
     "description": "Description",
     "days": "days",
     "months": "months",
-    "dateCreated": "Date Created"
+    "dateCreated": "Date Created",
+    "attendanceLogs": "Attendance Logs",
+    "fingerprintScan": "Fingerprint Scan",
+    "noAttendanceLogsFound": "No attendance logs found for this day"
 }

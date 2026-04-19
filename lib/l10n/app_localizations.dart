@@ -248,6 +248,12 @@ abstract class AppLocalizations {
   /// **'Time left until your shift ends'**
   String get timeLeftUntilYourShiftEnds;
 
+  /// No description provided for @shiftEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift Ended'**
+  String get shiftEnded;
+
   /// No description provided for @hours.
   ///
   /// In en, this message translates to:
@@ -1262,6 +1268,18 @@ abstract class AppLocalizations {
   /// **'Air Ticket'**
   String get airTicket;
 
+  /// No description provided for @visaEnterOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit/Entry Visa'**
+  String get visaEnterOut;
+
+  /// No description provided for @punch.
+  ///
+  /// In en, this message translates to:
+  /// **'Punch'**
+  String get punch;
+
   /// No description provided for @visaType.
   ///
   /// In en, this message translates to:
@@ -1333,6 +1351,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{months} months'**
   String visaMonths(String months);
+
+  /// No description provided for @compensationDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Compensation Day'**
+  String get compensationDay;
+
+  /// No description provided for @selectCompensationDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Select compensation day'**
+  String get selectCompensationDay;
+
+  /// No description provided for @pleaseSelectCompensationDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select compensation day for compensatory leave'**
+  String get pleaseSelectCompensationDay;
 
   /// No description provided for @noLeaveTypesAvailable.
   ///
@@ -1669,6 +1705,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Date Created'**
   String get dateCreated;
+
+  /// No description provided for @attendanceLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance Logs'**
+  String get attendanceLogs;
+
+  /// No description provided for @fingerprintScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Fingerprint Scan'**
+  String get fingerprintScan;
+
+  /// No description provided for @noAttendanceLogsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No attendance logs found for this day'**
+  String get noAttendanceLogsFound;
 }
 
 class _AppLocalizationsDelegate

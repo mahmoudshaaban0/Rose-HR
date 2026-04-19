@@ -19,10 +19,14 @@ class HeaderSection extends StatelessWidget {
       title: Text(
         AppManager.instance.getString(AppStrings.name) ?? context.localizations.noName,
         style: context.typography.semiBold18,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
         AppManager.instance.getString(AppStrings.email) ?? context.localizations.noEmail,
         style: context.typography.regular14,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
       leading: const AppVectorGraphic(path: Assets.vectorsUserPlaceHolder),
       trailing: hideNotificationIcon

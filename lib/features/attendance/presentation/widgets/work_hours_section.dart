@@ -2,17 +2,41 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart' show DateFormat;
+import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/helpers/date_helper.dart';
 import 'package:rose_hr/common/utility/extensions.dart';
+import 'package:rose_hr/common/widgets/bottom_sheet_wrapper.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
+import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/attendance/data/models/attendance_summary_details_response_model.dart';
 import 'package:rose_hr/features/attendance/presentation/cubit/attendance_details_cubit.dart';
+import 'package:rose_hr/features/attendance/presentation/widgets/attendance_logs_bottom_sheet.dart';
+import 'package:rose_hr/features/home/presentation/cubit/shift_cubit.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 import 'package:shimmer/shimmer.dart';
 
 class WorkHoursSection extends StatelessWidget {
   const WorkHoursSection({super.key});
+
+  /// Formats a 24-hour time value to 12-hour format with AM/PM
+  String _formatHourTo12Hour(BuildContext context, int? hour) {
+    if (hour == null) return context.localizations.timeUnavailablePlaceholder;
+    final period = hour >= 12 ? context.localizations.timePeriodPm : context.localizations.timePeriodAm;
+    final hour12 = hour % 12 == 0 ? 12 : hour % 12;
+    return '$hour12:00 $period ';
+  }
+
+  /// Formats shift hours range from 24-hour to 12-hour format
+  String _formatShiftHours(BuildContext context, int? shiftHourFrom, int? shiftHourTo) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    if (isArabic) {
+      return '${_formatHourTo12Hour(context, shiftHourFrom)} - ${_formatHourTo12Hour(context, shiftHourTo)}';
+    } else {
+      return '${_formatHourTo12Hour(context, shiftHourFrom)} - ${_formatHourTo12Hour(context, shiftHourTo)}';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +50,126 @@ class WorkHoursSection extends StatelessWidget {
         spacing: AppSpacing.md.h,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // ── Static title – never changes ─────────────────────────────────
-          Text(
-            context.localizations.workHours,
-            style: context.typography.semiBold16,
+          // ── Static title with fingerprint icon ──────────────────────────
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                context.localizations.workHours,
+                style: context.typography.semiBold16,
+              ),
+              BlocBuilder<AttendanceDetailsCubit, AttendanceDetailsState>(
+                builder: (context, state) {
+                  // Get the current selected date
+                  final selectedDate = state.attendanceSummaryDetailsResponse?.result?.data?.date;
+
+                  return GestureDetector(
+                    onTap: () {
+                      if (selectedDate != null) {
+                        // Format date as yyyy-MM-dd without UTC conversion
+                        // The backend expects the date in local timezone format
+                        final formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
+
+                        // Get the cubit instance before showing the bottom sheet
+                        final cubit = context.read<AttendanceDetailsCubit>()
+                          // Fetch logs for the selected date
+                          ..getAttendanceLogs(formattedDate);
+
+                        // Show the bottom sheet with cubit provided
+                        BottomSheetWrapper(
+                          initialSize: 0.6.h,
+                          disableDrag: false,
+                          child: BlocProvider.value(
+                            value: cubit,
+                            child: const AttendanceLogsBottomSheet(),
+                          ),
+                        ).callSheet(context);
+                      }
+                    },
+                    child: AppVectorGraphic(
+                      path: Assets.vectorsFingerprint,
+                      width: 22.r,
+                      height: 22.r,
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
+
+          // ── Shift hours display ──────────────────────────────────────────
+          BlocBuilder<ShiftCubit, ShiftState>(
+            builder: (context, state) {
+              final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
+              if (state.status == ShiftStatus.loading) {
+                return Shimmer.fromColors(
+                  baseColor: context.colors.surfaceVariant,
+                  highlightColor: context.colors.surface,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: context.colors.surfaceVariant,
+                      borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.xxl.r,
+                      vertical: AppSpacing.xl.r,
+                    ),
+                    child: Directionality(
+                      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                      child: Text(
+                        _formatShiftHours(context, null, null),
+                        style: context.typography.regular16,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              if (state.status == ShiftStatus.success) {
+                final shiftData = state.currentShiftResponse?.result?.data;
+                return Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xxl.r,
+                    vertical: AppSpacing.xl.r,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceContainerLow,
+                    borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                  ),
+                  child: Directionality(
+                    textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                    child: Text(
+                      _formatShiftHours(context, shiftData?.shiftHourFrom, shiftData?.shiftHourTo),
+                      style: context.typography.regular16,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              }
+
+              return Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.xxl.r,
+                  vertical: AppSpacing.xl.r,
+                ),
+                decoration: BoxDecoration(
+                  color: context.colors.containerBackground,
+                  borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                ),
+                child: Directionality(
+                  textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                  child: Text(
+                    _formatShiftHours(context, null, null),
+                    style: context.typography.regular16,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            },
+          ),
+
           const AppDivider(),
 
           // ── Day-off / Leave / Public Holiday banner ──────────────────────
@@ -360,7 +499,6 @@ class _PerShiftWorkHours extends StatelessWidget {
               child: _InfoCard(
                 label: context.localizations.leave,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Expanded(
                       child: Text(

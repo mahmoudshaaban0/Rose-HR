@@ -10,6 +10,7 @@ import 'package:rose_hr/features/attendance/presentation/cubit/attendance_cubit.
 import 'package:rose_hr/features/attendance/presentation/cubit/attendance_details_cubit.dart';
 import 'package:rose_hr/features/attendance/presentation/widgets/attendance_calendar_container.dart';
 import 'package:rose_hr/features/attendance/presentation/widgets/work_hours_section.dart';
+import 'package:rose_hr/features/home/presentation/cubit/shift_cubit.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 import 'package:timezone/timezone.dart';
@@ -29,6 +30,7 @@ class AttendanceScreen extends StatelessWidget {
             return sl<AttendanceDetailsCubit>()..getAttendanceSummaryByDate(dateTimeToString(selectedDate));
           },
         ),
+        BlocProvider(create: (context) => sl<ShiftCubit>()..getCurrentShift()),
       ],
       child: Builder(
         builder: (context) {

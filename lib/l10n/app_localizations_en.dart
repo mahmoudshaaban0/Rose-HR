@@ -85,6 +85,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeLeftUntilYourShiftEnds => 'Time left until your shift ends';
 
   @override
+  String get shiftEnded => 'Shift Ended';
+
+  @override
   String get hours => 'Hours';
 
   @override
@@ -607,6 +610,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get airTicket => 'Air Ticket';
 
   @override
+  String get visaEnterOut => 'Exit/Entry Visa';
+
+  @override
+  String get punch => 'Punch';
+
+  @override
   String get visaType => 'Visa Type';
 
   @override
@@ -643,6 +652,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String visaMonths(String months) {
     return '$months months';
   }
+
+  @override
+  String get compensationDay => 'Compensation Day';
+
+  @override
+  String get selectCompensationDay => 'Select compensation day';
+
+  @override
+  String get pleaseSelectCompensationDay =>
+      'Please select compensation day for compensatory leave';
 
   @override
   String get noLeaveTypesAvailable => 'No leave types available';
@@ -820,4 +839,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dateCreated => 'Date Created';
+
+  @override
+  String get attendanceLogs => 'Attendance Logs';
+
+  @override
+  String get fingerprintScan => 'Fingerprint Scan';
+
+  @override
+  String get noAttendanceLogsFound => 'No attendance logs found for this day';
 }
