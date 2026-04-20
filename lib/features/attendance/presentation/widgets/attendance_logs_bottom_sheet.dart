@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rose_hr/common/helpers/timezone_helper.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/features/attendance/data/models/attendance_logs_response_model.dart';
 import 'package:rose_hr/features/attendance/presentation/cubit/attendance_details_cubit.dart';
@@ -145,6 +146,22 @@ class _LogItem extends StatelessWidget {
 
   final Datum log;
 
+  DateTime _ensureUtc(DateTime dateTime) {
+    // Backend sends UTC time, but DateTime.parse may not mark it as UTC
+    // if the string doesn't have 'Z' suffix. Force interpret as UTC.
+    if (dateTime.isUtc) return dateTime;
+    return DateTime.utc(
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
+      dateTime.hour,
+      dateTime.minute,
+      dateTime.second,
+      dateTime.millisecond,
+      dateTime.microsecond,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
@@ -152,9 +169,9 @@ class _LogItem extends StatelessWidget {
 
     String formattedTime;
     if (actionTime != null) {
-      // Format the DateTime object directly
-      // Check if we need to convert from UTC to local
-      final localTime = actionTime.isUtc ? actionTime.toLocal() : actionTime;
+      // Ensure backend datetime is treated as UTC, then convert to app's local timezone
+      final utcDateTime = _ensureUtc(actionTime);
+      final localTime = TimezoneHelper.fromUtc(utcDateTime);
 
       final hour = localTime.hour;
       final minute = localTime.minute;
@@ -167,10 +184,8 @@ class _LogItem extends StatelessWidget {
       if (isArabic) {
         final arabicHour = _convertToArabicNumerals(hourStr);
         final arabicMinute = _convertToArabicNumerals(minuteStr);
-        // Hide minutes if they are 0, like formatTimeToArabic does
         formattedTime = minute == 0 ? '$arabicHour $period' : '$arabicHour:$arabicMinute $period';
       } else {
-        // Hide minutes if they are 0, like formatTimeToArabic does
         formattedTime = minute == 0 ? '$hourStr $period' : '$hourStr:$minuteStr $period';
       }
     } else {

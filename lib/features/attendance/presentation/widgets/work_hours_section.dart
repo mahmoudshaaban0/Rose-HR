@@ -12,31 +12,12 @@ import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/attendance/data/models/attendance_summary_details_response_model.dart';
 import 'package:rose_hr/features/attendance/presentation/cubit/attendance_details_cubit.dart';
 import 'package:rose_hr/features/attendance/presentation/widgets/attendance_logs_bottom_sheet.dart';
-import 'package:rose_hr/features/home/presentation/cubit/shift_cubit.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 import 'package:shimmer/shimmer.dart';
 
 class WorkHoursSection extends StatelessWidget {
   const WorkHoursSection({super.key});
-
-  /// Formats a 24-hour time value to 12-hour format with AM/PM
-  String _formatHourTo12Hour(BuildContext context, int? hour) {
-    if (hour == null) return context.localizations.timeUnavailablePlaceholder;
-    final period = hour >= 12 ? context.localizations.timePeriodPm : context.localizations.timePeriodAm;
-    final hour12 = hour % 12 == 0 ? 12 : hour % 12;
-    return '$hour12:00 $period ';
-  }
-
-  /// Formats shift hours range from 24-hour to 12-hour format
-  String _formatShiftHours(BuildContext context, int? shiftHourFrom, int? shiftHourTo) {
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-    if (isArabic) {
-      return '${_formatHourTo12Hour(context, shiftHourFrom)} - ${_formatHourTo12Hour(context, shiftHourTo)}';
-    } else {
-      return '${_formatHourTo12Hour(context, shiftHourFrom)} - ${_formatHourTo12Hour(context, shiftHourTo)}';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +49,7 @@ class WorkHoursSection extends StatelessWidget {
                       if (selectedDate != null) {
                         // Format date as yyyy-MM-dd without UTC conversion
                         // The backend expects the date in local timezone format
-                        final formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
+                        final formattedDate = DateFormat('yyyy-MM-dd', 'en').format(selectedDate);
 
                         // Get the cubit instance before showing the bottom sheet
                         final cubit = context.read<AttendanceDetailsCubit>()
@@ -96,81 +77,6 @@ class WorkHoursSection extends StatelessWidget {
               ),
             ],
           ),
-
-          // ── Shift hours display ──────────────────────────────────────────
-          BlocBuilder<ShiftCubit, ShiftState>(
-            builder: (context, state) {
-              final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-
-              if (state.status == ShiftStatus.loading) {
-                return Shimmer.fromColors(
-                  baseColor: context.colors.surfaceVariant,
-                  highlightColor: context.colors.surface,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: context.colors.surfaceVariant,
-                      borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xxl.r,
-                      vertical: AppSpacing.xl.r,
-                    ),
-                    child: Directionality(
-                      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-                      child: Text(
-                        _formatShiftHours(context, null, null),
-                        style: context.typography.regular16,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                );
-              }
-
-              if (state.status == ShiftStatus.success) {
-                final shiftData = state.currentShiftResponse?.result?.data;
-                return Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSpacing.xxl.r,
-                    vertical: AppSpacing.xl.r,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.colors.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
-                  ),
-                  child: Directionality(
-                    textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-                    child: Text(
-                      _formatShiftHours(context, shiftData?.shiftHourFrom, shiftData?.shiftHourTo),
-                      style: context.typography.regular16,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                );
-              }
-
-              return Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSpacing.xxl.r,
-                  vertical: AppSpacing.xl.r,
-                ),
-                decoration: BoxDecoration(
-                  color: context.colors.containerBackground,
-                  borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
-                ),
-                child: Directionality(
-                  textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-                  child: Text(
-                    _formatShiftHours(context, null, null),
-                    style: context.typography.regular16,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              );
-            },
-          ),
-
-          const AppDivider(),
 
           // ── Day-off / Leave / Public Holiday banner ──────────────────────
           BlocBuilder<AttendanceDetailsCubit, AttendanceDetailsState>(
@@ -270,8 +176,9 @@ class WorkHoursSection extends StatelessWidget {
               final shifts = data?.shifts ?? <ShiftData>[];
               final isAbsence = data?.absence ?? false;
 
-              // Absence: show badge on attendance, placeholders for the rest
-              if (isAbsence) {
+              // Absence with no shifts: show badge on attendance, placeholders for the rest
+              // If there are shifts, we still show them even when absent
+              if (isAbsence && shifts.isEmpty) {
                 return Column(
                   children: [
                     Row(
@@ -326,7 +233,7 @@ class WorkHoursSection extends StatelessWidget {
                 );
               }
 
-              // No shifts: single placeholder section
+              // No shifts and not absent: single placeholder section
               if (shifts.isEmpty) {
                 return Column(
                   children: [
@@ -390,7 +297,7 @@ class WorkHoursSection extends StatelessWidget {
                 spacing: AppSpacing.md.h,
                 children: [
                   // First shift uses the global header
-                  _PerShiftWorkHours(shift: shifts.first),
+                  _PerShiftWorkHours(shift: shifts.first, isAbsence: isAbsence),
                   // Subsequent shifts: divider + same "Work Hours" header, then section
                   for (var i = 1; i < shifts.length; i++) ...[
                     SizedBox(height: AppSpacing.md.h),
@@ -401,7 +308,7 @@ class WorkHoursSection extends StatelessWidget {
                     ),
                     const AppDivider(),
                     SizedBox(height: AppSpacing.sm.h),
-                    _PerShiftWorkHours(shift: shifts[i]),
+                    _PerShiftWorkHours(shift: shifts[i], isAbsence: isAbsence),
                     SizedBox(height: AppSpacing.xxl.h),
                   ],
                 ],
@@ -423,9 +330,36 @@ class WorkHoursSection extends StatelessWidget {
 // Per-shift work hours section
 // ─────────────────────────────────────────────────────────────────────────────
 class _PerShiftWorkHours extends StatelessWidget {
-  const _PerShiftWorkHours({required this.shift});
+  const _PerShiftWorkHours({required this.shift, this.isAbsence = false});
 
   final ShiftData shift;
+  final bool isAbsence;
+
+  /// Formats a time string like "06:00:00" to 12-hour format with AM/PM
+  String _formatShiftTime(BuildContext context, String? timeStr) {
+    if (timeStr == null || timeStr.isEmpty) {
+      return context.localizations.timeUnavailablePlaceholder;
+    }
+    try {
+      final parts = timeStr.split(':');
+      if (parts.isEmpty) return context.localizations.timeUnavailablePlaceholder;
+      final hour = int.tryParse(parts[0]) ?? 0;
+      final minute = parts.length > 1 ? int.tryParse(parts[1]) ?? 0 : 0;
+      final period = hour >= 12 ? context.localizations.timePeriodPm : context.localizations.timePeriodAm;
+      final hour12 = hour % 12 == 0 ? 12 : hour % 12;
+      final minuteStr = minute > 0 ? ':${minute.toString().padLeft(2, '0')}' : ':00';
+      return '$hour12$minuteStr $period';
+    } catch (_) {
+      return context.localizations.timeUnavailablePlaceholder;
+    }
+  }
+
+  /// Formats the shift time range (e.g., "6:00 AM - 10:00 AM")
+  String _formatShiftRange(BuildContext context) {
+    final start = _formatShiftTime(context, shift.shiftStartTime);
+    final end = _formatShiftTime(context, shift.shiftEndTime);
+    return '$start - $end';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -457,75 +391,109 @@ class _PerShiftWorkHours extends StatelessWidget {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Shift time range display
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSpacing.xxl.r,
+            vertical: AppSpacing.xl.r,
+          ),
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+          ),
+          child: Directionality(
+            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+            child: Text(
+              _formatShiftRange(context),
+              style: context.typography.regular16,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        SizedBox(height: AppSpacing.md.h),
+        const AppDivider(),
+        SizedBox(height: AppSpacing.md.h),
         // Row 1: Check-in | Check-out
         Row(
           children: [
             Expanded(
               child: _InfoCard(
                 label: context.localizations.attendance,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        formatTimeToArabic(
-                          shift.checkInTime,
-                          useArabicNumerals: Localizations.localeOf(context).languageCode == 'ar',
-                          amLabel: context.localizations.timePeriodAm,
-                          pmLabel: context.localizations.timePeriodPm,
-                        ),
-                        style: context.typography.semiBold16,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SizedBox(width: AppSpacing.xs.w),
-                    if (shift.hasLateIn)
-                      Flexible(
-                        child: Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: _Badge(
-                            label: context.localizations.lateAttendance,
-                            color: context.colors.error,
-                            background: context.colors.errorBadgeBackground,
+                child: isAbsence
+                    ? _Badge(
+                        label: context.localizations.absent,
+                        color: context.colors.error,
+                        background: context.colors.errorBadgeBackground,
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              formatTimeToArabic(
+                                shift.checkInTime,
+                                useArabicNumerals: Localizations.localeOf(context).languageCode == 'ar',
+                                amLabel: context.localizations.timePeriodAm,
+                                pmLabel: context.localizations.timePeriodPm,
+                              ),
+                              style: context.typography.semiBold16,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
+                          SizedBox(width: AppSpacing.xs.w),
+                          if (shift.hasLateIn)
+                            Flexible(
+                              child: Align(
+                                alignment: AlignmentDirectional.centerEnd,
+                                child: _Badge(
+                                  label: context.localizations.lateAttendance,
+                                  color: context.colors.error,
+                                  background: context.colors.errorBadgeBackground,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                  ],
-                ),
               ),
             ),
             SizedBox(width: AppSpacing.md.w),
             Expanded(
               child: _InfoCard(
                 label: context.localizations.leave,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        formatTimeToArabic(
-                          shift.checkOutTime,
-                          useArabicNumerals: Localizations.localeOf(context).languageCode == 'ar',
-                          amLabel: context.localizations.timePeriodAm,
-                          pmLabel: context.localizations.timePeriodPm,
-                        ),
+                child: isAbsence
+                    ? Text(
+                        '--:--',
                         style: context.typography.semiBold16,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SizedBox(width: AppSpacing.xs.w),
-                    if (shift.hasEarlyOut)
-                      Flexible(
-                        child: Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: _Badge(
-                            label: context.localizations.earlyCheckout,
-                            color: context.colors.error,
-                            background: context.colors.errorBadgeBackground,
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              formatTimeToArabic(
+                                shift.checkOutTime,
+                                useArabicNumerals: Localizations.localeOf(context).languageCode == 'ar',
+                                amLabel: context.localizations.timePeriodAm,
+                                pmLabel: context.localizations.timePeriodPm,
+                              ),
+                              style: context.typography.semiBold16,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
+                          SizedBox(width: AppSpacing.xs.w),
+                          if (shift.hasEarlyOut)
+                            Flexible(
+                              child: Align(
+                                alignment: AlignmentDirectional.centerEnd,
+                                child: _Badge(
+                                  label: context.localizations.earlyCheckout,
+                                  color: context.colors.error,
+                                  background: context.colors.errorBadgeBackground,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                  ],
-                ),
               ),
             ),
           ],
@@ -538,16 +506,20 @@ class _PerShiftWorkHours extends StatelessWidget {
               child: _InfoCard(
                 label: context.localizations.workHours,
                 child: Text(
-                  formatHoursToArabic(
-                    shift.totalWorkTime,
-                    useArabicNumerals: Localizations.localeOf(context).languageCode == 'ar',
-                    hourSingular: context.localizations.hour,
-                    hourDual: Localizations.localeOf(context).languageCode == 'ar' ? 'ساعتان' : context.localizations.hours,
-                    hourPlural: context.localizations.hours,
-                    minuteSingular: context.localizations.minute,
-                    minuteDual: Localizations.localeOf(context).languageCode == 'ar' ? 'دقيقتان' : context.localizations.minutes,
-                    minutePlural: context.localizations.minutes,
-                  ),
+                  isAbsence
+                      ? '--'
+                      : formatHoursToArabic(
+                          shift.totalWorkTime,
+                          useArabicNumerals: Localizations.localeOf(context).languageCode == 'ar',
+                          hourSingular: context.localizations.hour,
+                          hourDual: Localizations.localeOf(context).languageCode == 'ar' ? 'ساعتان' : context.localizations.hours,
+                          hourPlural: context.localizations.hours,
+                          minuteSingular: context.localizations.minute,
+                          minuteDual: Localizations.localeOf(context).languageCode == 'ar'
+                              ? 'دقيقتان'
+                              : context.localizations.minutes,
+                          minutePlural: context.localizations.minutes,
+                        ),
                   style: context.typography.semiBold16,
                 ),
               ),
@@ -557,8 +529,8 @@ class _PerShiftWorkHours extends StatelessWidget {
               child: _InfoCard(
                 label: context.localizations.difference,
                 child: Text(
-                  displayDiff,
-                  style: context.typography.semiBold16.copyWith(color: diffColor),
+                  isAbsence ? '--' : displayDiff,
+                  style: context.typography.semiBold16.copyWith(color: isAbsence ? context.colors.onSurface : diffColor),
                 ),
               ),
             ),

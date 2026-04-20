@@ -45,9 +45,27 @@ class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
     widget.cubit.fetchAttendanceLogs(dateToFetch);
   }
 
+  DateTime _ensureUtc(DateTime dateTime) {
+    // Backend sends UTC time, but DateTime.parse may not mark it as UTC
+    // if the string doesn't have 'Z' suffix. Force interpret as UTC.
+    if (dateTime.isUtc) return dateTime;
+    return DateTime.utc(
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
+      dateTime.hour,
+      dateTime.minute,
+      dateTime.second,
+      dateTime.millisecond,
+      dateTime.microsecond,
+    );
+  }
+
   String _formatTimeOnly(DateTime dateTime) {
-    // Convert to local timezone using TimezoneHelper and format as time only
-    final localTime = TimezoneHelper.toLocalTimezone(dateTime);
+    // Ensure backend datetime is treated as UTC, then convert to local timezone
+    final utcDateTime = _ensureUtc(dateTime);
+    final localTime = TimezoneHelper.fromUtc(utcDateTime);
+    debugPrint('Original: $dateTime (isUtc: ${dateTime.isUtc}) -> UTC: $utcDateTime -> Local: $localTime');
     return TimezoneHelper.format(
       localTime,
       pattern: 'hh:mm a',
@@ -56,8 +74,9 @@ class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
   }
 
   double _dateTimeToDecimalHours(DateTime dateTime) {
-    // Convert to local timezone to get correct hour/minute
-    final localTime = TimezoneHelper.toLocalTimezone(dateTime);
+    // Ensure backend datetime is treated as UTC, then convert to local timezone
+    final utcDateTime = _ensureUtc(dateTime);
+    final localTime = TimezoneHelper.fromUtc(utcDateTime);
     return localTime.hour + (localTime.minute / 60.0);
   }
 

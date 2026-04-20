@@ -53,19 +53,36 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
   /// Calculates time remaining until shift end
   /// Returns a map with hours, minutes, and isEnded status
   /// Returns null if shift data is unavailable
-  Map<String, dynamic>? _calculateTimeRemaining(int? shiftHourTo) {
-    if (shiftHourTo == null) return null;
+  /// Only shows time remaining if current time is within the shift period
+  Map<String, dynamic>? _calculateTimeRemaining(int? shiftHourFrom, int? shiftHourTo) {
+    if (shiftHourFrom == null || shiftHourTo == null) return null;
 
     final now = DateTime.now();
+    final shiftStart = DateTime(now.year, now.month, now.day, shiftHourFrom);
     final shiftEnd = DateTime(now.year, now.month, now.day, shiftHourTo);
 
-    // If shift end time has passed today, it means the shift ends tomorrow (night shift)
-    final targetShiftEnd = shiftEnd.isBefore(now) ? shiftEnd.add(const Duration(days: 1)) : shiftEnd;
+    // Handle night shifts (shift that crosses midnight)
+    final isNightShift = shiftEnd.isBefore(shiftStart) || shiftEnd.isAtSameMomentAs(shiftStart);
 
-    final difference = targetShiftEnd.difference(now);
+    DateTime effectiveShiftStart = shiftStart;
+    DateTime effectiveShiftEnd = shiftEnd;
 
-    // If difference is negative, shift has ended
-    if (difference.isNegative) {
+    if (isNightShift) {
+      // Night shift case: e.g., 10 PM to 6 AM
+      if (now.hour >= shiftHourFrom) {
+        // Current time is after shift start (e.g., 11 PM), shift ends tomorrow
+        effectiveShiftEnd = shiftEnd.add(const Duration(days: 1));
+      } else {
+        // Current time is before shift start (e.g., 3 AM), shift started yesterday
+        effectiveShiftStart = shiftStart.subtract(const Duration(days: 1));
+      }
+    }
+
+    // Check if current time is within shift period
+    final isWithinShift = now.isAfter(effectiveShiftStart) && now.isBefore(effectiveShiftEnd);
+
+    if (!isWithinShift) {
+      // Shift hasn't started yet or has already ended
       return {
         'hours': 0,
         'minutes': 0,
@@ -73,10 +90,8 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
       };
     }
 
-    // If difference is more than 24 hours, data is likely invalid
-    if (difference.inHours > 24) {
-      return null;
-    }
+    // Calculate time remaining until shift end
+    final difference = effectiveShiftEnd.difference(now);
 
     return {
       'hours': difference.inHours,
@@ -195,7 +210,10 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                             BlocBuilder<ShiftCubit, ShiftState>(
                               builder: (context, shiftState) {
                                 final shiftData = shiftState.currentShiftResponse?.result?.data;
-                                final timeRemaining = _calculateTimeRemaining(shiftData?.shiftHourTo);
+                                final timeRemaining = _calculateTimeRemaining(
+                                  shiftData?.shiftHourFrom,
+                                  shiftData?.shiftHourTo,
+                                );
                                 final countdownText = _formatCountdown(context, timeRemaining);
 
                                 return Text.rich(

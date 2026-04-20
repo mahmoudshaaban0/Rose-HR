@@ -103,6 +103,9 @@ class Data {
 @JsonSerializable()
 class ShiftData {
   ShiftData({
+    this.shiftId,
+    this.shiftStartTime,
+    this.shiftEndTime,
     this.checkInTime,
     this.lateInTime,
     this.checkOutTime,
@@ -112,6 +115,18 @@ class ShiftData {
   });
 
   factory ShiftData.fromJson(Map<String, dynamic> json) => _$ShiftDataFromJson(json);
+
+  /// Unique identifier for the shift
+  @JsonKey(name: "shift_id")
+  int? shiftId;
+
+  /// Shift start time, e.g. "06:00:00"
+  @JsonKey(name: "shift_start_time")
+  String? shiftStartTime;
+
+  /// Shift end time, e.g. "10:00:00"
+  @JsonKey(name: "shift_end_time")
+  String? shiftEndTime;
 
   /// Time of check-in, e.g. "07:25:57". Null / "0.0" → "--:--"
   @JsonKey(name: "check_in_time")

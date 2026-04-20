@@ -48,6 +48,9 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
 };
 
 ShiftData _$ShiftDataFromJson(Map<String, dynamic> json) => ShiftData(
+  shiftId: (json['shift_id'] as num?)?.toInt(),
+  shiftStartTime: json['shift_start_time'] as String?,
+  shiftEndTime: json['shift_end_time'] as String?,
   checkInTime: json['check_in_time'] as String?,
   lateInTime: json['late_in_time'] as String?,
   checkOutTime: json['check_out_time'] as String?,
@@ -57,6 +60,9 @@ ShiftData _$ShiftDataFromJson(Map<String, dynamic> json) => ShiftData(
 );
 
 Map<String, dynamic> _$ShiftDataToJson(ShiftData instance) => <String, dynamic>{
+  'shift_id': instance.shiftId,
+  'shift_start_time': instance.shiftStartTime,
+  'shift_end_time': instance.shiftEndTime,
   'check_in_time': instance.checkInTime,
   'late_in_time': instance.lateInTime,
   'check_out_time': instance.checkOutTime,
