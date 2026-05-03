@@ -50,3 +50,7 @@ app.*.map.json
 *.jks
 *.keystore
 /android/KEYSTORE_CREDENTIALS_BACKUP.txt
+
+# Firebase config files - generate from CI secrets
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist

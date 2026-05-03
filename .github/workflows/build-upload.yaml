@@ -19,6 +19,9 @@ jobs:
       APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ vars.APP_STORE_CONNECT_KEY_IDENTIFIER }}
       APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
       CERTIFICATE_PRIVATE_KEY: ${{ secrets.CERTIFICATE_PRIVATE_KEY }}
+      DART_DEFINES: ${{ secrets.DART_DEFINES }}
+      GOOGLE_SERVICE_PLIST: ${{ secrets.GOOGLE_SERVICE_PLIST }}
+      GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
     steps:
     - name: Clone repository
@@ -31,6 +34,20 @@ jobs:
         # cache: true
         # cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
         # cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
+
+    - name: Setup Firebase config files
+      run: |
+        echo "${{ env.GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
+        echo "${{ env.GOOGLE_SERVICE_PLIST }}" | base64 --decode > ios/Runner/GoogleService-Info.plist
+
+    - name: Setup Dart defines file
+      run: |
+        if [ -n "${{ env.DART_DEFINES }}" ]; then
+          echo "${{ env.DART_DEFINES }}" | base64 --decode > .env.prod
+          echo "✅ .env.prod generated from DART_DEFINES secret"
+        else
+          echo "ℹ️ DART_DEFINES is empty, skipping .env.prod generation"
+        fi
 
     - name: Get dependencies
       run: flutter pub get
@@ -73,7 +90,12 @@ jobs:
         echo "keyAlias=${{ env.ANDROID_KEY_ALIAS }}" >> android/key.properties
 
     - name: Build AAB
-      run: flutter build aab --release --build-name=${{ env.NEW_VERSION }} --build-number=${{ env.NEW_BUILD }}
+      run: |
+        DART_DEFINE_ARG=""
+        if [ -f .env.prod ]; then
+          DART_DEFINE_ARG="--dart-define-from-file=.env.prod"
+        fi
+        flutter build aab --release --build-name=${{ env.NEW_VERSION }} --build-number=${{ env.NEW_BUILD }} $DART_DEFINE_ARG
 
     - name: Prepare for Upload
       run: |
@@ -137,7 +159,11 @@ jobs:
 
     - name: Build iOS App
       run: |
-        flutter build ipa --export-options-plist=$HOME/export_options.plist --build-name=${{ env.NEW_VERSION }} --build-number=${{ env.NEW_BUILD }}
+        DART_DEFINE_ARG=""
+        if [ -f .env.prod ]; then
+          DART_DEFINE_ARG="--dart-define-from-file=.env.prod"
+        fi
+        flutter build ipa --export-options-plist=$HOME/export_options.plist --build-name=${{ env.NEW_VERSION }} --build-number=${{ env.NEW_BUILD }} $DART_DEFINE_ARG
         echo "Build completed. Checking for IPA file..."
         find build/ios -name "*.ipa" -type f || echo "No IPA file found in build/ios"
 
