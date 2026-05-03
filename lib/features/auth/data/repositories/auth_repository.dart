@@ -19,6 +19,7 @@ class AuthRepository {
         await AppManager.instance.setString(AppStrings.email, response.loginResult?.data?.email! ?? '');
         await AppManager.instance.setString(AppStrings.name, response.loginResult?.data?.name! ?? '');
         await AppManager.instance.setString(AppStrings.apiKey, response.loginResult?.data?.apiKey! ?? '');
+        await authDatasource.registerFcmToken();
         return Success(response);
       } else {
         return Error(ServerFailure(response.loginResult?.message ?? ''));

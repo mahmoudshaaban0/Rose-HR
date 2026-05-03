@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "948443130807",
+    "project_id": "rose-hr-4ad09",
+    "storage_bucket": "rose-hr-4ad09.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948443130807:android:61e8af0da2e8b8b08cd632",
+        "android_client_info": {
+          "package_name": "com.roseholding.hr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRuu2TiFjjobmQWRjIMKgLh3a-QWif7GQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

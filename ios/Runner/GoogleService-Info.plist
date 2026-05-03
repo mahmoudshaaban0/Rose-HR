@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDEkfRoWoBj5e61tQJlJXnzOFAYt5zpkcM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>948443130807</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.roseholding.hr</string>
+	<key>PROJECT_ID</key>
+	<string>rose-hr-4ad09</string>
+	<key>STORAGE_BUCKET</key>
+	<string>rose-hr-4ad09.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:948443130807:ios:f11243a8ba4dd9fb8cd632</string>
+</dict>
+</plist>

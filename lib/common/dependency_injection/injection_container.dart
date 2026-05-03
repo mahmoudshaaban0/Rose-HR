@@ -25,6 +25,9 @@ import 'package:rose_hr/features/home/data/repositories/home_repository.dart';
 import 'package:rose_hr/features/home/presentation/cubit/home_cubit.dart';
 import 'package:rose_hr/features/home/presentation/cubit/shift_cubit.dart';
 import 'package:rose_hr/features/home/presentation/cubit/timezone_cubit.dart';
+import 'package:rose_hr/features/notifications/data/datasources/notifications_datasource.dart';
+import 'package:rose_hr/features/notifications/data/repositories/notifications_repository.dart';
+import 'package:rose_hr/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:rose_hr/features/permission_request/data/datasources/permission_request_datasource.dart';
 import 'package:rose_hr/features/permission_request/data/repositories/permission_request_repository.dart';
 import 'package:rose_hr/features/permission_request/presentation/cubit/permission_request_cubit.dart';
@@ -74,6 +77,9 @@ Future<void> init() async {
     ..registerLazySingleton<RequestsDataSource>(
       () => RequestsDataSource(sl<ApiConsumer>()),
     )
+    ..registerLazySingleton<NotificationsDataSource>(
+      () => NotificationsDataSource(sl<ApiConsumer>()),
+    )
     // Repositories
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepository(sl<AuthDataSource>()),
@@ -101,6 +107,9 @@ Future<void> init() async {
     )
     ..registerLazySingleton<RequestsRepository>(
       () => RequestsRepository(sl<RequestsDataSource>()),
+    )
+    ..registerLazySingleton<NotificationsRepository>(
+      () => NotificationsRepository(sl<NotificationsDataSource>()),
     )
     // Cubits/Blocs
     ..registerFactory<AuthBloc>(() => AuthBloc(sl<AuthRepository>()))
@@ -141,6 +150,9 @@ Future<void> init() async {
     )
     ..registerFactory<PendingRequestsCubit>(
       () => PendingRequestsCubit(sl<RequestsRepository>()),
+    )
+    ..registerFactory<NotificationsCubit>(
+      () => NotificationsCubit(sl<NotificationsRepository>()),
     )
     ///! Core
     ..registerLazySingleton<NetworkInfo>(

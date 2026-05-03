@@ -1,0 +1,164 @@
+name: Build & Upload (Android, iOS)
+
+on:
+  workflow_dispatch:  # Manual trigger
+  push:
+    tags:
+      - 'v*'  # Only trigger on version tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: self-hosted
+    timeout-minutes: 120
+    
+    permissions:
+      contents: write  # Required to commit version changes back
+    
+    env:
+      APP_STORE_CONNECT_ISSUER_ID: ${{ vars.APP_STORE_CONNECT_ISSUER_ID }}
+      APP_STORE_CONNECT_KEY_IDENTIFIER: ${{ vars.APP_STORE_CONNECT_KEY_IDENTIFIER }}
+      APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+      CERTIFICATE_PRIVATE_KEY: ${{ secrets.CERTIFICATE_PRIVATE_KEY }}
+
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v4
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        # cache: true
+        # cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+        # cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
+
+    - name: Get dependencies
+      run: flutter pub get
+
+    - name: Set version from tag
+      run: |
+        # Extract version from tag (e.g., v1.0.11 -> 1.0.11)
+        NEW_VERSION="${{ github.ref_name }}"
+        NEW_VERSION="${NEW_VERSION#v}"  # Remove 'v' prefix
+        
+        # Extract current build number from pubspec.yaml
+        CURRENT_BUILD=$(grep '^version:' pubspec.yaml | sed 's/version: //' | cut -d'+' -f2)
+        
+        # Increment build number
+        NEW_BUILD=$((CURRENT_BUILD + 2))
+        
+        echo "📦 Version from tag: $NEW_VERSION"
+        echo "🔢 Build number: $CURRENT_BUILD → $NEW_BUILD"
+        
+        # Update pubspec.yaml
+        sed -i.bak "s/^version:.*/version: ${NEW_VERSION}+${NEW_BUILD}/" pubspec.yaml
+        rm pubspec.yaml.bak
+        
+        echo "✅ Updated to version: ${NEW_VERSION}+${NEW_BUILD}"
+        echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+        echo "NEW_BUILD=${NEW_BUILD}" >> $GITHUB_ENV
+
+    # Generate all the files needed for Android code signing
+    - name: Setup Android Keystore
+      env:
+        ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/android_keystore.jks
+        ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      run: |
+        echo "${{ secrets.ANDROID_KEYSTORE_JKS }}" | base64 --decode > ${{ env.ANDROID_KEYSTORE_PATH }}
+        echo "storeFile=${{ env.ANDROID_KEYSTORE_PATH }}" > android/key.properties
+        echo "storePassword=${{ env.ANDROID_KEYSTORE_PASSWORD }}" >> android/key.properties
+        echo "keyPassword=${{ env.ANDROID_KEY_PASSWORD }}" >> android/key.properties
+        echo "keyAlias=${{ env.ANDROID_KEY_ALIAS }}" >> android/key.properties
+
+    - name: Build AAB
+      run: flutter build aab --release --build-name=${{ env.NEW_VERSION }} --build-number=${{ env.NEW_BUILD }}
+
+    - name: Prepare for Upload
+      run: |
+        echo "PACKAGE_NAME=com.roseholding.crm" >> $GITHUB_ENV
+        echo "AAB_PATH=${{ github.workspace }}/build/app/outputs/bundle/release/app-release.aab" >> $GITHUB_ENV
+ 
+    - name: Upload to Google Play
+      uses: r0adkll/upload-google-play@v1
+      with:
+        # Note: First version should be updated manually.
+        # See: https://github.com/r0adkll/upload-google-play
+        serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        packageName: ${{ env.PACKAGE_NAME }}
+        releaseFiles: ${{ env.AAB_PATH }}
+        track: 'production' 
+        status: 'completed'
+
+    # # https://docs.codemagic.io/knowledge-codemagic/codemagic-cli-tools/
+    - name: Install Codemagic CLI tools
+      run: |
+        # Ensure we have Python 3.10+ via Homebrew
+        if ! command -v python3.12 &> /dev/null && ! command -v python3.11 &> /dev/null && ! command -v python3.10 &> /dev/null; then
+          echo "Installing Python 3.12 via Homebrew..."
+          brew install python@3.12
+        fi
+        
+        # Use the latest available Python 3.10+
+        PYTHON_CMD=""
+        for ver in python3.12 python3.11 python3.10; do
+          if command -v $ver &> /dev/null; then
+            PYTHON_CMD=$ver
+            break
+          fi
+        done
+        
+        if [ -z "$PYTHON_CMD" ]; then
+          echo "Error: Python 3.10+ is required"
+          exit 1
+        fi
+        
+        echo "Using $PYTHON_CMD"
+        $PYTHON_CMD -m pip install --upgrade pip --user --break-system-packages
+        $PYTHON_CMD -m pip install codemagic-cli-tools --user --break-system-packages
+        echo "$HOME/Library/Python/$($PYTHON_CMD -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')/bin" >> $GITHUB_PATH
+
+    - name: Set up keychain
+      run: keychain initialize
+
+    - name: Fetch signing files
+      run: |
+        BUNDLE_ID=$(xcode-project detect-bundle-id)
+        app-store-connect fetch-signing-files $BUNDLE_ID \
+          --type IOS_APP_STORE \
+          --create
+
+    - name: Set up signing certificate
+      run: keychain add-certificates
+
+    - name: Set up code signing settings on Xcode project
+      run: xcode-project use-profiles
+
+    - name: Build iOS App
+      run: |
+        flutter build ipa --export-options-plist=$HOME/export_options.plist --build-name=${{ env.NEW_VERSION }} --build-number=${{ env.NEW_BUILD }}
+        echo "Build completed. Checking for IPA file..."
+        find build/ios -name "*.ipa" -type f || echo "No IPA file found in build/ios"
+
+    - name: Upload to App Store Connect
+      run: |
+        IPA_FILE=$(find build/ios -name "*.ipa" -type f | head -1)
+        if [ -z "$IPA_FILE" ]; then
+          echo "Error: IPA file not found"
+          echo "Searching in build directory:"
+          find build -name "*.ipa" -type f || echo "No IPA files found"
+          exit 1
+        fi
+        echo "Found IPA file: $IPA_FILE"
+        app-store-connect publish --path "$IPA_FILE"
+
+    - name: Commit version bump
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add pubspec.yaml
+        git commit -m "chore: bump version to ${{ env.NEW_VERSION }}+${{ env.NEW_BUILD }} [skip ci]" || echo "No changes to commit"
+        git push || echo "Nothing to push"
+
+

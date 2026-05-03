@@ -56,4 +56,6 @@ final class Env {
   static String rejectRequest = _Env.rejectRequest;
   @EnviedField(varName: 'attendanceLogs', obfuscate: true)
   static String attendanceLogs = _Env.attendanceLogs;
+  @EnviedField(varName: 'registerDeviceToken', obfuscate: true)
+  static String registerDeviceToken = _Env.registerDeviceToken;
 }

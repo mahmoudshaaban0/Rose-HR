@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_strings.dart';
 import 'package:rose_hr/common/helpers/app_manager.dart';
+import 'package:rose_hr/common/notifications/notification_service.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
@@ -23,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-
+    _setup();
     // Initialize animation controller with slower duration
     _animationController = AnimationController(
       vsync: this,
@@ -246,4 +247,11 @@ class _CloudBump {
   final double angle; // Angle in degrees
   final double size; // Size multiplier for this bump
   final double curvature; // How curved the transition is
+}
+
+Future<void> _setup() async {
+  await NotificationService().requestPermission();
+  NotificationService().onTap.listen((data) {
+    debugPrint('Notification tapped: $data');
+  });
 }
