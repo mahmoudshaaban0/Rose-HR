@@ -52,25 +52,33 @@ jobs:
     - name: Get dependencies
       run: flutter pub get
 
-    - name: Set version from tag
+    - name: Set version safely
       run: |
-        # Extract version from tag (e.g., v1.0.11 -> 1.0.11)
-        NEW_VERSION="${{ github.ref_name }}"
-        NEW_VERSION="${NEW_VERSION#v}"  # Remove 'v' prefix
-        
-        # Extract current build number from pubspec.yaml
-        CURRENT_BUILD=$(grep '^version:' pubspec.yaml | sed 's/version: //' | cut -d'+' -f2)
-        
+        # Read current version/build from pubspec.yaml
+        CURRENT_VERSION_LINE=$(grep '^version:' pubspec.yaml | sed 's/version: //')
+        CURRENT_VERSION_NAME=$(echo "$CURRENT_VERSION_LINE" | cut -d'+' -f1)
+        CURRENT_BUILD=$(echo "$CURRENT_VERSION_LINE" | cut -d'+' -f2)
+
+        # On tag builds, use tag version (v1.2.3 -> 1.2.3).
+        # On manual/branch builds, keep current pubspec version name.
+        REF_NAME="${{ github.ref_name }}"
+        TAG_CANDIDATE="${REF_NAME#v}"
+        if [[ "$REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          NEW_VERSION="$TAG_CANDIDATE"
+          echo "📦 Using tag version: $NEW_VERSION"
+        else
+          NEW_VERSION="$CURRENT_VERSION_NAME"
+          echo "📦 Non-tag run detected ($REF_NAME). Using pubspec version: $NEW_VERSION"
+        fi
+
         # Increment build number
         NEW_BUILD=$((CURRENT_BUILD + 2))
-        
-        echo "📦 Version from tag: $NEW_VERSION"
         echo "🔢 Build number: $CURRENT_BUILD → $NEW_BUILD"
-        
+
         # Update pubspec.yaml
         sed -i.bak "s/^version:.*/version: ${NEW_VERSION}+${NEW_BUILD}/" pubspec.yaml
         rm pubspec.yaml.bak
-        
+
         echo "✅ Updated to version: ${NEW_VERSION}+${NEW_BUILD}"
         echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
         echo "NEW_BUILD=${NEW_BUILD}" >> $GITHUB_ENV
