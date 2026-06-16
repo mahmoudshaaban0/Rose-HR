@@ -104,8 +104,32 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   leaveBereavementType: json['leave_bereavement_type'] as bool?,
   leaveCanCancel: json['leave_can_cancel'] as bool?,
   leaveCanApprove: json['leave_can_approve'] as bool?,
+  clrLastWorkingDay: const FalseOrStringConverter().fromJson(
+    json['clr_last_working_day'],
+  ),
+  clrResignationReason: const FalseOrStringConverter().fromJson(
+    json['clr_resignation_reason'],
+  ),
+  clrResignationReasonDetail: const FalseOrStringConverter().fromJson(
+    json['clr_resignation_reason_detail'],
+  ),
+  clrTotalSalary: json['clr_total_salary'] as num?,
+  clrLeaveBalanceDays: json['clr_leave_balance_days'] as num?,
+  clrLeaveBalanceAmount: json['clr_leave_balance_amount'] as num?,
+  clrLoanSettlement: json['clr_loan_settlement'] as num?,
+  clrEosGratuity: json['clr_eos_gratuity'] as num?,
+  clrTotalAdditions: json['clr_total_additions'] as num?,
+  clrTotalDeductions: json['clr_total_deductions'] as num?,
+  clrNetAmount: json['clr_net_amount'] as num?,
+  clrServiceYears: (json['clr_service_years'] as num?)?.toInt(),
+  clrServiceMonths: (json['clr_service_months'] as num?)?.toInt(),
+  clrServiceDays: (json['clr_service_days'] as num?)?.toInt(),
+  clrPhysicalCustodyCleared: json['clr_physical_custody_cleared'] as bool?,
   attachments: (json['attachments'] as List<dynamic>?)
       ?.map((e) => Attachment.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  approvalChain: (json['approval_chain'] as List<dynamic>?)
+      ?.map((e) => ApprovalChainItem.fromJson(e as Map<String, dynamic>))
       .toList(),
 );
 
@@ -192,8 +216,44 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'leave_bereavement_type': instance.leaveBereavementType,
   'leave_can_cancel': instance.leaveCanCancel,
   'leave_can_approve': instance.leaveCanApprove,
+  'clr_last_working_day': const FalseOrStringConverter().toJson(
+    instance.clrLastWorkingDay,
+  ),
+  'clr_resignation_reason': const FalseOrStringConverter().toJson(
+    instance.clrResignationReason,
+  ),
+  'clr_resignation_reason_detail': const FalseOrStringConverter().toJson(
+    instance.clrResignationReasonDetail,
+  ),
+  'clr_total_salary': instance.clrTotalSalary,
+  'clr_leave_balance_days': instance.clrLeaveBalanceDays,
+  'clr_leave_balance_amount': instance.clrLeaveBalanceAmount,
+  'clr_loan_settlement': instance.clrLoanSettlement,
+  'clr_eos_gratuity': instance.clrEosGratuity,
+  'clr_total_additions': instance.clrTotalAdditions,
+  'clr_total_deductions': instance.clrTotalDeductions,
+  'clr_net_amount': instance.clrNetAmount,
+  'clr_service_years': instance.clrServiceYears,
+  'clr_service_months': instance.clrServiceMonths,
+  'clr_service_days': instance.clrServiceDays,
+  'clr_physical_custody_cleared': instance.clrPhysicalCustodyCleared,
   'attachments': instance.attachments,
+  'approval_chain': instance.approvalChain,
 };
+
+ApprovalChainItem _$ApprovalChainItemFromJson(Map<String, dynamic> json) =>
+    ApprovalChainItem(
+      approvalNames: (json['approval_names'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      approvalStatus: json['approval_status'] as String?,
+    );
+
+Map<String, dynamic> _$ApprovalChainItemToJson(ApprovalChainItem instance) =>
+    <String, dynamic>{
+      'approval_names': instance.approvalNames,
+      'approval_status': instance.approvalStatus,
+    };
 
 Attachment _$AttachmentFromJson(Map<String, dynamic> json) => Attachment(
   id: (json['id'] as num?)?.toInt(),

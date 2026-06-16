@@ -22,7 +22,8 @@ class HomeScreen extends StatelessWidget {
           create: (context) => sl<TimezoneCubit>(),
         ),
         BlocProvider(
-          create: (context) => sl<PendingRequestsCubit>()..getPendingManagerRequests(),
+          create: (context) =>
+              sl<PendingRequestsCubit>()..getPendingManagerRequests(),
         ),
       ],
       child: Builder(
@@ -35,7 +36,9 @@ class HomeScreen extends StatelessWidget {
                   if (context.mounted) {
                     await context.read<TimezoneCubit>().refreshTimezone();
                     if (context.mounted) {
-                      await context.read<PendingRequestsCubit>().getPendingManagerRequests();
+                      await context
+                          .read<PendingRequestsCubit>()
+                          .getPendingManagerRequests();
                     }
                   }
                 },

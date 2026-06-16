@@ -108,6 +108,8 @@ class Datum {
     this.leaveBereavementType,
     this.leaveCanCancel,
     this.leaveCanApprove,
+    this.clrLastWorkingDay,
+    this.clrResignationReason,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
@@ -223,6 +225,14 @@ class Datum {
   bool? leaveCanCancel;
   @JsonKey(name: "leave_can_approve")
   bool? leaveCanApprove;
+
+  // ── End of service (hr.end.of.service) clearance fields ──────────────
+  @FalseOrStringConverter()
+  @JsonKey(name: "clr_last_working_day")
+  String? clrLastWorkingDay;
+  @FalseOrStringConverter()
+  @JsonKey(name: "clr_resignation_reason")
+  String? clrResignationReason;
 
   Map<String, dynamic> toJson() => _$DatumToJson(this);
 }

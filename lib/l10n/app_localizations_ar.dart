@@ -80,6 +80,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get permissionRequest => 'طلب استئذان';
 
   @override
+  String get resignation => 'استقالة';
+
+  @override
   String get accuredLeaveBalance => 'رصيد الإجازة المستحق';
 
   @override
@@ -497,6 +500,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get approvalChain => 'سلسلة الموافقات';
 
   @override
+  String get approvalStatusPending => 'قيد الانتظار';
+
+  @override
+  String get approvalStatusApproved => 'تمت الموافقة';
+
+  @override
+  String get approvalStatusRejected => 'مرفوض';
+
+  @override
   String get cancelRequestConfirmation => 'هل أنت متأكد من إلغاء هذا الطلب؟';
 
   @override
@@ -838,4 +850,79 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noAttendanceLogsFound => 'لا توجد سجلات حضور لهذا اليوم';
+
+  @override
+  String get resignationRequestTitle => 'طلب استقالة';
+
+  @override
+  String get lastWorkingDay => 'آخر يوم عمل';
+
+  @override
+  String get selectLastWorkingDay => 'اختر آخر يوم عمل';
+
+  @override
+  String get resignationReason => 'سبب الاستقالة';
+
+  @override
+  String get selectResignationReason => 'اختر السبب';
+
+  @override
+  String get resignationReasonResignation => 'استقالة';
+
+  @override
+  String get resignationReasonTermination => 'إنهاء خدمة';
+
+  @override
+  String get resignationReasonDetail => 'تفاصيل السبب';
+
+  @override
+  String get enterResignationReasonHere => 'اكتب سببك هنا إن وجد...';
+
+  @override
+  String get failedToSendResignationRequest => 'فشل إرسال طلب الاستقالة';
+
+  @override
+  String get endOfServiceRequest => 'إنهاء الخدمة';
+
+  @override
+  String get settlementDetails => 'تفاصيل التسوية';
+
+  @override
+  String get servicePeriod => 'مدة الخدمة';
+
+  @override
+  String get years => 'سنوات';
+
+  @override
+  String get totalSalary => 'إجمالي الراتب';
+
+  @override
+  String get leaveBalanceDays => 'رصيد الإجازات (أيام)';
+
+  @override
+  String get leaveBalanceAmount => 'قيمة رصيد الإجازات';
+
+  @override
+  String get loanSettlement => 'تسوية القروض';
+
+  @override
+  String get eosGratuity => 'مكافأة نهاية الخدمة';
+
+  @override
+  String get totalAdditions => 'إجمالي الإضافات';
+
+  @override
+  String get totalDeductions => 'إجمالي الخصومات';
+
+  @override
+  String get netAmount => 'صافي المبلغ';
+
+  @override
+  String get physicalCustodyCleared => 'العهدة';
+
+  @override
+  String get cleared => 'تم التسليم';
+
+  @override
+  String get notCleared => 'لم يتم التسليم';
 }

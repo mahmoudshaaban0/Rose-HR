@@ -12,7 +12,10 @@ class NewRequestSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.r),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg.r,
+        vertical: AppSpacing.xl.r,
+      ),
       decoration: BoxDecoration(
         color: context.colors.containerBackground,
         borderRadius: BorderRadius.circular(AppSpacing.lg.r),
@@ -26,34 +29,44 @@ class NewRequestSection extends StatelessWidget {
             style: context.typography.semiBold16,
           ),
           const AppDivider(),
-          Row(
-            spacing: AppSpacing.md.w,
-            children: [
-              RequestItem(
-                title: context.localizations.attendanceCorrection,
-                onTap: () {
-                  context.pushNamed(AppRoutes.punchCorrection.name);
-                },
-              ),
-              RequestItem(
-                title: context.localizations.workMission,
-                onTap: () {
-                  context.pushNamed(AppRoutes.workMission.name);
-                },
-              ),
-              RequestItem(
-                title: context.localizations.holidayRequest,
-                onTap: () {
-                  context.pushNamed(AppRoutes.holidayRequest.name);
-                },
-              ),
-              RequestItem(
-                title: context.localizations.permissionRequest,
-                onTap: () {
-                  context.pushNamed(AppRoutes.permissionRequest.name);
-                },
-              ),
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: Row(
+              spacing: AppSpacing.md.w,
+              children: [
+                RequestItem(
+                  title: context.localizations.attendanceCorrection,
+                  onTap: () {
+                    context.pushNamed(AppRoutes.punchCorrection.name);
+                  },
+                ),
+                RequestItem(
+                  title: context.localizations.workMission,
+                  onTap: () {
+                    context.pushNamed(AppRoutes.workMission.name);
+                  },
+                ),
+                RequestItem(
+                  title: context.localizations.holidayRequest,
+                  onTap: () {
+                    context.pushNamed(AppRoutes.holidayRequest.name);
+                  },
+                ),
+                RequestItem(
+                  title: context.localizations.permissionRequest,
+                  onTap: () {
+                    context.pushNamed(AppRoutes.permissionRequest.name);
+                  },
+                ),
+                RequestItem(
+                  title: context.localizations.resignation,
+                  onTap: () {
+                    context.pushNamed(AppRoutes.resignation.name);
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -73,7 +86,8 @@ class RequestItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return SizedBox(
+      width: 80.w,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
           padding: EdgeInsets.zero,
@@ -89,7 +103,10 @@ class RequestItem extends StatelessWidget {
           ),
           child: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.r, vertical: AppSpacing.xxxxl.r),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.md.r,
+              vertical: AppSpacing.xxxxl.r,
+            ),
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(

@@ -58,4 +58,6 @@ final class Env {
   static String attendanceLogs = _Env.attendanceLogs;
   @EnviedField(varName: 'registerDeviceToken', obfuscate: true)
   static String registerDeviceToken = _Env.registerDeviceToken;
+  @EnviedField(varName: 'createEos', obfuscate: true)
+  static String createEos = _Env.createEos;
 }

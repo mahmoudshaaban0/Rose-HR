@@ -8,6 +8,7 @@ import 'package:rose_hr/features/account/presentation/screens/update_account_scr
 import 'package:rose_hr/features/auth/presentation/screens/forget_password_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/login_screen.dart';
 import 'package:rose_hr/features/auth/presentation/screens/verification_screen.dart';
+import 'package:rose_hr/features/eos/presentation/screens/eos_screen.dart';
 import 'package:rose_hr/features/general_settings/presentation/screens/general_settings_screen.dart';
 import 'package:rose_hr/features/holiday_request/presentation/screens/holiday_request_screen.dart';
 import 'package:rose_hr/features/notifications/presentation/screens/notifications_screen.dart';
@@ -90,6 +91,11 @@ class AppRouter {
         name: AppRoutes.holidayRequest.name,
         path: AppRoutes.holidayRequest.path,
         builder: (context, state) => const HolidayRequestScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.resignation.name,
+        path: AppRoutes.resignation.path,
+        builder: (context, state) => const EosScreen(),
       ),
       GoRoute(
         name: AppRoutes.singleRequest.name,

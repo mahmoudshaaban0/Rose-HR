@@ -68,7 +68,11 @@ class SingleRequestScreen extends StatelessWidget {
         },
         child: Scaffold(
           appBar: PrimaryAppBar(
-            title: request?.recordType == 'hr.request' ? request?.reqRequestTypeDisplay ?? '' : request?.leaveTypeName ?? '',
+            title: switch (request?.recordType) {
+              'hr.request' => request?.reqRequestTypeDisplay ?? '',
+              'hr.end.of.service' => context.localizations.endOfServiceRequest,
+              _ => request?.leaveTypeName ?? '',
+            },
           ),
           body: SafeArea(
             child: BlocBuilder<SingleRequestCubit, SingleRequestState>(
@@ -164,6 +168,7 @@ class SingleRequestScreen extends StatelessWidget {
     final canCancel = _canCancelRequest(data.state);
     final isLeaveRequest = data.recordType == 'hr.leave';
     final isHrRequest = data.recordType == 'hr.request';
+    final isEosRequest = data.recordType == 'hr.end.of.service';
 
     return Column(
       children: [
@@ -439,6 +444,74 @@ class SingleRequestScreen extends StatelessWidget {
                         ],
 
                         // ══════════════════════════════════════════════════
+                        // HR.END.OF.SERVICE FIELDS
+                        // ══════════════════════════════════════════════════
+                        if (isEosRequest) ...[
+                          // Resignation reason badge
+                          if (!data.clrResignationReason.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsPulseLine,
+                              title: context.localizations.resignationReason,
+                              trailingWidget: _buildBadge(
+                                context,
+                                text: _resignationReasonLabel(
+                                  context,
+                                  data.clrResignationReason,
+                                ),
+                                bg: context.colors.surfaceDim,
+                                border: context.colors.info,
+                                textColor: context.colors.info,
+                              ),
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Last working day
+                          if (!data.clrLastWorkingDay.isNullOrEmpty) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsCalendarFill,
+                              title: context.localizations.lastWorkingDay,
+                              trailingText: _formatDate(data.clrLastWorkingDay),
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Service period
+                          if (data.clrServiceYears != null ||
+                              data.clrServiceMonths != null ||
+                              data.clrServiceDays != null) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsTime,
+                              title: context.localizations.servicePeriod,
+                              trailingText: _formatServicePeriod(context, data),
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+
+                          // Physical custody cleared
+                          if (data.clrPhysicalCustodyCleared != null) ...[
+                            RequestDetailRow(
+                              icon: Assets.vectorsPulseLine,
+                              title: context.localizations.physicalCustodyCleared,
+                              trailingWidget: _buildBadge(
+                                context,
+                                text: (data.clrPhysicalCustodyCleared ?? false)
+                                    ? context.localizations.cleared
+                                    : context.localizations.notCleared,
+                                bg: context.colors.surfaceDim,
+                                border: (data.clrPhysicalCustodyCleared ?? false)
+                                    ? context.colors.success
+                                    : context.colors.error,
+                                textColor: (data.clrPhysicalCustodyCleared ?? false)
+                                    ? context.colors.success
+                                    : context.colors.error,
+                              ),
+                            ),
+                            SizedBox(height: AppSpacing.md.h),
+                          ],
+                        ],
+
+                        // ══════════════════════════════════════════════════
                         // COMMON FIELDS (both hr.request and hr.leave)
                         // ══════════════════════════════════════════════════
 
@@ -515,6 +588,29 @@ class SingleRequestScreen extends StatelessWidget {
                           SizedBox(height: AppSpacing.md.h),
                         ],
 
+                        if (isEosRequest && !data.clrResignationReasonDetail.isNullOrEmpty) ...[
+                          const AppDivider(),
+                          SizedBox(height: AppSpacing.md.h),
+                          Text(
+                            context.localizations.resignationReasonDetail,
+                            style: context.typography.semiBold16,
+                          ),
+                          SizedBox(height: AppSpacing.sm.h),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(AppSpacing.md.r),
+                            decoration: BoxDecoration(
+                              color: context.colors.surface,
+                              borderRadius: BorderRadius.circular(AppSpacing.md.r),
+                            ),
+                            child: Text(
+                              data.clrResignationReasonDetail!,
+                              style: context.typography.medium16,
+                            ),
+                          ),
+                          SizedBox(height: AppSpacing.md.h),
+                        ],
+
                         // Attachments
                         if (data.attachments != null && data.attachments!.isNotEmpty) ...[
                           const AppDivider(),
@@ -533,8 +629,14 @@ class SingleRequestScreen extends StatelessWidget {
 
                   SizedBox(height: AppSpacing.md.h),
 
+                  // ── Settlement card (hr.end.of.service) ───────────────
+                  if (isEosRequest) ...[
+                    _buildSettlementCard(context, data),
+                    SizedBox(height: AppSpacing.md.h),
+                  ],
+
                   // ── Approval chain card ───────────────────────────────
-                  if (!data.reqManagerName.isNullOrEmpty)
+                  if (data.approvalChain != null && data.approvalChain!.isNotEmpty)
                     Container(
                       padding: EdgeInsets.all(AppSpacing.md.r),
                       decoration: BoxDecoration(
@@ -551,14 +653,12 @@ class SingleRequestScreen extends StatelessWidget {
                           SizedBox(height: AppSpacing.md.h),
                           ApprovalChainWidget(
                             employees: [
-                              ApprovalEmployee(
-                                name: data.reqManagerName!,
-                                status: data.state == 'approve' || data.state == 'done'
-                                    ? ApprovalStatus.approved
-                                    : data.state == 'refuse'
-                                    ? ApprovalStatus.rejected
-                                    : ApprovalStatus.pending,
-                              ),
+                              for (final step in data.approvalChain!)
+                                for (final name in step.approvalNames ?? <String>[])
+                                  ApprovalEmployee(
+                                    name: name,
+                                    status: ApprovalStatus.fromApi(step.approvalStatus),
+                                  ),
                             ],
                           ),
                           SizedBox(height: AppSpacing.md.h),
@@ -603,6 +703,102 @@ class SingleRequestScreen extends StatelessWidget {
           ),
       ],
     );
+  }
+
+  /// Financial breakdown card shown for end-of-service requests.
+  Widget _buildSettlementCard(BuildContext context, Data data) {
+    final rows = <Widget>[];
+
+    void addRow(String title, num? value, {bool isDeduction = false}) {
+      if (value == null) return;
+      rows
+        ..add(
+          RequestDetailRow(
+            icon: Assets.vectorsPulseLine,
+            title: title,
+            trailingText: '${isDeduction && value > 0 ? '-' : ''}${_formatAmount(value)}',
+          ),
+        )
+        ..add(SizedBox(height: AppSpacing.md.h));
+    }
+
+    addRow(context.localizations.totalSalary, data.clrTotalSalary);
+    addRow(context.localizations.leaveBalanceDays, data.clrLeaveBalanceDays);
+    addRow(context.localizations.leaveBalanceAmount, data.clrLeaveBalanceAmount);
+    addRow(context.localizations.eosGratuity, data.clrEosGratuity);
+    addRow(context.localizations.totalAdditions, data.clrTotalAdditions);
+    addRow(context.localizations.loanSettlement, data.clrLoanSettlement, isDeduction: true);
+    addRow(context.localizations.totalDeductions, data.clrTotalDeductions, isDeduction: true);
+
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.md.r),
+      decoration: BoxDecoration(
+        color: context.colors.containerBackground,
+        borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.localizations.settlementDetails,
+            style: context.typography.semiBold16,
+          ),
+          SizedBox(height: AppSpacing.md.h),
+          const AppDivider(),
+          SizedBox(height: AppSpacing.md.h),
+          ...rows,
+          if (data.clrNetAmount != null) ...[
+            const AppDivider(),
+            SizedBox(height: AppSpacing.md.h),
+            Row(
+              children: [
+                Text(
+                  context.localizations.netAmount,
+                  style: context.typography.semiBold16,
+                ),
+                const Spacer(),
+                Text(
+                  _formatAmount(data.clrNetAmount!),
+                  style: context.typography.semiBold18.copyWith(
+                    color: context.colors.success,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Maps the raw resignation reason key to a localized label.
+  String _resignationReasonLabel(BuildContext context, String? reason) {
+    return switch (reason) {
+      'resignation' => context.localizations.resignationReasonResignation,
+      'termination' => context.localizations.resignationReasonTermination,
+      _ => reason ?? '',
+    };
+  }
+
+  /// Builds a "1 years 11 months 7 days" style service period string,
+  /// skipping any zero components.
+  String _formatServicePeriod(BuildContext context, Data data) {
+    final parts = <String>[];
+    if ((data.clrServiceYears ?? 0) > 0) {
+      parts.add('${data.clrServiceYears} ${context.localizations.years}');
+    }
+    if ((data.clrServiceMonths ?? 0) > 0) {
+      parts.add('${data.clrServiceMonths} ${context.localizations.months}');
+    }
+    if ((data.clrServiceDays ?? 0) > 0) {
+      parts.add('${data.clrServiceDays} ${context.localizations.days}');
+    }
+    return parts.isEmpty ? '0 ${context.localizations.days}' : parts.join(' ');
+  }
+
+  /// Formats a numeric amount with thousands separators and 2 decimals.
+  String _formatAmount(num value) {
+    return NumberFormat('#,##0.00').format(value);
   }
 
   Widget _buildBadge(

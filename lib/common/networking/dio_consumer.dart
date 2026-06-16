@@ -149,20 +149,32 @@ class DioConsumer implements ApiConsumer {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        throw FetchDataException(backendMessage);
+        throw backendMessage != null
+            ? FetchDataException(backendMessage)
+            : const FetchDataException();
       case DioExceptionType.badResponse:
         switch (error.response?.statusCode) {
           case StatusCode.badRequest:
-            throw BadRequestException(backendMessage);
+            throw backendMessage != null
+                ? BadRequestException(backendMessage)
+                : const BadRequestException();
           case StatusCode.unauthorized:
           case StatusCode.forbidden:
-            throw UnauthorizedException(backendMessage);
+            throw backendMessage != null
+                ? UnauthorizedException(backendMessage)
+                : const UnauthorizedException();
           case StatusCode.notFound:
-            throw NotFoundException(backendMessage);
+            throw backendMessage != null
+                ? NotFoundException(backendMessage)
+                : const NotFoundException();
           case StatusCode.confilct:
-            throw ConflictException(backendMessage);
+            throw backendMessage != null
+                ? ConflictException(backendMessage)
+                : const ConflictException();
           case StatusCode.internalServerError:
-            throw InternalServerErrorException(backendMessage);
+            throw backendMessage != null
+                ? InternalServerErrorException(backendMessage)
+                : const InternalServerErrorException();
           default:
             // For any other status codes
             throw ServerException(
@@ -172,11 +184,17 @@ class DioConsumer implements ApiConsumer {
       case DioExceptionType.cancel:
         throw ServerException(backendMessage ?? 'Request was cancelled.');
       case DioExceptionType.unknown:
-        throw NoInternetConnectionException(backendMessage);
+        throw backendMessage != null
+            ? NoInternetConnectionException(backendMessage)
+            : const NoInternetConnectionException();
       case DioExceptionType.badCertificate:
-        throw BadCertificateException(backendMessage);
+        throw backendMessage != null
+            ? BadCertificateException(backendMessage)
+            : const BadCertificateException();
       case DioExceptionType.connectionError:
-        throw NoInternetConnectionException(backendMessage);
+        throw backendMessage != null
+            ? NoInternetConnectionException(backendMessage)
+            : const NoInternetConnectionException();
     }
   }
 

@@ -122,6 +122,12 @@ Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
   leaveBereavementType: json['leave_bereavement_type'] as bool?,
   leaveCanCancel: json['leave_can_cancel'] as bool?,
   leaveCanApprove: json['leave_can_approve'] as bool?,
+  clrLastWorkingDay: const FalseOrStringConverter().fromJson(
+    json['clr_last_working_day'],
+  ),
+  clrResignationReason: const FalseOrStringConverter().fromJson(
+    json['clr_resignation_reason'],
+  ),
 );
 
 Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
@@ -207,4 +213,10 @@ Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
   'leave_bereavement_type': instance.leaveBereavementType,
   'leave_can_cancel': instance.leaveCanCancel,
   'leave_can_approve': instance.leaveCanApprove,
+  'clr_last_working_day': const FalseOrStringConverter().toJson(
+    instance.clrLastWorkingDay,
+  ),
+  'clr_resignation_reason': const FalseOrStringConverter().toJson(
+    instance.clrResignationReason,
+  ),
 };

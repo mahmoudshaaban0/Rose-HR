@@ -79,6 +79,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get permissionRequest => 'Permission Request';
 
   @override
+  String get resignation => 'Resignation';
+
+  @override
   String get accuredLeaveBalance => 'Accured Leave Balance';
 
   @override
@@ -501,6 +504,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get approvalChain => 'Approval Chain';
 
   @override
+  String get approvalStatusPending => 'Pending';
+
+  @override
+  String get approvalStatusApproved => 'Approved';
+
+  @override
+  String get approvalStatusRejected => 'Rejected';
+
+  @override
   String get cancelRequestConfirmation =>
       'Are you sure you want to cancel this request?';
 
@@ -848,4 +860,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noAttendanceLogsFound => 'No attendance logs found for this day';
+
+  @override
+  String get resignationRequestTitle => 'Resignation Request';
+
+  @override
+  String get lastWorkingDay => 'Last Working Day';
+
+  @override
+  String get selectLastWorkingDay => 'Select last working day';
+
+  @override
+  String get resignationReason => 'Resignation Reason';
+
+  @override
+  String get selectResignationReason => 'Select reason';
+
+  @override
+  String get resignationReasonResignation => 'Resignation';
+
+  @override
+  String get resignationReasonTermination => 'Termination';
+
+  @override
+  String get resignationReasonDetail => 'Reason Details';
+
+  @override
+  String get enterResignationReasonHere => 'Enter your reason here if any...';
+
+  @override
+  String get failedToSendResignationRequest =>
+      'Failed to send resignation request';
+
+  @override
+  String get endOfServiceRequest => 'End of Service';
+
+  @override
+  String get settlementDetails => 'Settlement Details';
+
+  @override
+  String get servicePeriod => 'Service Period';
+
+  @override
+  String get years => 'years';
+
+  @override
+  String get totalSalary => 'Total Salary';
+
+  @override
+  String get leaveBalanceDays => 'Leave Balance (Days)';
+
+  @override
+  String get leaveBalanceAmount => 'Leave Balance Amount';
+
+  @override
+  String get loanSettlement => 'Loan Settlement';
+
+  @override
+  String get eosGratuity => 'End of Service Gratuity';
+
+  @override
+  String get totalAdditions => 'Total Additions';
+
+  @override
+  String get totalDeductions => 'Total Deductions';
+
+  @override
+  String get netAmount => 'Net Amount';
+
+  @override
+  String get physicalCustodyCleared => 'Physical Custody';
+
+  @override
+  String get cleared => 'Cleared';
+
+  @override
+  String get notCleared => 'Not Cleared';
 }

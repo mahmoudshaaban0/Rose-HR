@@ -236,6 +236,12 @@ abstract class AppLocalizations {
   /// **'Permission Request'**
   String get permissionRequest;
 
+  /// No description provided for @resignation.
+  ///
+  /// In en, this message translates to:
+  /// **'Resignation'**
+  String get resignation;
+
   /// No description provided for @accuredLeaveBalance.
   ///
   /// In en, this message translates to:
@@ -1058,6 +1064,24 @@ abstract class AppLocalizations {
   /// **'Approval Chain'**
   String get approvalChain;
 
+  /// No description provided for @approvalStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get approvalStatusPending;
+
+  /// No description provided for @approvalStatusApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get approvalStatusApproved;
+
+  /// No description provided for @approvalStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get approvalStatusRejected;
+
   /// No description provided for @cancelRequestConfirmation.
   ///
   /// In en, this message translates to:
@@ -1723,6 +1747,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No attendance logs found for this day'**
   String get noAttendanceLogsFound;
+
+  /// No description provided for @resignationRequestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Resignation Request'**
+  String get resignationRequestTitle;
+
+  /// No description provided for @lastWorkingDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Working Day'**
+  String get lastWorkingDay;
+
+  /// No description provided for @selectLastWorkingDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Select last working day'**
+  String get selectLastWorkingDay;
+
+  /// No description provided for @resignationReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Resignation Reason'**
+  String get resignationReason;
+
+  /// No description provided for @selectResignationReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Select reason'**
+  String get selectResignationReason;
+
+  /// No description provided for @resignationReasonResignation.
+  ///
+  /// In en, this message translates to:
+  /// **'Resignation'**
+  String get resignationReasonResignation;
+
+  /// No description provided for @resignationReasonTermination.
+  ///
+  /// In en, this message translates to:
+  /// **'Termination'**
+  String get resignationReasonTermination;
+
+  /// No description provided for @resignationReasonDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason Details'**
+  String get resignationReasonDetail;
+
+  /// No description provided for @enterResignationReasonHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your reason here if any...'**
+  String get enterResignationReasonHere;
+
+  /// No description provided for @failedToSendResignationRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send resignation request'**
+  String get failedToSendResignationRequest;
+
+  /// No description provided for @endOfServiceRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'End of Service'**
+  String get endOfServiceRequest;
+
+  /// No description provided for @settlementDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Settlement Details'**
+  String get settlementDetails;
+
+  /// No description provided for @servicePeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Period'**
+  String get servicePeriod;
+
+  /// No description provided for @years.
+  ///
+  /// In en, this message translates to:
+  /// **'years'**
+  String get years;
+
+  /// No description provided for @totalSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Salary'**
+  String get totalSalary;
+
+  /// No description provided for @leaveBalanceDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Balance (Days)'**
+  String get leaveBalanceDays;
+
+  /// No description provided for @leaveBalanceAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Balance Amount'**
+  String get leaveBalanceAmount;
+
+  /// No description provided for @loanSettlement.
+  ///
+  /// In en, this message translates to:
+  /// **'Loan Settlement'**
+  String get loanSettlement;
+
+  /// No description provided for @eosGratuity.
+  ///
+  /// In en, this message translates to:
+  /// **'End of Service Gratuity'**
+  String get eosGratuity;
+
+  /// No description provided for @totalAdditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Additions'**
+  String get totalAdditions;
+
+  /// No description provided for @totalDeductions.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Deductions'**
+  String get totalDeductions;
+
+  /// No description provided for @netAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Net Amount'**
+  String get netAmount;
+
+  /// No description provided for @physicalCustodyCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Physical Custody'**
+  String get physicalCustodyCleared;
+
+  /// No description provided for @cleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleared'**
+  String get cleared;
+
+  /// No description provided for @notCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Cleared'**
+  String get notCleared;
 }
 
 class _AppLocalizationsDelegate

@@ -11,6 +11,7 @@ enum AppRoutes {
   permissionRequest('/permission-request', 'Permission Request'),
   workMission('/work-mission', 'Work Mission'),
   holidayRequest('/holiday-request', 'Holiday Request'),
+  resignation('/resignation', 'Resignation'),
   singleRequest('/single-request', 'Single Request'),
   generalSettings('/general-settings', 'General Settings'),
   allPendingManagerRequests('/all-pending-manager-requests', 'All Pending Manager Requests'),

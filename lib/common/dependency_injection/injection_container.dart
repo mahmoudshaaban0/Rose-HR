@@ -17,6 +17,9 @@ import 'package:rose_hr/features/attendance/presentation/cubit/attendance_detail
 import 'package:rose_hr/features/auth/data/datasources/auth_datasource.dart';
 import 'package:rose_hr/features/auth/data/repositories/auth_repository.dart';
 import 'package:rose_hr/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:rose_hr/features/eos/data/datasources/eos_datasource.dart';
+import 'package:rose_hr/features/eos/data/repositories/eos_repository.dart';
+import 'package:rose_hr/features/eos/presentation/cubit/eos_cubit.dart';
 import 'package:rose_hr/features/holiday_request/data/datasources/holiday_request_datasource.dart';
 import 'package:rose_hr/features/holiday_request/data/repositories/holiday_request_repository.dart';
 import 'package:rose_hr/features/holiday_request/presentation/bloc/holiday_request_cubit.dart';
@@ -80,6 +83,9 @@ Future<void> init() async {
     ..registerLazySingleton<NotificationsDataSource>(
       () => NotificationsDataSource(sl<ApiConsumer>()),
     )
+    ..registerLazySingleton<EosDataSource>(
+      () => EosDataSource(sl<ApiConsumer>()),
+    )
     // Repositories
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepository(sl<AuthDataSource>()),
@@ -111,6 +117,9 @@ Future<void> init() async {
     ..registerLazySingleton<NotificationsRepository>(
       () => NotificationsRepository(sl<NotificationsDataSource>()),
     )
+    ..registerLazySingleton<EosRepository>(
+      () => EosRepository(sl<EosDataSource>()),
+    )
     // Cubits/Blocs
     ..registerFactory<AuthBloc>(() => AuthBloc(sl<AuthRepository>()))
     ..registerFactory<HomeCubit>(() => HomeCubit(sl<HomeRepository>()))
@@ -130,7 +139,10 @@ Future<void> init() async {
       () => ShiftIdCubit(sl<PermissionRequestRepository>()),
     )
     ..registerFactory<PunchCorrectionCubit>(
-      () => PunchCorrectionCubit(sl<PunchCorrectionRepository>(), sl<AttendanceRepository>()),
+      () => PunchCorrectionCubit(
+        sl<PunchCorrectionRepository>(),
+        sl<AttendanceRepository>(),
+      ),
     )
     ..registerFactory<FileUploadCubit>(FileUploadCubit.new)
     ..registerFactory<WorkMissionCubit>(
@@ -154,6 +166,9 @@ Future<void> init() async {
     ..registerFactory<NotificationsCubit>(
       () => NotificationsCubit(sl<NotificationsRepository>()),
     )
+    ..registerFactory<EosCubit>(
+      () => EosCubit(sl<EosRepository>(), sl<AccountRepository>()),
+    )
     ///! Core
     ..registerLazySingleton<NetworkInfo>(
       () => NetworkInfoImpl(connectivityChecker: sl()),
@@ -166,7 +181,7 @@ Future<void> init() async {
     ..registerLazySingleton<AppIntercepters>(AppIntercepters.new)
     ..registerLazySingleton<PrettyDioLogger>(
       () => PrettyDioLogger(
-        requestBody: false,
+        requestBody: true,
         requestHeader: true,
         responseHeader: true,
       ),

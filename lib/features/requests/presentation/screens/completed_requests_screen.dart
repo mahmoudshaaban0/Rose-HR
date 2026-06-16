@@ -98,12 +98,16 @@ class CompletedRequests extends StatelessWidget {
                         },
                       );
                     },
-                    requestType: request.recordType == 'hr.request'
-                        ? request.reqRequestTypeDisplay ?? ''
-                        : request.leaveTypeName ?? '',
-                    requestDate: request.recordType == 'hr.request'
-                        ? _formatDate(request.reqDate)
-                        : '${request.leaveDateFrom} - ${request.leaveDateTo}',
+                    requestType: switch (request.recordType) {
+                      'hr.request' => request.reqRequestTypeDisplay ?? '',
+                      'hr.end.of.service' => context.localizations.endOfServiceRequest,
+                      _ => request.leaveTypeName ?? '',
+                    },
+                    requestDate: switch (request.recordType) {
+                      'hr.request' => _formatDate(request.reqDate),
+                      'hr.end.of.service' => _formatDate(request.clrLastWorkingDay),
+                      _ => '${request.leaveDateFrom} - ${request.leaveDateTo}',
+                    },
                     requestNumber: request.name?.toString() ?? '',
                     requestStatus: request.stateDisplay ?? request.state ?? '',
                     requestColor: _getStatusColor(context, request.state),

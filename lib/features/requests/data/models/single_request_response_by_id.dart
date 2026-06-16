@@ -124,7 +124,23 @@ class Data {
     this.leaveBereavementType,
     this.leaveCanCancel,
     this.leaveCanApprove,
+    this.clrLastWorkingDay,
+    this.clrResignationReason,
+    this.clrResignationReasonDetail,
+    this.clrTotalSalary,
+    this.clrLeaveBalanceDays,
+    this.clrLeaveBalanceAmount,
+    this.clrLoanSettlement,
+    this.clrEosGratuity,
+    this.clrTotalAdditions,
+    this.clrTotalDeductions,
+    this.clrNetAmount,
+    this.clrServiceYears,
+    this.clrServiceMonths,
+    this.clrServiceDays,
+    this.clrPhysicalCustodyCleared,
     this.attachments,
+    this.approvalChain,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -239,10 +255,70 @@ class Data {
   bool? leaveCanCancel;
   @JsonKey(name: "leave_can_approve")
   bool? leaveCanApprove;
+
+  // ── End of service (hr.end.of.service) clearance fields ──────────────
+  @FalseOrStringConverter()
+  @JsonKey(name: "clr_last_working_day")
+  String? clrLastWorkingDay;
+  @FalseOrStringConverter()
+  @JsonKey(name: "clr_resignation_reason")
+  String? clrResignationReason;
+  @FalseOrStringConverter()
+  @JsonKey(name: "clr_resignation_reason_detail")
+  String? clrResignationReasonDetail;
+  @JsonKey(name: "clr_total_salary")
+  num? clrTotalSalary;
+  @JsonKey(name: "clr_leave_balance_days")
+  num? clrLeaveBalanceDays;
+  @JsonKey(name: "clr_leave_balance_amount")
+  num? clrLeaveBalanceAmount;
+  @JsonKey(name: "clr_loan_settlement")
+  num? clrLoanSettlement;
+  @JsonKey(name: "clr_eos_gratuity")
+  num? clrEosGratuity;
+  @JsonKey(name: "clr_total_additions")
+  num? clrTotalAdditions;
+  @JsonKey(name: "clr_total_deductions")
+  num? clrTotalDeductions;
+  @JsonKey(name: "clr_net_amount")
+  num? clrNetAmount;
+  @JsonKey(name: "clr_service_years")
+  int? clrServiceYears;
+  @JsonKey(name: "clr_service_months")
+  int? clrServiceMonths;
+  @JsonKey(name: "clr_service_days")
+  int? clrServiceDays;
+  @JsonKey(name: "clr_physical_custody_cleared")
+  bool? clrPhysicalCustodyCleared;
+
   @JsonKey(name: "attachments")
   List<Attachment>? attachments;
+  @JsonKey(name: "approval_chain")
+  List<ApprovalChainItem>? approvalChain;
 
   Map<String, dynamic> toJson() => _$DataToJson(this);
+}
+
+@JsonSerializable()
+class ApprovalChainItem {
+  ApprovalChainItem({
+    this.approvalNames,
+    this.approvalStatus,
+  });
+
+  factory ApprovalChainItem.fromJson(Map<String, dynamic> json) =>
+      _$ApprovalChainItemFromJson(json);
+
+  /// Names of the approvers for this step.
+  @JsonKey(name: "approval_names")
+  List<String>? approvalNames;
+
+  /// Raw status coming from the backend (English only):
+  /// "Pending", "Approved", "Rejected". An empty string means pending.
+  @JsonKey(name: "approval_status")
+  String? approvalStatus;
+
+  Map<String, dynamic> toJson() => _$ApprovalChainItemToJson(this);
 }
 
 @JsonSerializable()
