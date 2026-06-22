@@ -8,6 +8,8 @@ final class Env {
 
   @EnviedField(varName: 'BASE_URL', obfuscate: true)
   static String baseUrl = _Env.baseUrl;
+  @EnviedField(varName: 'BASE_URL_STG', obfuscate: true)
+  static String baseUrlStg = _Env.baseUrlStg;
   @EnviedField(varName: 'Authenticate', obfuscate: true)
   static String authenticate = _Env.authenticate;
   @EnviedField(varName: 'resetPassword', obfuscate: true)
@@ -60,4 +62,6 @@ final class Env {
   static String registerDeviceToken = _Env.registerDeviceToken;
   @EnviedField(varName: 'createEos', obfuscate: true)
   static String createEos = _Env.createEos;
+  @EnviedField(varName: 'home', obfuscate: true)
+  static String home = _Env.home;
 }

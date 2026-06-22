@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rose_hr/common/constants/app_assets.dart';
+import 'package:rose_hr/common/helpers/app_manager.dart';
 import 'package:rose_hr/common/routing/app_routes.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/features/account/presentation/widgets/account_menu_item.dart';
@@ -135,7 +136,9 @@ class _AccountScreenState extends State<AccountScreen> {
                 appButtonSize: AppButtonSize.xlarge,
                 label: context.localizations.logout,
                 overriddenBackgroundColor: context.colors.error,
-                onTap: () => context.goNamed(AppRoutes.login.name),
+                onTap: () {
+                  context.goNamed(AppRoutes.login.name);
+                },
               ),
             ),
           ],

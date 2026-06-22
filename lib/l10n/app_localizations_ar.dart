@@ -311,6 +311,66 @@ class AppLocalizationsAr extends AppLocalizations {
   String get lastName => 'الاسم الأخير';
 
   @override
+  String get fullName => 'الاسم كامل';
+
+  @override
+  String get employeeNumber => 'الرقم الوظيفي';
+
+  @override
+  String get workEmail => 'بريد العمل';
+
+  @override
+  String get jobTitle => 'المسمى الوظيفي';
+
+  @override
+  String get department => 'القسم';
+
+  @override
+  String get businessUnit => 'الوحدة';
+
+  @override
+  String get workLocation => 'موقع العمل';
+
+  @override
+  String get directManager => 'المدير المباشر';
+
+  @override
+  String get joinDate => 'تاريخ الانضمام';
+
+  @override
+  String get salaryInformation => 'بيانات الراتب';
+
+  @override
+  String get basicSalary => 'الراتب الأساسي';
+
+  @override
+  String get housingAllowance => 'بدل السكن';
+
+  @override
+  String get transportationAllowance => 'بدل المواصلات';
+
+  @override
+  String get communicationAllowance => 'بدل الاتصالات';
+
+  @override
+  String get supervisionAllowance => 'بدل الإشراف';
+
+  @override
+  String get excellenceAllowance => 'بدل التميز';
+
+  @override
+  String get transportationSupportAllowance => 'بدل دعم المواصلات';
+
+  @override
+  String get assignmentAllowance => 'بدل الانتداب';
+
+  @override
+  String get otherAllowance => 'بدلات أخرى';
+
+  @override
+  String get totalSalary => 'إجمالي الراتب';
+
+  @override
   String get requestNumber => 'رقم الطلــــب';
 
   @override
@@ -892,9 +952,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get years => 'سنوات';
-
-  @override
-  String get totalSalary => 'إجمالي الراتب';
 
   @override
   String get leaveBalanceDays => 'رصيد الإجازات (أيام)';

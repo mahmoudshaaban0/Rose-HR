@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/common/widgets/loading.dart';
@@ -13,10 +14,48 @@ class MyInformationAccountScreen extends StatefulWidget {
   const MyInformationAccountScreen({super.key});
 
   @override
-  State<MyInformationAccountScreen> createState() => _MyInformationAccountScreenState();
+  State<MyInformationAccountScreen> createState() =>
+      _MyInformationAccountScreenState();
 }
 
-class _MyInformationAccountScreenState extends State<MyInformationAccountScreen> {
+class _MyInformationAccountScreenState
+    extends State<MyInformationAccountScreen> {
+  bool _isEmpty(dynamic value) {
+    if (value == null) return true;
+    final text = value.toString().trim();
+    return text.isEmpty || text == 'null' || text == 'false';
+  }
+
+  String _money(dynamic value) {
+    final number = value is num ? value : num.tryParse(value.toString());
+    if (number == null) return value.toString();
+    return NumberFormat('#,##0.##').format(number);
+  }
+
+  /// Builds a titled section, dropping rows whose value is null/empty.
+  /// Returns `null` when no rows remain so the whole section is hidden.
+  Widget? _section(
+    BuildContext context,
+    String title,
+    List<MapEntry<String, dynamic>> rows,
+  ) {
+    final visible = rows.where((row) => !_isEmpty(row.value)).toList();
+    if (visible.isEmpty) return null;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: context.typography.semiBold18),
+        SizedBox(height: AppSpacing.sm.h),
+        for (var i = 0; i < visible.length; i++)
+          RowItem(
+            title: visible[i].key,
+            value: visible[i].value.toString(),
+            hasDivider: i != visible.length - 1,
+          ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -24,7 +63,8 @@ class _MyInformationAccountScreenState extends State<MyInformationAccountScreen>
       child: BlocConsumer<AccountCubit, AccountState>(
         listener: (context, state) {},
         builder: (context, state) {
-          if (state.status == AccountStatus.initial || state.status == AccountStatus.loading) {
+          if (state.status == AccountStatus.initial ||
+              state.status == AccountStatus.loading) {
             return Scaffold(
               backgroundColor: context.colors.containerBackground,
               appBar: PrimaryAppBar(title: context.localizations.personalData),
@@ -35,7 +75,12 @@ class _MyInformationAccountScreenState extends State<MyInformationAccountScreen>
             return Scaffold(
               backgroundColor: context.colors.containerBackground,
               appBar: PrimaryAppBar(title: context.localizations.personalData),
-              body: Center(child: Text(state.errorMessage ?? context.localizations.somethingWentWrong)),
+              body: Center(
+                child: Text(
+                  state.errorMessage ??
+                      context.localizations.somethingWentWrong,
+                ),
+              ),
             );
           }
           if (state.status == AccountStatus.success) {
@@ -43,7 +88,9 @@ class _MyInformationAccountScreenState extends State<MyInformationAccountScreen>
             if (accountResponseModel == null) {
               return Scaffold(
                 backgroundColor: context.colors.containerBackground,
-                appBar: PrimaryAppBar(title: context.localizations.personalData),
+                appBar: PrimaryAppBar(
+                  title: context.localizations.personalData,
+                ),
                 body: Center(child: Text(context.localizations.noData)),
               );
             }
@@ -51,7 +98,9 @@ class _MyInformationAccountScreenState extends State<MyInformationAccountScreen>
             if (data == null) {
               return Scaffold(
                 backgroundColor: context.colors.containerBackground,
-                appBar: PrimaryAppBar(title: context.localizations.personalData),
+                appBar: PrimaryAppBar(
+                  title: context.localizations.personalData,
+                ),
                 body: Center(child: Text(context.localizations.noData)),
               );
             }
@@ -93,7 +142,10 @@ class _MyInformationAccountScreenState extends State<MyInformationAccountScreen>
               ),
               body: SafeArea(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.r),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg.r,
+                    vertical: AppSpacing.xl.r,
+                  ),
                   child: RefreshIndicator.adaptive(
                     onRefresh: () async {
                       await context.read<AccountCubit>().getAccountInfo();
@@ -101,41 +153,188 @@ class _MyInformationAccountScreenState extends State<MyInformationAccountScreen>
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 8.h,
+                        spacing: AppSpacing.lg.h,
                         children: [
-                          Text(context.localizations.personalData, style: context.typography.semiBold18),
-                          RowItem(title: context.localizations.firstName, value: data.name.toString()),
-                          RowItem(title: context.localizations.lastName, value: data.name.toString().split(' ').last),
-                          RowItem(
-                            title: context.localizations.gender,
-                            value: data.gender.toString() == 'male' ? context.localizations.male : context.localizations.female,
+                          _section(
+                            context,
+                            context.localizations.personalData,
+                            [
+                              MapEntry(
+                                context.localizations.employeeNumber,
+                                data.pin,
+                              ),
+                              MapEntry(
+                                context.localizations.fullName,
+                                data.name,
+                              ),
+                              MapEntry(
+                                context.localizations.gender,
+                                data.gender == null
+                                    ? null
+                                    : data.gender.toString() == 'male'
+                                    ? context.localizations.male
+                                    : context.localizations.female,
+                              ),
+                              MapEntry(
+                                context.localizations.workEmail,
+                                data.workEmail,
+                              ),
+                              MapEntry(
+                                context.localizations.maritalStatus,
+                                data.marital,
+                              ),
+                              MapEntry(
+                                context.localizations.dateOfBirth,
+                                data.birthday,
+                              ),
+                              MapEntry(
+                                context.localizations.mobileNumber,
+                                data.phone,
+                              ),
+                            ],
                           ),
-                          RowItem(title: context.localizations.emailAddress, value: data.privateEmail.toString()),
-                          RowItem(title: context.localizations.maritalStatus, value: data.marital.toString()),
-                          RowItem(title: context.localizations.dateOfBirth, value: data.birthday.toString()),
-                          RowItem(title: context.localizations.mobileNumber, value: data.phone.toString(), hasDivider: false),
-                          SizedBox(height: AppSpacing.sm.h),
-                          Text(context.localizations.identityDetails, style: context.typography.semiBold18),
-                          RowItem(title: context.localizations.nationality, value: data.country.toString()),
-                          RowItem(title: context.localizations.religion, value: context.localizations.muslim),
-                          RowItem(title: context.localizations.identityType, value: '12345678901234'),
-                          RowItem(title: context.localizations.identityNumber, value: context.localizations.egyptian),
-                          RowItem(title: context.localizations.identityExpiryDate, value: '1999-01-01'),
-                          SizedBox(height: AppSpacing.sm.h),
-                          Text(context.localizations.address, style: context.typography.semiBold18),
-                          RowItem(title: context.localizations.buildingNumber, value: '1234567890'),
-                          RowItem(title: context.localizations.streetName, value: 'محمد علي'),
-                          RowItem(title: context.localizations.district, value: 'المنطقة الشرقية'),
-                          RowItem(title: context.localizations.city, value: 'الرياض'),
-                          RowItem(title: context.localizations.postalCode, value: '123456'),
-                          SizedBox(height: AppSpacing.sm.h),
-                          Text(context.localizations.bankAccountDetails, style: context.typography.semiBold18),
-                          RowItem(title: context.localizations.bankName, value: data.bankAccount?.bankName.toString() ?? ''),
-                          RowItem(
-                            title: context.localizations.ibanNumber,
-                            value: data.bankAccount?.accountNumber.toString() ?? '',
+                          _section(
+                            context,
+                            context.localizations.employmentData,
+                            [
+                              MapEntry(
+                                context.localizations.joinDate,
+                                data.joinDate,
+                              ),
+                              MapEntry(
+                                context.localizations.jobTitle,
+                                data.jobPosition,
+                              ),
+                              MapEntry(
+                                context.localizations.department,
+                                data.department,
+                              ),
+                              MapEntry(
+                                context.localizations.businessUnit,
+                                data.businessUnit,
+                              ),
+                              MapEntry(
+                                context.localizations.workLocation,
+                                data.workLocation,
+                              ),
+                              MapEntry(
+                                context.localizations.directManager,
+                                data.directManager,
+                              ),
+                            ],
                           ),
-                        ],
+                          _section(
+                            context,
+                            context.localizations.identityDetails,
+                            [
+                              MapEntry(
+                                context.localizations.nationality,
+                                data.country,
+                              ),
+                              MapEntry(
+                                context.localizations.religion,
+                                data.religion,
+                              ),
+                              MapEntry(
+                                context.localizations.identityNumber,
+                                data.iqamaNumber,
+                              ),
+                              MapEntry(
+                                context.localizations.identityExpiryDate,
+                                data.iqamaExpiryDate,
+                              ),
+                            ],
+                          ),
+                          _section(context, context.localizations.address, [
+                            MapEntry(
+                              context.localizations.buildingNumber,
+                              data.buildingNumber,
+                            ),
+                            MapEntry(
+                              context.localizations.streetName,
+                              data.street,
+                            ),
+                            MapEntry(
+                              context.localizations.district,
+                              data.state,
+                            ),
+                            MapEntry(context.localizations.city, data.city),
+                            MapEntry(
+                              context.localizations.postalCode,
+                              data.zip,
+                            ),
+                          ]),
+                          _section(
+                            context,
+                            context.localizations.salaryInformation,
+                            [
+                              MapEntry(
+                                context.localizations.basicSalary,
+                                _isEmpty(data.basicSalary)
+                                    ? null
+                                    : _money(data.basicSalary),
+                              ),
+                              MapEntry(
+                                context.localizations.housingAllowance,
+                                _isEmpty(data.housingAllowance)
+                                    ? null
+                                    : _money(data.housingAllowance),
+                              ),
+                              MapEntry(
+                                context.localizations.transportationAllowance,
+                                _isEmpty(data.transportationAllowance)
+                                    ? null
+                                    : _money(data.transportationAllowance),
+                              ),
+                              MapEntry(
+                                context.localizations.communicationAllowance,
+                                _isEmpty(data.communicationAllowance)
+                                    ? null
+                                    : _money(data.communicationAllowance),
+                              ),
+                              MapEntry(
+                                context.localizations.supervisionAllowance,
+                                _isEmpty(data.supervisionAllowance)
+                                    ? null
+                                    : _money(data.supervisionAllowance),
+                              ),
+                              MapEntry(
+                                context.localizations.excellenceAllowance,
+                                _isEmpty(data.excellenceAllowance)
+                                    ? null
+                                    : _money(data.excellenceAllowance),
+                              ),
+                              MapEntry(
+                                context
+                                    .localizations
+                                    .transportationSupportAllowance,
+                                _isEmpty(data.transportationSupportAllowance)
+                                    ? null
+                                    : _money(
+                                        data.transportationSupportAllowance,
+                                      ),
+                              ),
+                              MapEntry(
+                                context.localizations.assignmentAllowance,
+                                _isEmpty(data.assignmentAllowance)
+                                    ? null
+                                    : _money(data.assignmentAllowance),
+                              ),
+                              MapEntry(
+                                context.localizations.otherAllowance,
+                                _isEmpty(data.otherAllowance)
+                                    ? null
+                                    : _money(data.otherAllowance),
+                              ),
+                              MapEntry(
+                                context.localizations.totalSalary,
+                                _isEmpty(data.totalSalary)
+                                    ? null
+                                    : _money(data.totalSalary),
+                              ),
+                            ],
+                          ),
+                        ].whereType<Widget>().toList(),
                       ),
                     ),
                   ),

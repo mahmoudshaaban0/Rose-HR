@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/timezone_manager.dart';
+import 'package:rose_hr/features/home/presentation/cubit/home_cubit.dart';
 import 'package:rose_hr/features/home/presentation/cubit/timezone_cubit.dart';
 import 'package:rose_hr/features/home/presentation/widgets/header_shift_section.dart';
 import 'package:rose_hr/features/home/presentation/widgets/holidays_section.dart';
@@ -25,6 +26,9 @@ class HomeScreen extends StatelessWidget {
           create: (context) =>
               sl<PendingRequestsCubit>()..getPendingManagerRequests(),
         ),
+        BlocProvider(
+          create: (context) => sl<HomeCubit>()..getHome(),
+        ),
       ],
       child: Builder(
         builder: (context) {
@@ -33,14 +37,14 @@ class HomeScreen extends StatelessWidget {
               child: RefreshIndicator.adaptive(
                 onRefresh: () async {
                   await TimezoneManager.refreshFromGps();
-                  if (context.mounted) {
-                    await context.read<TimezoneCubit>().refreshTimezone();
-                    if (context.mounted) {
-                      await context
-                          .read<PendingRequestsCubit>()
-                          .getPendingManagerRequests();
-                    }
-                  }
+                  if (!context.mounted) return;
+                  await Future.wait([
+                    context.read<TimezoneCubit>().refreshTimezone(),
+                    context
+                        .read<PendingRequestsCubit>()
+                        .getPendingManagerRequests(),
+                    context.read<HomeCubit>().getHome(),
+                  ]);
                 },
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),

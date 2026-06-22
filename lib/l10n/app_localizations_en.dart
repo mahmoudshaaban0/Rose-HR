@@ -310,6 +310,67 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastName => 'Last Name';
 
   @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get employeeNumber => 'Employee Number';
+
+  @override
+  String get workEmail => 'Work Email';
+
+  @override
+  String get jobTitle => 'Job Title';
+
+  @override
+  String get department => 'Department';
+
+  @override
+  String get businessUnit => 'Business Unit';
+
+  @override
+  String get workLocation => 'Work Location';
+
+  @override
+  String get directManager => 'Direct Manager';
+
+  @override
+  String get joinDate => 'Join Date';
+
+  @override
+  String get salaryInformation => 'Salary Information';
+
+  @override
+  String get basicSalary => 'Basic Salary';
+
+  @override
+  String get housingAllowance => 'Housing Allowance';
+
+  @override
+  String get transportationAllowance => 'Transportation Allowance';
+
+  @override
+  String get communicationAllowance => 'Communication Allowance';
+
+  @override
+  String get supervisionAllowance => 'Supervision Allowance';
+
+  @override
+  String get excellenceAllowance => 'Excellence Allowance';
+
+  @override
+  String get transportationSupportAllowance =>
+      'Transportation Support Allowance';
+
+  @override
+  String get assignmentAllowance => 'Assignment Allowance';
+
+  @override
+  String get otherAllowance => 'Other Allowance';
+
+  @override
+  String get totalSalary => 'Total Salary';
+
+  @override
   String get requestNumber => 'Request Number';
 
   @override
@@ -903,9 +964,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get years => 'years';
-
-  @override
-  String get totalSalary => 'Total Salary';
 
   @override
   String get leaveBalanceDays => 'Leave Balance (Days)';

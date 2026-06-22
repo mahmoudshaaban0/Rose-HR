@@ -335,13 +335,20 @@ class _PerShiftWorkHours extends StatelessWidget {
   final ShiftData shift;
   final bool isAbsence;
 
-  /// Formats a time string like "06:00:00" to 12-hour format with AM/PM
+  /// Formats a time string like "06:00:00" to 12-hour format with AM/PM.
+  ///
+  /// The backend sends shift times in UTC, so convert to the user's local
+  /// timezone before formatting.
   String _formatShiftTime(BuildContext context, String? timeStr) {
     if (timeStr == null || timeStr.isEmpty) {
       return context.localizations.timeUnavailablePlaceholder;
     }
     try {
-      final parts = timeStr.split(':');
+      final localTimeStr = convertUtcTimeToLocal(timeStr);
+      if (localTimeStr == null) {
+        return context.localizations.timeUnavailablePlaceholder;
+      }
+      final parts = localTimeStr.split(':');
       if (parts.isEmpty) return context.localizations.timeUnavailablePlaceholder;
       final hour = int.tryParse(parts[0]) ?? 0;
       final minute = parts.length > 1 ? int.tryParse(parts[1]) ?? 0 : 0;

@@ -692,6 +692,126 @@ abstract class AppLocalizations {
   /// **'Last Name'**
   String get lastName;
 
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullName;
+
+  /// No description provided for @employeeNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee Number'**
+  String get employeeNumber;
+
+  /// No description provided for @workEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Email'**
+  String get workEmail;
+
+  /// No description provided for @jobTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Title'**
+  String get jobTitle;
+
+  /// No description provided for @department.
+  ///
+  /// In en, this message translates to:
+  /// **'Department'**
+  String get department;
+
+  /// No description provided for @businessUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Unit'**
+  String get businessUnit;
+
+  /// No description provided for @workLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Location'**
+  String get workLocation;
+
+  /// No description provided for @directManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct Manager'**
+  String get directManager;
+
+  /// No description provided for @joinDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Date'**
+  String get joinDate;
+
+  /// No description provided for @salaryInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary Information'**
+  String get salaryInformation;
+
+  /// No description provided for @basicSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Salary'**
+  String get basicSalary;
+
+  /// No description provided for @housingAllowance.
+  ///
+  /// In en, this message translates to:
+  /// **'Housing Allowance'**
+  String get housingAllowance;
+
+  /// No description provided for @transportationAllowance.
+  ///
+  /// In en, this message translates to:
+  /// **'Transportation Allowance'**
+  String get transportationAllowance;
+
+  /// No description provided for @communicationAllowance.
+  ///
+  /// In en, this message translates to:
+  /// **'Communication Allowance'**
+  String get communicationAllowance;
+
+  /// No description provided for @supervisionAllowance.
+  ///
+  /// In en, this message translates to:
+  /// **'Supervision Allowance'**
+  String get supervisionAllowance;
+
+  /// No description provided for @excellenceAllowance.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellence Allowance'**
+  String get excellenceAllowance;
+
+  /// No description provided for @transportationSupportAllowance.
+  ///
+  /// In en, this message translates to:
+  /// **'Transportation Support Allowance'**
+  String get transportationSupportAllowance;
+
+  /// No description provided for @assignmentAllowance.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment Allowance'**
+  String get assignmentAllowance;
+
+  /// No description provided for @otherAllowance.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Allowance'**
+  String get otherAllowance;
+
+  /// No description provided for @totalSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Salary'**
+  String get totalSalary;
+
   /// No description provided for @requestNumber.
   ///
   /// In en, this message translates to:
@@ -1831,12 +1951,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'years'**
   String get years;
-
-  /// No description provided for @totalSalary.
-  ///
-  /// In en, this message translates to:
-  /// **'Total Salary'**
-  String get totalSalary;
 
   /// No description provided for @leaveBalanceDays.
   ///

@@ -3,6 +3,7 @@ import 'package:rose_hr/common/networking/api_consumer.dart';
 import 'package:rose_hr/features/home/data/models/create_attendance_punch_request.dart';
 import 'package:rose_hr/features/home/data/models/create_attendance_punch_response.dart';
 import 'package:rose_hr/features/home/data/models/current_shift_response.dart';
+import 'package:rose_hr/features/home/data/models/home_response.dart';
 
 class HomeDataSource {
   HomeDataSource(this.apiConsumer);
@@ -21,5 +22,10 @@ class HomeDataSource {
   Future<CurrentShiftResponse> getCurrentShift() async {
     final response = await apiConsumer.get(Env.getCurrentShift);
     return CurrentShiftResponse.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<HomeResponse> getHome() async {
+    final response = await apiConsumer.get(Env.home);
+    return HomeResponse.fromJson(response as Map<String, dynamic>);
   }
 }
