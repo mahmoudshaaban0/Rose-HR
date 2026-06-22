@@ -72,7 +72,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   spacing: AppSpacing.md.h,
                   children: [
-                    Expanded(child: Image.asset(Assets.rastersLoginBackgroundImage)),
+                    Expanded(
+                      child: Image.asset(Assets.rastersLoginBackgroundImage),
+                    ),
                     Container(
                       padding: EdgeInsets.all(AppSpacing.md.h),
                       decoration: BoxDecoration(
@@ -80,27 +82,41 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(AppSpacing.xxxl.r),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSpacing.md.h,
+                        ),
                         child: Form(
                           key: _formKey,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             spacing: AppSpacing.lg.h,
                             children: [
-                              Text(context.localizations.login, style: context.typography.bold22),
+                              Text(
+                                context.localizations.login,
+                                style: context.typography.bold22,
+                              ),
                               AppTextField(
-                                prefixIcon: const AppVectorGraphic(path: Assets.vectorsEmailIcon),
-                                validator: (value) => AuthHelper.validateEmail(context, value),
+                                keyboardType: TextInputType.text,
+                                prefixIcon: const AppVectorGraphic(
+                                  path: Assets.vectorsEmailIcon,
+                                ),
+                                validator: (value) =>
+                                    AuthHelper.validateEmail(context, value),
                                 title: context.localizations.email,
-                                hintTextLabel: context.localizations.pleaseEnterYourEmail,
+                                hintTextLabel:
+                                    context.localizations.pleaseEnterYourEmail,
                                 required: true,
                                 controller: _emailController,
                               ),
                               AppTextField(
-                                prefixIcon: const AppVectorGraphic(path: Assets.vectorsPasswordIcon),
+                                prefixIcon: const AppVectorGraphic(
+                                  path: Assets.vectorsPasswordIcon,
+                                ),
                                 // validator: (value) => AuthHelper.validatePassword(context, value),
                                 title: context.localizations.password,
-                                hintTextLabel: context.localizations.pleaseEnterYourPassword,
+                                hintTextLabel: context
+                                    .localizations
+                                    .pleaseEnterYourPassword,
                                 required: true,
                                 suffixIcon: InkWell(
                                   onTap: () {
@@ -109,15 +125,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                     });
                                   },
                                   child: _obscurePassword
-                                      ? const AppVectorGraphic(path: Assets.vectorsPasswordVisible)
-                                      : const AppVectorGraphic(path: Assets.vectorsVisibilityOff),
+                                      ? const AppVectorGraphic(
+                                          path: Assets.vectorsPasswordVisible,
+                                        )
+                                      : const AppVectorGraphic(
+                                          path: Assets.vectorsVisibilityOff,
+                                        ),
                                 ),
                                 obscureText: _obscurePassword,
                                 controller: _passwordController,
                               ),
                               InkWell(
                                 onTap: () {
-                                  context.pushNamed(AppRoutes.forgetPassword.name);
+                                  context.pushNamed(
+                                    AppRoutes.forgetPassword.name,
+                                  );
                                 },
                                 child: Text(
                                   context.localizations.forgetPassword,

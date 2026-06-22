@@ -40,13 +40,19 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
   /// Formats a 24-hour time value to 12-hour format with AM/PM
   String _formatHourTo12Hour(BuildContext context, int? hour) {
     if (hour == null) return context.localizations.timeUnavailablePlaceholder;
-    final period = hour >= 12 ? context.localizations.timePeriodPm : context.localizations.timePeriodAm;
+    final period = hour >= 12
+        ? context.localizations.timePeriodPm
+        : context.localizations.timePeriodAm;
     final hour12 = hour % 12 == 0 ? 12 : hour % 12;
     return '$hour12:00 $period ';
   }
 
   /// Formats shift hours range from 24-hour to 12-hour format
-  String _formatShiftHours(BuildContext context, int? shiftHourFrom, int? shiftHourTo) {
+  String _formatShiftHours(
+    BuildContext context,
+    int? shiftHourFrom,
+    int? shiftHourTo,
+  ) {
     return '${_formatHourTo12Hour(context, shiftHourFrom)} - ${_formatHourTo12Hour(context, shiftHourTo)}';
   }
 
@@ -54,7 +60,10 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
   /// Returns a map with hours, minutes, and isEnded status
   /// Returns null if shift data is unavailable
   /// Only shows time remaining if current time is within the shift period
-  Map<String, dynamic>? _calculateTimeRemaining(int? shiftHourFrom, int? shiftHourTo) {
+  Map<String, dynamic>? _calculateTimeRemaining(
+    int? shiftHourFrom,
+    int? shiftHourTo,
+  ) {
     if (shiftHourFrom == null || shiftHourTo == null) return null;
 
     final now = DateTime.now();
@@ -62,7 +71,8 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
     final shiftEnd = DateTime(now.year, now.month, now.day, shiftHourTo);
 
     // Handle night shifts (shift that crosses midnight)
-    final isNightShift = shiftEnd.isBefore(shiftStart) || shiftEnd.isAtSameMomentAs(shiftStart);
+    final isNightShift =
+        shiftEnd.isBefore(shiftStart) || shiftEnd.isAtSameMomentAs(shiftStart);
 
     DateTime effectiveShiftStart = shiftStart;
     DateTime effectiveShiftEnd = shiftEnd;
@@ -79,7 +89,8 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
     }
 
     // Check if current time is within shift period
-    final isWithinShift = now.isAfter(effectiveShiftStart) && now.isBefore(effectiveShiftEnd);
+    final isWithinShift =
+        now.isAfter(effectiveShiftStart) && now.isBefore(effectiveShiftEnd);
 
     if (!isWithinShift) {
       // Shift hasn't started yet or has already ended
@@ -101,7 +112,10 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
   }
 
   /// Formats the countdown display with localized labels
-  String _formatCountdown(BuildContext context, Map<String, dynamic>? timeRemaining) {
+  String _formatCountdown(
+    BuildContext context,
+    Map<String, dynamic>? timeRemaining,
+  ) {
     if (timeRemaining == null) {
       return context.localizations.timeUnavailablePlaceholder;
     }
@@ -122,8 +136,11 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
         builder: (context) {
           // Start countdown timer when shift data is loaded
           context.read<ShiftCubit>().stream.listen((state) {
-            if (state.status == ShiftStatus.success && _countdownTimer == null) {
-              _countdownTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+            if (state.status == ShiftStatus.success &&
+                _countdownTimer == null) {
+              _countdownTimer = Timer.periodic(const Duration(seconds: 30), (
+                _,
+              ) {
                 if (mounted) {
                   setState(() {
                     // Timer triggers rebuild every 30 seconds to update countdown
@@ -145,9 +162,13 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                     builder: (context, state) {
                       // Default values for initial/loading/detecting states
                       final formattedDateTime = state is TimezoneLoaded
-                          ? state.getFormattedDateTime(context: context, locale: context.localizations.localeName)
+                          ? state.getFormattedDateTime(
+                              context: context,
+                              locale: context.localizations.localeName,
+                            )
                           : context.localizations.loadingEllipsis;
-                      final cityName = (state is TimezoneLoaded && !state.isDetecting)
+                      final cityName =
+                          (state is TimezoneLoaded && !state.isDetecting)
                           ? (state.cityName ?? state.locationName)
                           : context.localizations.loadingEllipsis;
 
@@ -163,7 +184,9 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                       }
 
                       return Container(
-                        margin: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: AppSpacing.xxl.r,
+                        ),
                         padding: EdgeInsets.symmetric(
                           horizontal: AppSpacing.lg.r,
                           vertical: AppSpacing.xl.r,
@@ -190,12 +213,18 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: context.colors.surface,
-                                    borderRadius: BorderRadius.circular(AppSpacing.sm.r),
-                                    border: Border.all(color: context.colors.containerBorder),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.sm.r,
+                                    ),
+                                    border: Border.all(
+                                      color: context.colors.containerBorder,
+                                    ),
                                   ),
                                   child: Row(
                                     children: [
-                                      const AppVectorGraphic(path: Assets.vectorsLocationIcon),
+                                      const AppVectorGraphic(
+                                        path: Assets.vectorsLocationIcon,
+                                      ),
                                       SizedBox(width: AppSpacing.xs.r),
                                       Text(
                                         cityName,
@@ -209,19 +238,27 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                             // Dynamic countdown based on shift
                             BlocBuilder<ShiftCubit, ShiftState>(
                               builder: (context, shiftState) {
-                                final shiftData = shiftState.currentShiftResponse?.result?.data;
+                                final shiftData = shiftState
+                                    .currentShiftResponse
+                                    ?.result
+                                    ?.data;
                                 final timeRemaining = _calculateTimeRemaining(
                                   shiftData?.shiftHourFrom,
                                   shiftData?.shiftHourTo,
                                 );
-                                final countdownText = _formatCountdown(context, timeRemaining);
+                                final countdownText = _formatCountdown(
+                                  context,
+                                  timeRemaining,
+                                );
 
                                 return Text.rich(
                                   textAlign: TextAlign.center,
                                   TextSpan(
                                     children: [
                                       TextSpan(
-                                        text: context.localizations.timeLeftUntilYourShiftEnds,
+                                        text: context
+                                            .localizations
+                                            .timeLeftUntilYourShiftEnds,
                                         style: context.typography.regular16,
                                       ),
                                       TextSpan(
@@ -275,13 +312,16 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
 
   BottomSheetWrapper goToPermissionBottomSheet(BuildContext context) {
     return BottomSheetWrapper(
-      initialSize: 0.18.h,
-      maxChildSize: 0.18.h,
+      initialSize: 0.2.h,
+      maxChildSize: 0.2.h,
       removeAutoScroll: true,
       disableDrag: true,
       useRootNavigator: true,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r, vertical: AppSpacing.xl.r),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.xxl.r,
+          vertical: AppSpacing.xl.r,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: AppSpacing.md.h,
@@ -305,14 +345,26 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
   }
 
   BottomSheetWrapper ordinaryClockInClockOutBottomSheet(BuildContext context) {
+    // Account for the Android/iOS system navigation bar so the punch button is
+    // never hidden behind it. Grow the sheet by the bottom inset and pad the
+    // content by the same amount.
+    final screenHeight = MediaQuery.sizeOf(context).height;
+    final bottomInset = MediaQuery.viewPaddingOf(context).bottom;
+    final sheetSize = (0.42.h + bottomInset / screenHeight).clamp(0.0, 1.0);
+
     return BottomSheetWrapper(
-      initialSize: 0.37.h,
-      maxChildSize: 0.37.h,
+      initialSize: sheetSize,
+      maxChildSize: sheetSize,
       removeAutoScroll: true,
       disableDrag: true,
       useRootNavigator: true,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.r, vertical: AppSpacing.xl.r),
+        padding: EdgeInsets.only(
+          left: AppSpacing.xxl.r,
+          right: AppSpacing.xxl.r,
+          top: AppSpacing.xl.r,
+          bottom: AppSpacing.xl.r + bottomInset,
+        ),
         child: MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => sl<TimezoneCubit>()),
@@ -330,21 +382,26 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                 children: [
                   BlocBuilder<ShiftCubit, ShiftState>(
                     builder: (context, state) {
-                      if (state.locationCheckStatus == LocationCheckStatus.checkingBetweenRadiusLoading) {
+                      if (state.locationCheckStatus ==
+                          LocationCheckStatus.checkingBetweenRadiusLoading) {
                         return Shimmer.fromColors(
                           baseColor: context.colors.surfaceVariant,
                           highlightColor: context.colors.surface,
                           child: Container(
                             decoration: BoxDecoration(
                               color: context.colors.surfaceVariant,
-                              borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.xxl.r,
+                              ),
                             ),
                             width: 100.w,
                             height: 18.h,
                           ),
                         );
                       }
-                      if (state.locationCheckStatus == LocationCheckStatus.checkedBetweenRadiusSuccessfully &&
+                      if (state.locationCheckStatus ==
+                              LocationCheckStatus
+                                  .checkedBetweenRadiusSuccessfully &&
                           state.isWithinRadius != null &&
                           state.isWithinRadius!) {
                         return Text(
@@ -353,7 +410,9 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                             color: context.colors.success,
                           ),
                         );
-                      } else if (state.locationCheckStatus == LocationCheckStatus.checkedBetweenRadiusSuccessfully &&
+                      } else if (state.locationCheckStatus ==
+                              LocationCheckStatus
+                                  .checkedBetweenRadiusSuccessfully &&
                           state.isWithinRadius != null &&
                           !state.isWithinRadius!) {
                         return Text(
@@ -381,7 +440,9 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const AppVectorGraphic(path: Assets.vectorsLocationIcon),
+                        const AppVectorGraphic(
+                          path: Assets.vectorsLocationIcon,
+                        ),
                         SizedBox(width: AppSpacing.xs.r),
                         BlocBuilder<TimezoneCubit, TimezoneState>(
                           builder: (context, state) {
@@ -414,7 +475,11 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                         borderRadius: BorderRadius.circular(AppSpacing.xxl.r),
                       ),
                       child: Text(
-                        _formatShiftHours(context, shiftData?.shiftHourFrom, shiftData?.shiftHourTo),
+                        _formatShiftHours(
+                          context,
+                          shiftData?.shiftHourFrom,
+                          shiftData?.shiftHourTo,
+                        ),
                         style: context.typography.regular16,
                       ),
                     );
@@ -440,7 +505,9 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
               BlocBuilder<TimezoneCubit, TimezoneState>(
                 builder: (context, state) {
                   final date = state is TimezoneLoaded
-                      ? state.getFormattedDate(locale: context.localizations.localeName)
+                      ? state.getFormattedDate(
+                          locale: context.localizations.localeName,
+                        )
                       : context.localizations.loadingEllipsis;
                   return Text(
                     date,
@@ -463,32 +530,54 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
               ),
               BlocBuilder<ShiftCubit, ShiftState>(
                 builder: (context, shiftState) {
-                  final isLocationLoading = shiftState.locationCheckStatus == LocationCheckStatus.checkingBetweenRadiusLoading;
+                  final isLocationLoading =
+                      shiftState.locationCheckStatus ==
+                      LocationCheckStatus.checkingBetweenRadiusLoading;
                   final isOutOfRange =
-                      shiftState.locationCheckStatus == LocationCheckStatus.checkedBetweenRadiusSuccessfully &&
+                      shiftState.locationCheckStatus ==
+                          LocationCheckStatus
+                              .checkedBetweenRadiusSuccessfully &&
                       shiftState.isWithinRadius == false;
                   final isLocationDisabled =
-                      isLocationLoading || isOutOfRange || shiftState.locationCheckStatus == LocationCheckStatus.initial;
+                      isLocationLoading ||
+                      isOutOfRange ||
+                      shiftState.locationCheckStatus ==
+                          LocationCheckStatus.initial;
 
                   return BlocConsumer<HomeCubit, HomeState>(
                     listener: (context, homeState) {
                       if (homeState.status == HomeStatus.success) {
-                        final result = homeState.createAttendancePunchResponse?.result;
+                        final result =
+                            homeState.createAttendancePunchResponse?.result;
 
                         // Check if the operation was actually successful
                         if (result?.success ?? false) {
                           if (context.mounted) {
+                            final screenHeight = MediaQuery.sizeOf(
+                              context,
+                            ).height;
+                            final bottomInset = MediaQuery.viewPaddingOf(
+                              context,
+                            ).bottom;
+                            final sheetSize =
+                                (0.42.h + bottomInset / screenHeight).clamp(
+                                  0.0,
+                                  1.0,
+                                );
                             context.pop();
                             BottomSheetWrapper(
-                              initialSize: 0.37.h,
-                              maxChildSize: 0.37.h,
+                              initialSize: sheetSize,
+                              maxChildSize: sheetSize,
                               removeAutoScroll: true,
                               disableDrag: true,
                               useRootNavigator: true,
-                              child: ClockInClockOutBottomSheet(
-                                clockImage: context.isDarkMode
-                                    ? Assets.rastersFingerprintregisteredDark
-                                    : Assets.rastersFingerPrintRegistered,
+                              child: Padding(
+                                padding: EdgeInsets.only(bottom: bottomInset),
+                                child: ClockInClockOutBottomSheet(
+                                  clockImage: context.isDarkMode
+                                      ? Assets.rastersFingerprintregisteredDark
+                                      : Assets.rastersFingerPrintRegistered,
+                                ),
                               ),
                             ).callSheet(context);
                           }
@@ -498,7 +587,8 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                             context.pop();
                             SnackbarService.showError(
                               context,
-                              result?.message ?? context.localizations.punchOperationFailed,
+                              result?.message ??
+                                  context.localizations.punchOperationFailed,
                             );
                           }
                         }
@@ -507,13 +597,15 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                           context.pop();
                           SnackbarService.showError(
                             context,
-                            homeState.error ?? context.localizations.somethingWentWrong,
+                            homeState.error ??
+                                context.localizations.somethingWentWrong,
                           );
                         }
                       }
                     },
                     builder: (context, homeState) {
-                      final isPunchLoading = homeState.status == HomeStatus.loading;
+                      final isPunchLoading =
+                          homeState.status == HomeStatus.loading;
                       final isDisabled = isLocationDisabled || isPunchLoading;
 
                       return PrimaryTextButton(
@@ -525,16 +617,20 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                                 height: 20.r,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2.r,
-                                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    color,
+                                  ),
                                 ),
                               )
                             : null,
                         onTap: isDisabled
                             ? null
                             : () async {
-                                final deviceInfo = context.localizations.deviceInfoPlaceholder;
+                                final deviceInfo =
+                                    context.localizations.deviceInfoPlaceholder;
                                 // Get current location
-                                final location = await LocationProvider.getCurrentLocation();
+                                final location =
+                                    await LocationProvider.getCurrentLocation();
 
                                 // Get current datetime in the required format
                                 final now = DateTime.now();
@@ -542,16 +638,18 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                                     '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
 
                                 if (context.mounted) {
-                                  await context.read<HomeCubit>().createAttendancePunchIn(
-                                    CreateAttendancePunchRequest(
-                                      geoInformation: GeoInformation(
-                                        latitude: location.latitude,
-                                        longitude: location.longitude,
-                                      ),
-                                      deviceInfo: deviceInfo,
-                                      actionDatetime: actionDatetime,
-                                    ),
-                                  );
+                                  await context
+                                      .read<HomeCubit>()
+                                      .createAttendancePunchIn(
+                                        CreateAttendancePunchRequest(
+                                          geoInformation: GeoInformation(
+                                            latitude: location.latitude,
+                                            longitude: location.longitude,
+                                          ),
+                                          deviceInfo: deviceInfo,
+                                          actionDatetime: actionDatetime,
+                                        ),
+                                      );
                                 }
                               },
                       );
