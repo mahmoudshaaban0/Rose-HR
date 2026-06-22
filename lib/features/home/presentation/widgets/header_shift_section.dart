@@ -8,6 +8,7 @@ import 'package:rose_hr/common/constants/app_assets.dart';
 import 'package:rose_hr/common/dependency_injection/injection_container.dart';
 import 'package:rose_hr/common/helpers/location_provider.dart';
 import 'package:rose_hr/common/helpers/snackbar_service.dart';
+import 'package:rose_hr/common/helpers/timezone_helper.dart';
 import 'package:rose_hr/common/widgets/bottom_sheet_wrapper.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/home/data/models/create_attendance_punch_request.dart';
@@ -28,13 +29,69 @@ class HeaderAndShiftSection extends StatefulWidget {
   State<HeaderAndShiftSection> createState() => _HeaderAndShiftSectionState();
 }
 
-class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
+class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection>
+    with WidgetsBindingObserver {
   Timer? _countdownTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // The countdown is always derived from the wall clock (projectedCheckout -
+    // now), so a periodic rebuild is all that's needed to keep it ticking.
+    // Because it's recomputed from the current time on every build, a pull to
+    // refresh re-fetches the same target and does NOT reset the countdown.
+    _countdownTimer = Timer.periodic(
+      const Duration(seconds: 30),
+      (_) {
+        if (mounted) setState(() {});
+      },
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // When returning from the background, recompute immediately so the
+    // countdown reflects the time that elapsed while the app was suspended
+    // instead of waiting for the next periodic tick.
+    if (state == AppLifecycleState.resumed && mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   void dispose() {
     _countdownTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  /// Calculates the time remaining until the projected checkout.
+  ///
+  /// [projectedCheckout] is an absolute instant (already in local time), so the
+  /// remaining time is simply the difference from "now". This makes the value
+  /// inherently correct after refreshes and after the app returns from the
+  /// background. Returns zeroes when there is no checkout or it has passed.
+  Map<String, int> _calculateRemaining(DateTime? projectedCheckout) {
+    if (projectedCheckout == null) {
+      return {'hours': 0, 'minutes': 0};
+    }
+    final difference = projectedCheckout.difference(TimezoneHelper.now());
+    if (difference.isNegative) {
+      return {'hours': 0, 'minutes': 0};
+    }
+    return {
+      'hours': difference.inHours,
+      'minutes': difference.inMinutes.remainder(60),
+    };
+  }
+
+  /// Formats the remaining time with localized labels, e.g. "2 Hours 5 Minutes".
+  String _formatRemaining(BuildContext context, Map<String, int> remaining) {
+    final hours = remaining['hours'] ?? 0;
+    final minutes = remaining['minutes'] ?? 0;
+    return '$hours ${context.localizations.hours} $minutes ${context.localizations.minutes}';
   }
 
   /// Formats a 24-hour time value to 12-hour format with AM/PM
@@ -56,100 +113,15 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
     return '${_formatHourTo12Hour(context, shiftHourFrom)} - ${_formatHourTo12Hour(context, shiftHourTo)}';
   }
 
-  /// Calculates time remaining until shift end
-  /// Returns a map with hours, minutes, and isEnded status
-  /// Returns null if shift data is unavailable
-  /// Only shows time remaining if current time is within the shift period
-  Map<String, dynamic>? _calculateTimeRemaining(
-    int? shiftHourFrom,
-    int? shiftHourTo,
-  ) {
-    if (shiftHourFrom == null || shiftHourTo == null) return null;
-
-    final now = DateTime.now();
-    final shiftStart = DateTime(now.year, now.month, now.day, shiftHourFrom);
-    final shiftEnd = DateTime(now.year, now.month, now.day, shiftHourTo);
-
-    // Handle night shifts (shift that crosses midnight)
-    final isNightShift =
-        shiftEnd.isBefore(shiftStart) || shiftEnd.isAtSameMomentAs(shiftStart);
-
-    DateTime effectiveShiftStart = shiftStart;
-    DateTime effectiveShiftEnd = shiftEnd;
-
-    if (isNightShift) {
-      // Night shift case: e.g., 10 PM to 6 AM
-      if (now.hour >= shiftHourFrom) {
-        // Current time is after shift start (e.g., 11 PM), shift ends tomorrow
-        effectiveShiftEnd = shiftEnd.add(const Duration(days: 1));
-      } else {
-        // Current time is before shift start (e.g., 3 AM), shift started yesterday
-        effectiveShiftStart = shiftStart.subtract(const Duration(days: 1));
-      }
-    }
-
-    // Check if current time is within shift period
-    final isWithinShift =
-        now.isAfter(effectiveShiftStart) && now.isBefore(effectiveShiftEnd);
-
-    if (!isWithinShift) {
-      // Shift hasn't started yet or has already ended
-      return {
-        'hours': 0,
-        'minutes': 0,
-        'isEnded': true,
-      };
-    }
-
-    // Calculate time remaining until shift end
-    final difference = effectiveShiftEnd.difference(now);
-
-    return {
-      'hours': difference.inHours,
-      'minutes': difference.inMinutes.remainder(60),
-      'isEnded': false,
-    };
-  }
-
-  /// Formats the countdown display with localized labels
-  String _formatCountdown(
-    BuildContext context,
-    Map<String, dynamic>? timeRemaining,
-  ) {
-    if (timeRemaining == null) {
-      return context.localizations.timeUnavailablePlaceholder;
-    }
-
-    final hours = timeRemaining['hours'] ?? 0;
-    final minutes = timeRemaining['minutes'] ?? 0;
-
-    // Always show hours and minutes format for consistency
-    // When shift ends, shows "0 Hours 0 Minutes"
-    return '$hours ${context.localizations.hours} $minutes ${context.localizations.minutes}';
-  }
-
   @override
   Widget build(BuildContext context) {
+    // Capture the HomeCubit from the screen (which loads `projectedCheckout`)
+    // before the inner BlocProvider below shadows it with a punch-only instance.
+    final homeCubit = context.read<HomeCubit>();
     return BlocProvider(
       create: (context) => sl<ShiftCubit>()..getCurrentShift(),
       child: Builder(
         builder: (context) {
-          // Start countdown timer when shift data is loaded
-          context.read<ShiftCubit>().stream.listen((state) {
-            if (state.status == ShiftStatus.success &&
-                _countdownTimer == null) {
-              _countdownTimer = Timer.periodic(const Duration(seconds: 30), (
-                _,
-              ) {
-                if (mounted) {
-                  setState(() {
-                    // Timer triggers rebuild every 30 seconds to update countdown
-                  });
-                }
-              });
-            }
-          });
-
           return BlocProvider(
             create: (context) => sl<HomeCubit>(),
             child: Container(
@@ -235,20 +207,16 @@ class _HeaderAndShiftSectionState extends State<HeaderAndShiftSection> {
                                 ),
                               ],
                             ),
-                            // Dynamic countdown based on shift
-                            BlocBuilder<ShiftCubit, ShiftState>(
-                              builder: (context, shiftState) {
-                                final shiftData = shiftState
-                                    .currentShiftResponse
-                                    ?.result
-                                    ?.data;
-                                final timeRemaining = _calculateTimeRemaining(
-                                  shiftData?.shiftHourFrom,
-                                  shiftData?.shiftHourTo,
+                            // Dynamic countdown based on projected checkout
+                            BlocBuilder<HomeCubit, HomeState>(
+                              bloc: homeCubit,
+                              builder: (context, homeState) {
+                                final remaining = _calculateRemaining(
+                                  homeState.projectedCheckout,
                                 );
-                                final countdownText = _formatCountdown(
+                                final countdownText = _formatRemaining(
                                   context,
-                                  timeRemaining,
+                                  remaining,
                                 );
 
                                 return Text.rich(
