@@ -89,7 +89,9 @@ class DioConsumer implements ApiConsumer {
         path,
         queryParameters: queryParameters,
         data: data,
-        options: data is String ? Options(contentType: 'application/json') : null,
+        options: data is String
+            ? Options(contentType: 'application/json')
+            : null,
       );
       return _handleResponseAsJson(response);
     } on DioException catch (error) {
@@ -123,7 +125,9 @@ class DioConsumer implements ApiConsumer {
 
     // Handle cases where response might still be a string (fallback)
     try {
-      final parsedData = responseJson is String ? jsonDecode(responseJson) : responseJson;
+      final parsedData = responseJson is String
+          ? jsonDecode(responseJson)
+          : responseJson;
 
       // Session expiration is now handled exclusively in AppInterceptors
       // to avoid conflicts
@@ -178,7 +182,8 @@ class DioConsumer implements ApiConsumer {
           default:
             // For any other status codes
             throw ServerException(
-              backendMessage ?? 'Server error (${error.response?.statusCode}).Please try again.',
+              backendMessage ??
+                  'Server error (${error.response?.statusCode}).Please try again.',
             );
         }
       case DioExceptionType.cancel:

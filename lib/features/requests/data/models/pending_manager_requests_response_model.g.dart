@@ -51,6 +51,12 @@ PendingRequestItem _$PendingRequestItemFromJson(Map<String, dynamic> json) =>
       stateDisplay: json['state_display'] as String?,
       createDate: json['create_date'] as String?,
       canCancel: json['can_cancel'] as bool?,
+      pendingUsersNames: (json['pending_users_names'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      approvalChain: (json['approval_chain'] as List<dynamic>?)
+          ?.map((e) => ApprovalChainItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       reqRequestType: json['req_request_type'],
       reqRequestTypeDisplay: json['req_request_type_display'],
       reqDate: json['req_date'],
@@ -101,6 +107,8 @@ Map<String, dynamic> _$PendingRequestItemToJson(PendingRequestItem instance) =>
       'state_display': instance.stateDisplay,
       'create_date': instance.createDate,
       'can_cancel': instance.canCancel,
+      'pending_users_names': instance.pendingUsersNames,
+      'approval_chain': instance.approvalChain,
       'req_request_type': instance.reqRequestType,
       'req_request_type_display': instance.reqRequestTypeDisplay,
       'req_date': instance.reqDate,

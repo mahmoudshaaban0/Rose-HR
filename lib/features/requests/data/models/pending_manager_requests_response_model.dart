@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rose_hr/features/requests/data/models/single_request_response_by_id.dart';
 
 part 'pending_manager_requests_response_model.g.dart';
 
@@ -103,6 +104,8 @@ class PendingRequestItem {
     this.stateDisplay,
     this.createDate,
     this.canCancel,
+    this.pendingUsersNames,
+    this.approvalChain,
     this.reqRequestType,
     this.reqRequestTypeDisplay,
     this.reqDate,
@@ -170,6 +173,12 @@ class PendingRequestItem {
 
   @JsonKey(name: 'can_cancel')
   bool? canCancel;
+
+  @JsonKey(name: 'pending_users_names')
+  List<String>? pendingUsersNames;
+
+  @JsonKey(name: 'approval_chain')
+  List<ApprovalChainItem>? approvalChain;
 
   @JsonKey(name: 'req_request_type')
   dynamic reqRequestType;

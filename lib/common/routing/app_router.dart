@@ -28,7 +28,13 @@ import 'package:rose_hr/features/work_mission/presentation/screens/work_mission_
 import 'package:rose_hr/theme/theme_ext.dart';
 
 class AppRouter {
+  /// Root navigator key. Exposed so widgets living above the router's
+  /// Navigator (e.g. `MaterialApp.router`'s `builder`, where `UpgradeAlert`
+  /// lives) can still resolve a valid Navigator context for dialogs.
+  static final rootNavigatorKey = GlobalKey<NavigatorState>();
+
   static final router = GoRouter(
+    navigatorKey: rootNavigatorKey,
     initialLocation: AppRoutes.splash.path,
     refreshListenable: RoutingNotifier(),
     routes: [

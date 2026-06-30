@@ -413,7 +413,7 @@ class SingleTeamRequestScreen extends StatelessWidget {
         SizedBox(height: AppSpacing.md.h),
 
         // ── Approval chain card ───────────────────────────────
-        if (!(item.reqManagerName?.toString()).isNullOrEmpty)
+        if (item.approvalChain != null && item.approvalChain!.isNotEmpty)
           Container(
             padding: EdgeInsets.all(AppSpacing.md.r),
             decoration: BoxDecoration(
@@ -430,14 +430,12 @@ class SingleTeamRequestScreen extends StatelessWidget {
                 SizedBox(height: AppSpacing.md.h),
                 ApprovalChainWidget(
                   employees: [
-                    ApprovalEmployee(
-                      name: item.reqManagerName.toString(),
-                      status: item.state == 'approve' || item.state == 'done'
-                          ? ApprovalStatus.approved
-                          : item.state == 'refuse'
-                          ? ApprovalStatus.rejected
-                          : ApprovalStatus.pending,
-                    ),
+                    for (final step in item.approvalChain!)
+                      for (final name in step.approvalNames ?? <String>[])
+                        ApprovalEmployee(
+                          name: name,
+                          status: ApprovalStatus.fromApi(step.approvalStatus),
+                        ),
                   ],
                 ),
                 SizedBox(height: AppSpacing.md.h),
