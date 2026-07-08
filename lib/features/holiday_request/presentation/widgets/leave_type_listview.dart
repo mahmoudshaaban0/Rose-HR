@@ -30,7 +30,10 @@ class _LeaveTypeListViewState extends State<LeaveTypeListView> {
               spacing: AppSpacing.md.h,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(context.localizations.leaveType, style: context.typography.semiBold16),
+                Text(
+                  context.localizations.leaveType,
+                  style: context.typography.semiBold16,
+                ),
                 Expanded(
                   child: ListView.separated(
                     separatorBuilder: (context, index) => const AppDivider(),
@@ -52,7 +55,9 @@ class _LeaveTypeListViewState extends State<LeaveTypeListView> {
                               Container(
                                 decoration: BoxDecoration(
                                   color: context.colors.surfaceVariant,
-                                  borderRadius: BorderRadius.circular(AppSpacing.sm.r),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSpacing.sm.r,
+                                  ),
                                 ),
                                 width: 300.w,
                                 height: 16.h,
@@ -86,42 +91,55 @@ class _LeaveTypeListViewState extends State<LeaveTypeListView> {
             spacing: AppSpacing.md.h,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(context.localizations.leaveType, style: context.typography.semiBold16),
+              Text(
+                context.localizations.leaveType,
+                style: context.typography.semiBold16,
+              ),
 
               Expanded(
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => const AppDivider(),
-                  itemCount: leaveTypes.length,
-                  itemBuilder: (context, index) {
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xxxl),
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => const AppDivider(),
+                    itemCount: leaveTypes.length,
+                    itemBuilder: (context, index) {
                     final leaveType = leaveTypes[index];
-                    final isSelected = state.selectedLeaveTypeId == leaveType.id;
+                      final isSelected =
+                          state.selectedLeaveTypeId == leaveType.id;
 
-                    return InkWell(
-                      onTap: () {
-                        context.read<HolidayRequestCubit>().selectLeaveType(
-                          leaveType.name ?? '',
-                          leaveType.id ?? 0,
-                        );
-                        context.pop();
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: AppSpacing.lg.h,
-                          horizontal: AppSpacing.lg.r,
+                      return InkWell(
+                        onTap: () {
+                          context.read<HolidayRequestCubit>().selectLeaveType(
+                            leaveType.name ?? '',
+                            leaveType.id ?? 0,
+                            leaveType.technicalName,
+                          );
+                          context.pop();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: AppSpacing.lg.h,
+                            horizontal: AppSpacing.lg.r,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                leaveType.name ?? '',
+                                style: isSelected
+                                    ? context.typography.medium16
+                                    : context.typography.regular16,
+                              ),
+                              if (isSelected)
+                                const AppVectorGraphic(
+                                  path: Assets.vectorsCheckline,
+                                ),
+                            ],
+                          ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              leaveType.name ?? '',
-                              style: isSelected ? context.typography.medium16 : context.typography.regular16,
-                            ),
-                            if (isSelected) const AppVectorGraphic(path: Assets.vectorsCheckline),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

@@ -6,6 +6,7 @@ import 'package:rose_hr/common/networking/result.dart';
 import 'package:rose_hr/features/holiday_request/data/models/get_all_leave_types_response_model.dart';
 import 'package:rose_hr/features/holiday_request/data/models/holiday_request_model.dart';
 import 'package:rose_hr/features/holiday_request/data/models/holiday_request_response_model.dart';
+import 'package:rose_hr/features/holiday_request/data/models/leave_type_technical.dart';
 import 'package:rose_hr/features/holiday_request/data/repositories/holiday_request_repository.dart';
 
 part 'holiday_request_state.dart';
@@ -27,9 +28,13 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
     }
   }
 
-  void selectLeaveType(String leaveTypeName, int leaveTypeId) {
+  void selectLeaveType(
+    String leaveTypeName,
+    int leaveTypeId, [
+    String? technicalName,
+  ]) {
     // Check if the selected leave type is annual leave
-    final isAnnualLeave = leaveTypeName.toLowerCase().contains('annual') || leaveTypeName.contains('سنوية');
+    final isAnnualLeave = LeaveTypeTechnical.isAnnual(technicalName);
 
     // If not annual leave, reset the switches to false
     if (!isAnnualLeave) {
@@ -37,6 +42,7 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
         state.copyWith(
           selectedLeaveTypeName: leaveTypeName,
           selectedLeaveTypeId: leaveTypeId,
+          selectedLeaveTypeTechnicalName: technicalName,
           advanceSalary: false,
           airTicket: false,
           compensationForDay: null,
@@ -48,6 +54,7 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
         state.copyWith(
           selectedLeaveTypeName: leaveTypeName,
           selectedLeaveTypeId: leaveTypeId,
+          selectedLeaveTypeTechnicalName: technicalName,
           compensationForDay: null,
         ),
       );
@@ -166,10 +173,8 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
       }
 
       // Validate compensation day for compensatory leave
-      final isCompensatoryLeave = state.selectedLeaveTypeName != null &&
-          (state.selectedLeaveTypeName!.toLowerCase().contains('compensatory') ||
-              state.selectedLeaveTypeName!.toLowerCase().contains('compensation') ||
-              state.selectedLeaveTypeName!.contains('تعويضية'));
+      final isCompensatoryLeave =
+          LeaveTypeTechnical.isCompensatory(state.selectedLeaveTypeTechnicalName);
 
       if (isCompensatoryLeave && state.compensationForDay == null) {
         emit(

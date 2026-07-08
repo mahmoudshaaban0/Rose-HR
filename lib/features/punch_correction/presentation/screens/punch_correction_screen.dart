@@ -201,6 +201,21 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
     );
   }
 
+  /// Whether the correction time(s) required by the selected correction type
+  /// are present: check-in -> startTime, check-out -> endTime, both -> both.
+  bool _hasRequiredCorrectionTimes(PunchCorrectionState state) {
+    switch (state.correctionType) {
+      case 'both':
+        return state.startTime != null && state.endTime != null;
+      case 'in':
+        return state.startTime != null;
+      case 'out':
+        return state.endTime != null;
+      default:
+        return false;
+    }
+  }
+
   /// Validates and submits the punch correction request
   void _submitPunchCorrection(BuildContext context, PunchCorrectionState state) {
     // Validate required fields
@@ -228,10 +243,9 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
       return;
     }
 
-    // Validate that correction time is selected (stored in startTime for 'in' or endTime for 'out')
-    final correctionTime = state.correctionType == CorrectionType.checkIn.id ? state.startTime : state.endTime;
-
-    if (correctionTime == null) {
+    // Validate that the correction time(s) are selected. Check-in is stored in
+    // startTime, check-out in endTime; 'both' needs both.
+    if (!_hasRequiredCorrectionTimes(state)) {
       SnackbarService.showError(context, context.localizations.pleaseSelectCorrectionTime);
       return;
     }
@@ -561,7 +575,9 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                       pmLabel: context.localizations.timePeriodPm,
                                     );
 
-                                    final isCheckInSelected = punchCorrectionState.correctionType == CorrectionType.checkIn.id;
+                                    final isCheckInSelected =
+                                        punchCorrectionState.correctionType == CorrectionType.checkIn.id ||
+                                        punchCorrectionState.correctionType == CorrectionType.both.id;
 
                                     // Get correction time from startTime if available
                                     final correctionTime = punchCorrectionState.startTime != null
@@ -581,20 +597,18 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                       title: context.localizations.recordedCheckInTime,
                                       time: displayTime,
                                       onCheckedChange: (value) {
-                                        AppLogger.instance.logDebug('selected attendance method: ${CorrectionType.checkIn.id}');
-                                        // Toggle: if already selected, clear selection; otherwise, select check-in
-                                        if (value) {
-                                          context.read<PunchCorrectionCubit>().selectCorrectionType(CorrectionType.checkIn.id);
-                                        } else {
-                                          context.read<PunchCorrectionCubit>().clearCorrectionType();
-                                        }
+                                        AppLogger.instance.logDebug('toggled check-in: $value');
+                                        context.read<PunchCorrectionCubit>().toggleCheckIn(value);
                                       },
+                                      // Disabled only when the check-out slot is the exclusive selection.
                                       onCorrectTap: punchCorrectionState.correctionType == CorrectionType.checkOut.id
                                           ? null
                                           : () {
+                                              final cubit = context.read<PunchCorrectionCubit>()
+                                                ..setEditingType(CorrectionType.checkIn.id);
                                               context.pushNamed(
                                                 AppRoutes.correctionTime.name,
-                                                extra: context.read<PunchCorrectionCubit>(),
+                                                extra: cubit,
                                               );
                                             },
                                     );
@@ -631,7 +645,9 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                       pmLabel: context.localizations.timePeriodPm,
                                     );
 
-                                    final isCheckOutSelected = punchCorrectionState.correctionType == CorrectionType.checkOut.id;
+                                    final isCheckOutSelected =
+                                        punchCorrectionState.correctionType == CorrectionType.checkOut.id ||
+                                        punchCorrectionState.correctionType == CorrectionType.both.id;
 
                                     // Get correction time from endTime if available
                                     final correctionTime = punchCorrectionState.endTime != null
@@ -651,21 +667,18 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                       title: context.localizations.recordedCheckOutTime,
                                       time: displayTime,
                                       onCheckedChange: (value) {
-                                        AppLogger.instance.logDebug('selected attendance method: ${CorrectionType.checkOut.id}');
-                                        // Toggle: if already selected, clear selection; otherwise, select check-out
-                                        if (value) {
-                                          context.read<PunchCorrectionCubit>().selectCorrectionType(CorrectionType.checkOut.id);
-                                        } else {
-                                          context.read<PunchCorrectionCubit>().clearCorrectionType();
-                                        }
+                                        AppLogger.instance.logDebug('toggled check-out: $value');
+                                        context.read<PunchCorrectionCubit>().toggleCheckOut(value);
                                       },
-                                      onCorrectTap:
-                                          context.read<PunchCorrectionCubit>().state.correctionType == CorrectionType.checkIn.id
+                                      // Disabled only when the check-in slot is the exclusive selection.
+                                      onCorrectTap: punchCorrectionState.correctionType == CorrectionType.checkIn.id
                                           ? null
                                           : () {
+                                              final cubit = context.read<PunchCorrectionCubit>()
+                                                ..setEditingType(CorrectionType.checkOut.id);
                                               context.pushNamed(
                                                 AppRoutes.correctionTime.name,
-                                                extra: context.read<PunchCorrectionCubit>(),
+                                                extra: cubit,
                                               );
                                             },
                                     );
@@ -828,7 +841,7 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                           state.correctionType == null ||
                                           state.attendanceMethod == null ||
                                           state.reasonId == null ||
-                                          (state.startTime == null && state.endTime == null)
+                                          !_hasRequiredCorrectionTimes(state)
                                       ? null
                                       : () => _submitPunchCorrection(context, state),
                                   appButtonSize: AppButtonSize.xxLarge,

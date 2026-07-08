@@ -8,6 +8,7 @@ import 'package:rose_hr/common/widgets/app_radio_button.dart';
 import 'package:rose_hr/common/widgets/appbar.dart';
 import 'package:rose_hr/common/widgets/divider.dart';
 import 'package:rose_hr/features/punch_correction/data/models/attendance_method_enum.dart';
+import 'package:rose_hr/features/punch_correction/data/models/correction_type_enum.dart';
 import 'package:rose_hr/features/punch_correction/presentation/cubit/punch_correction_cubit.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
@@ -220,7 +221,9 @@ class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
                                             padding: EdgeInsets.symmetric(vertical: AppSpacing.lg.h),
                                             child: AppRadioButton<int>(
                                               value: log.id ?? 0,
-                                              groupValue: state.attendanceLogId,
+                                              groupValue: state.editingType == CorrectionType.checkOut.id
+                                                  ? state.attendanceLogOutId
+                                                  : state.attendanceLogId,
                                               labelStyle: context.typography.regular18.copyWith(
                                                 color: context.colors.onSurface,
                                               ),
@@ -251,10 +254,10 @@ class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
                                                 onDateTimeChanged: (DateTime date) {
                                                   final duration = date.hour + (date.minute / 60.0);
                                                   final cubit = context.read<PunchCorrectionCubit>();
-                                                  if (cubit.state.correctionType == 'in') {
-                                                    cubit.selectStartTime(duration);
-                                                  } else if (cubit.state.correctionType == 'out') {
+                                                  if (cubit.state.editingType == CorrectionType.checkOut.id) {
                                                     cubit.selectEndTime(duration);
+                                                  } else {
+                                                    cubit.selectStartTime(duration);
                                                   }
                                                 },
                                                 initialDateTime: DateTime(2000, 1, 1, 0, 30),
@@ -266,10 +269,12 @@ class _CorrectionTimeScreenState extends State<CorrectionTimeScreen> {
                                         cancelButton: CupertinoButton(
                                           onPressed: () {
                                             final cubit = context.read<PunchCorrectionCubit>();
-                                            if (cubit.state.correctionType == 'in' && state.startTime == null) {
+                                            if (cubit.state.editingType == CorrectionType.checkOut.id) {
+                                              if (state.endTime == null) {
+                                                cubit.selectEndTime(0.5);
+                                              }
+                                            } else if (state.startTime == null) {
                                               cubit.selectStartTime(0.5);
-                                            } else if (cubit.state.correctionType == 'out' && state.endTime == null) {
-                                              cubit.selectEndTime(0.5);
                                             }
                                             Navigator.of(context).pop();
                                           },

@@ -12,7 +12,10 @@ class HolidaysSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.r),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg.r,
+        vertical: AppSpacing.xl.r,
+      ),
       decoration: BoxDecoration(
         color: context.colors.containerBackground,
         borderRadius: BorderRadius.circular(AppSpacing.lg.r),
@@ -29,15 +32,18 @@ class HolidaysSection extends StatelessWidget {
           BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
               final balances = state.leaveBalances;
-              if (state.homeStatus == HomeDataStatus.loading && balances.isEmpty) {
+              if (state.homeStatus == HomeDataStatus.loading &&
+                  balances.isEmpty) {
                 return SizedBox(
                   height: 100.h,
-                  child: const Center(child: CircularProgressIndicator.adaptive()),
+                  child: const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
                 );
               }
               if (balances.isEmpty) {
                 return _LeaveBalanceCard(
-                  balance: '0 ${context.localizations.days}',
+                  balance: ' 0 ',
                   label: context.localizations.accuredLeaveBalance,
                 );
               }
@@ -48,9 +54,10 @@ class HolidaysSection extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(bottom: AppSpacing.md.h),
                       child: _LeaveBalanceCard(
-                        balance: '${_formatBalance(balance.balance)} '
-                            '${context.localizations.days}',
-                        label: balance.label ?? context.localizations.accuredLeaveBalance,
+                        balance: ' ${_formatBalance(balance.balance)} ',
+                        label:
+                            balance.label ??
+                            context.localizations.accuredLeaveBalance,
                       ),
                     ),
                 ],
@@ -83,7 +90,10 @@ class _LeaveBalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.r, vertical: AppSpacing.xl.r),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg.r,
+        vertical: AppSpacing.xl.r,
+      ),
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: BorderRadius.circular(AppSpacing.lg.r),

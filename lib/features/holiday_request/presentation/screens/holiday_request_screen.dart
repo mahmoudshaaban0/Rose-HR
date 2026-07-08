@@ -15,6 +15,7 @@ import 'package:rose_hr/common/widgets/file_upload_widget.dart';
 import 'package:rose_hr/common/widgets/info_card.dart';
 import 'package:rose_hr/common/widgets/success_request_bottomsheet.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
+import 'package:rose_hr/features/holiday_request/data/models/leave_type_technical.dart';
 import 'package:rose_hr/features/holiday_request/presentation/bloc/holiday_request_cubit.dart';
 import 'package:rose_hr/features/holiday_request/presentation/widgets/leave_type_listview.dart';
 import 'package:rose_hr/features/holiday_request/presentation/widgets/visa_type_listview.dart';
@@ -60,7 +61,8 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
             showDialog<void>(
               barrierDismissible: false,
               context: context,
-              builder: (context) => const Center(child: CircularProgressIndicator.adaptive()),
+              builder: (context) =>
+                  const Center(child: CircularProgressIndicator.adaptive()),
             );
           } else if (state.status == HolidayRequestStatus.submitted) {
             // Dismiss loading dialog
@@ -87,7 +89,8 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
               // Business logic error (e.g., 400 with success: false)
               SnackbarService.showError(
                 context,
-                result?.message ?? context.localizations.failedToSendHolidayRequest,
+                result?.message ??
+                    context.localizations.failedToSendHolidayRequest,
               );
             }
           } else if (state.status == HolidayRequestStatus.submitError) {
@@ -96,7 +99,8 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
             // Network or other errors
             SnackbarService.showError(
               context,
-              state.errorMessage ?? context.localizations.failedToSendHolidayRequest,
+              state.errorMessage ??
+                  context.localizations.failedToSendHolidayRequest,
             );
           }
         },
@@ -130,22 +134,39 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                               child: Column(
                                 spacing: AppSpacing.md.w,
                                 children: [
-                                  BlocBuilder<HolidayRequestCubit, HolidayRequestState>(
+                                  BlocBuilder<
+                                    HolidayRequestCubit,
+                                    HolidayRequestState
+                                  >(
                                     builder: (context, state) {
-                                      final cubit = context.read<HolidayRequestCubit>();
+                                      final cubit = context
+                                          .read<HolidayRequestCubit>();
 
                                       return InfoCard(
                                         title: context.localizations.leaveType,
-                                        subtitle: state.selectedLeaveTypeName ?? context.localizations.selectLeaveType,
-                                        subTitlestyle: state.selectedLeaveTypeName != null
-                                            ? context.typography.regular16.copyWith(
-                                                color: context.colors.onSurface,
-                                              )
+                                        subtitle:
+                                            state.selectedLeaveTypeName ??
+                                            context
+                                                .localizations
+                                                .selectLeaveType,
+                                        subTitlestyle:
+                                            state.selectedLeaveTypeName != null
+                                            ? context.typography.regular16
+                                                  .copyWith(
+                                                    color: context
+                                                        .colors
+                                                        .onSurface,
+                                                  )
                                             : null,
-                                        value: state.selectedLeaveTypeName ?? context.localizations.selectLeaveType,
+                                        value:
+                                            state.selectedLeaveTypeName ??
+                                            context
+                                                .localizations
+                                                .selectLeaveType,
                                         onTap: () {
                                           BottomSheetWrapper(
                                             disableDrag: true,
+                                            fitSheetHeight: true,
                                             initialSize: .5.h,
                                             maxChildSize: .5.h,
                                             child: BlocProvider.value(
@@ -157,9 +178,13 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                       );
                                     },
                                   ),
-                                  BlocBuilder<HolidayRequestCubit, HolidayRequestState>(
+                                  BlocBuilder<
+                                    HolidayRequestCubit,
+                                    HolidayRequestState
+                                  >(
                                     builder: (context, state) {
-                                      final cubit = context.read<HolidayRequestCubit>();
+                                      final cubit = context
+                                          .read<HolidayRequestCubit>();
                                       return InfoCard(
                                         title: context.localizations.startsFrom,
                                         subtitle: state.startDate != null
@@ -172,14 +197,23 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                                 locale: 'en',
                                                 pattern: 'yyyy-MM-dd',
                                               )
-                                            : context.localizations.selectStartDate,
-                                        value: state.startDate ?? context.localizations.selectStartDate,
+                                            : context
+                                                  .localizations
+                                                  .selectStartDate,
+                                        value:
+                                            state.startDate ??
+                                            context
+                                                .localizations
+                                                .selectStartDate,
                                         prefixIcon: Assets.vectorsCalendarFill,
                                         showArrow: false,
                                         subTitlestyle: state.startDate != null
-                                            ? context.typography.regular16.copyWith(
-                                                color: context.colors.onSurface,
-                                              )
+                                            ? context.typography.regular16
+                                                  .copyWith(
+                                                    color: context
+                                                        .colors
+                                                        .onSurface,
+                                                  )
                                             : null,
                                         onTap: () {
                                           AppDatePicker.show(
@@ -190,16 +224,22 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                                     state.startDate!,
                                                   )
                                                 : TimezoneHelper.now(),
-                                            onDateChanged: cubit.selectStartDate,
-                                            onDateConfirmed: cubit.selectStartDate,
+                                            onDateChanged:
+                                                cubit.selectStartDate,
+                                            onDateConfirmed:
+                                                cubit.selectStartDate,
                                           );
                                         },
                                       );
                                     },
                                   ),
-                                  BlocBuilder<HolidayRequestCubit, HolidayRequestState>(
+                                  BlocBuilder<
+                                    HolidayRequestCubit,
+                                    HolidayRequestState
+                                  >(
                                     builder: (context, state) {
-                                      final cubit = context.read<HolidayRequestCubit>();
+                                      final cubit = context
+                                          .read<HolidayRequestCubit>();
                                       return InfoCard(
                                         title: context.localizations.endsAt,
                                         subtitle: state.endDate != null
@@ -212,17 +252,25 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                                 locale: 'en',
                                                 pattern: 'yyyy-MM-dd',
                                               )
-                                            : context.localizations.selectEndDate,
-                                        value: state.endDate ?? context.localizations.selectEndDate,
+                                            : context
+                                                  .localizations
+                                                  .selectEndDate,
+                                        value:
+                                            state.endDate ??
+                                            context.localizations.selectEndDate,
                                         prefixIcon: Assets.vectorsCalendarFill,
                                         showArrow: false,
                                         subTitlestyle: state.endDate != null
-                                            ? context.typography.regular16.copyWith(
-                                                color: context.colors.onSurface,
-                                              )
+                                            ? context.typography.regular16
+                                                  .copyWith(
+                                                    color: context
+                                                        .colors
+                                                        .onSurface,
+                                                  )
                                             : null,
                                         onTap: () {
-                                          final minimumEndDate = state.startDate != null
+                                          final minimumEndDate =
+                                              state.startDate != null
                                               ? DateTime.parse(state.startDate!)
                                               : null;
                                           AppDatePicker.show(
@@ -242,29 +290,37 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                                   ).year
                                                 : DateTime.now().year - 100,
                                             onDateChanged: cubit.selectEndDate,
-                                            onDateConfirmed: cubit.selectEndDate,
+                                            onDateConfirmed:
+                                                cubit.selectEndDate,
                                           );
                                         },
                                       );
                                     },
                                   ),
-                                  BlocBuilder<HolidayRequestCubit, HolidayRequestState>(
+                                  BlocBuilder<
+                                    HolidayRequestCubit,
+                                    HolidayRequestState
+                                  >(
                                     builder: (context, state) {
-                                      final cubit = context.read<HolidayRequestCubit>();
+                                      final cubit = context
+                                          .read<HolidayRequestCubit>();
                                       // Check if selected leave type is compensatory leave
                                       final isCompensatoryLeave =
-                                          state.selectedLeaveTypeName != null &&
-                                          (state.selectedLeaveTypeName!.toLowerCase().contains('compensatory') ||
-                                              state.selectedLeaveTypeName!.toLowerCase().contains('compensation') ||
-                                              state.selectedLeaveTypeName!.contains('تعويضية'));
+                                          LeaveTypeTechnical.isCompensatory(
+                                            state
+                                                .selectedLeaveTypeTechnicalName,
+                                          );
 
                                       if (!isCompensatoryLeave) {
                                         return const SizedBox.shrink();
                                       }
 
                                       return InfoCard(
-                                        title: context.localizations.compensationDay,
-                                        subtitle: state.compensationForDay != null
+                                        title: context
+                                            .localizations
+                                            .compensationDay,
+                                        subtitle:
+                                            state.compensationForDay != null
                                             ? TimezoneHelper.format(
                                                 TimezoneHelper.createTimestamp(
                                                   DateTime.parse(
@@ -274,26 +330,39 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                                 locale: 'en',
                                                 pattern: 'yyyy-MM-dd',
                                               )
-                                            : context.localizations.selectCompensationDay,
-                                        value: state.compensationForDay ?? context.localizations.selectCompensationDay,
+                                            : context
+                                                  .localizations
+                                                  .selectCompensationDay,
+                                        value:
+                                            state.compensationForDay ??
+                                            context
+                                                .localizations
+                                                .selectCompensationDay,
                                         prefixIcon: Assets.vectorsCalendarFill,
                                         showArrow: false,
-                                        subTitlestyle: state.compensationForDay != null
-                                            ? context.typography.regular16.copyWith(
-                                                color: context.colors.onSurface,
-                                              )
+                                        subTitlestyle:
+                                            state.compensationForDay != null
+                                            ? context.typography.regular16
+                                                  .copyWith(
+                                                    color: context
+                                                        .colors
+                                                        .onSurface,
+                                                  )
                                             : null,
                                         onTap: () {
                                           AppDatePicker.show(
                                             context,
                                             mode: CupertinoDatePickerMode.date,
-                                            initialDate: state.compensationForDay != null
+                                            initialDate:
+                                                state.compensationForDay != null
                                                 ? DateTime.parse(
                                                     state.compensationForDay!,
                                                   )
                                                 : TimezoneHelper.now(),
-                                            onDateChanged: cubit.selectCompensationForDay,
-                                            onDateConfirmed: cubit.selectCompensationForDay,
+                                            onDateChanged:
+                                                cubit.selectCompensationForDay,
+                                            onDateConfirmed:
+                                                cubit.selectCompensationForDay,
                                           );
                                         },
                                       );
@@ -302,16 +371,18 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                 ],
                               ),
                             ),
-                            BlocBuilder<HolidayRequestCubit, HolidayRequestState>(
+                            BlocBuilder<
+                              HolidayRequestCubit,
+                              HolidayRequestState
+                            >(
                               builder: (context, state) {
-                                final cubit = context.read<HolidayRequestCubit>();
+                                final cubit = context
+                                    .read<HolidayRequestCubit>();
                                 // Check if selected leave type is annual leave
                                 final isAnnualLeave =
-                                    state.selectedLeaveTypeName != null &&
-                                    (state.selectedLeaveTypeName!.toLowerCase().contains('annual') ||
-                                        state.selectedLeaveTypeName!.contains(
-                                          'المدفوعة',
-                                        ));
+                                    LeaveTypeTechnical.isAnnual(
+                                      state.selectedLeaveTypeTechnicalName,
+                                    );
 
                                 return Visibility(
                                   visible: isAnnualLeave,
@@ -328,17 +399,22 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                     child: Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              context.localizations.wantAdvanceSalary,
-                                              style: context.typography.semiBold16,
+                                              context
+                                                  .localizations
+                                                  .wantAdvanceSalary,
+                                              style:
+                                                  context.typography.semiBold16,
                                             ),
                                             Transform.scale(
                                               scale: 0.8,
                                               child: Switch.adaptive(
                                                 value: state.advanceSalary,
-                                                onChanged: cubit.toggleAdvanceSalary,
+                                                onChanged:
+                                                    cubit.toggleAdvanceSalary,
                                               ),
                                             ),
                                           ],
@@ -349,16 +425,18 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                 );
                               },
                             ),
-                            BlocBuilder<HolidayRequestCubit, HolidayRequestState>(
+                            BlocBuilder<
+                              HolidayRequestCubit,
+                              HolidayRequestState
+                            >(
                               builder: (context, state) {
-                                final cubit = context.read<HolidayRequestCubit>();
+                                final cubit = context
+                                    .read<HolidayRequestCubit>();
                                 // Check if selected leave type is annual leave
                                 final isAnnualLeave =
-                                    state.selectedLeaveTypeName != null &&
-                                    (state.selectedLeaveTypeName!.toLowerCase().contains('annual') ||
-                                        state.selectedLeaveTypeName!.contains(
-                                          'المدفوعة',
-                                        ));
+                                    LeaveTypeTechnical.isAnnual(
+                                      state.selectedLeaveTypeTechnicalName,
+                                    );
 
                                 return Visibility(
                                   visible: isAnnualLeave,
@@ -375,17 +453,22 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                     child: Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              context.localizations.visaEnterOut,
-                                              style: context.typography.semiBold16,
+                                              context
+                                                  .localizations
+                                                  .visaEnterOut,
+                                              style:
+                                                  context.typography.semiBold16,
                                             ),
                                             Transform.scale(
                                               scale: 0.8,
                                               child: Switch.adaptive(
                                                 value: state.airTicket,
-                                                onChanged: cubit.toggleAirTicket,
+                                                onChanged:
+                                                    cubit.toggleAirTicket,
                                               ),
                                             ),
                                           ],
@@ -397,9 +480,13 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                               },
                             ),
                             // Visa Type InfoCard - visible only when airTicket is enabled
-                            BlocBuilder<HolidayRequestCubit, HolidayRequestState>(
+                            BlocBuilder<
+                              HolidayRequestCubit,
+                              HolidayRequestState
+                            >(
                               builder: (context, state) {
-                                final cubit = context.read<HolidayRequestCubit>();
+                                final cubit = context
+                                    .read<HolidayRequestCubit>();
 
                                 return Visibility(
                                   visible: state.airTicket,
@@ -419,13 +506,25 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                       children: [
                                         InfoCard(
                                           title: context.localizations.visaType,
-                                          subtitle: state.visaTypeName ?? context.localizations.selectVisaType,
-                                          subTitlestyle: state.visaTypeName != null
-                                              ? context.typography.regular16.copyWith(
-                                                  color: context.colors.onSurface,
-                                                )
+                                          subtitle:
+                                              state.visaTypeName ??
+                                              context
+                                                  .localizations
+                                                  .selectVisaType,
+                                          subTitlestyle:
+                                              state.visaTypeName != null
+                                              ? context.typography.regular16
+                                                    .copyWith(
+                                                      color: context
+                                                          .colors
+                                                          .onSurface,
+                                                    )
                                               : null,
-                                          value: state.visaTypeName ?? context.localizations.selectVisaType,
+                                          value:
+                                              state.visaTypeName ??
+                                              context
+                                                  .localizations
+                                                  .selectVisaType,
                                           onTap: () {
                                             BottomSheetWrapper(
                                               disableDrag: true,
@@ -439,14 +538,27 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                           },
                                         ),
                                         InfoCard(
-                                          title: context.localizations.visaPeriod,
-                                          subtitle: state.visaPeriod ?? context.localizations.enterVisaPeriod,
-                                          subTitlestyle: state.visaPeriod != null
-                                              ? context.typography.regular16.copyWith(
-                                                  color: context.colors.onSurface,
-                                                )
+                                          title:
+                                              context.localizations.visaPeriod,
+                                          subtitle:
+                                              state.visaPeriod ??
+                                              context
+                                                  .localizations
+                                                  .enterVisaPeriod,
+                                          subTitlestyle:
+                                              state.visaPeriod != null
+                                              ? context.typography.regular16
+                                                    .copyWith(
+                                                      color: context
+                                                          .colors
+                                                          .onSurface,
+                                                    )
                                               : null,
-                                          value: state.visaPeriod ?? context.localizations.enterVisaPeriod,
+                                          value:
+                                              state.visaPeriod ??
+                                              context
+                                                  .localizations
+                                                  .enterVisaPeriod,
                                           onTap: () {
                                             _showVisaPeriodDialog(
                                               context,
@@ -467,26 +579,40 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                                   locale: 'en',
                                                   pattern: 'yyyy-MM-dd',
                                                 )
-                                              : context.localizations.selectVisaDate,
-                                          value: state.visaDate ?? context.localizations.selectVisaDate,
-                                          prefixIcon: Assets.vectorsCalendarFill,
+                                              : context
+                                                    .localizations
+                                                    .selectVisaDate,
+                                          value:
+                                              state.visaDate ??
+                                              context
+                                                  .localizations
+                                                  .selectVisaDate,
+                                          prefixIcon:
+                                              Assets.vectorsCalendarFill,
                                           showArrow: false,
                                           subTitlestyle: state.visaDate != null
-                                              ? context.typography.regular16.copyWith(
-                                                  color: context.colors.onSurface,
-                                                )
+                                              ? context.typography.regular16
+                                                    .copyWith(
+                                                      color: context
+                                                          .colors
+                                                          .onSurface,
+                                                    )
                                               : null,
                                           onTap: () {
                                             AppDatePicker.show(
                                               context,
-                                              mode: CupertinoDatePickerMode.date,
-                                              initialDate: state.visaDate != null
+                                              mode:
+                                                  CupertinoDatePickerMode.date,
+                                              initialDate:
+                                                  state.visaDate != null
                                                   ? DateTime.parse(
                                                       state.visaDate!,
                                                     )
                                                   : TimezoneHelper.now(),
-                                              onDateChanged: cubit.selectVisaDate,
-                                              onDateConfirmed: cubit.selectVisaDate,
+                                              onDateChanged:
+                                                  cubit.selectVisaDate,
+                                              onDateConfirmed:
+                                                  cubit.selectVisaDate,
                                             );
                                           },
                                         ),
@@ -513,14 +639,19 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                   AppTextField(
                                     title: context.localizations.reason,
                                     controller: _descriptionController,
-                                    hintTextLabel: context.localizations.enterHolidayReasonHere,
+                                    hintTextLabel: context
+                                        .localizations
+                                        .enterHolidayReasonHere,
                                     maxLines: 4,
                                     onChanged: (value) {
-                                      context.read<HolidayRequestCubit>().updateDescription(value);
+                                      context
+                                          .read<HolidayRequestCubit>()
+                                          .updateDescription(value);
                                     },
                                   ),
                                   Align(
-                                    alignment: context.localizations.localeName == 'ar'
+                                    alignment:
+                                        context.localizations.localeName == 'ar'
                                         ? Alignment.centerRight
                                         : Alignment.centerLeft,
                                     child: Text(
@@ -539,19 +670,28 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                     ),
                     BlocBuilder<HolidayRequestCubit, HolidayRequestState>(
                       builder: (context, state) {
-                        final isLoading = state.status == HolidayRequestStatus.submitting;
-                        
+                        final isLoading =
+                            state.status == HolidayRequestStatus.submitting;
+
                         // Check if selected leave type is compensatory leave
                         final isCompensatoryLeave =
                             state.selectedLeaveTypeName != null &&
-                            (state.selectedLeaveTypeName!.toLowerCase().contains('compensatory') ||
-                                state.selectedLeaveTypeName!.toLowerCase().contains('compensation') ||
-                                state.selectedLeaveTypeName!.contains('تعويضية'));
-                        
-                        final canSubmit = state.selectedLeaveTypeId != null && 
-                            state.startDate != null && 
+                            (state.selectedLeaveTypeName!
+                                    .toLowerCase()
+                                    .contains('compensatory') ||
+                                state.selectedLeaveTypeName!
+                                    .toLowerCase()
+                                    .contains('compensation') ||
+                                state.selectedLeaveTypeName!.contains(
+                                  'تعويضية',
+                                ));
+
+                        final canSubmit =
+                            state.selectedLeaveTypeId != null &&
+                            state.startDate != null &&
                             state.endDate != null &&
-                            (!isCompensatoryLeave || state.compensationForDay != null);
+                            (!isCompensatoryLeave ||
+                                state.compensationForDay != null);
 
                         return isLoading
                             ? Center(
@@ -575,14 +715,18 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                       ? null
                                       : () {
                                           // Get uploaded files from FileUploadCubit
-                                          final files = _fileUploadCubit.state.files
+                                          final files = _fileUploadCubit
+                                              .state
+                                              .files
                                               .where(
                                                 (file) => file.isUploadComplete,
                                               )
                                               .toList();
 
                                           // Submit the request
-                                          context.read<HolidayRequestCubit>().submitHolidayRequest(files);
+                                          context
+                                              .read<HolidayRequestCubit>()
+                                              .submitHolidayRequest(files);
                                         },
                                   label: context.localizations.send,
                                   appButtonSize: AppButtonSize.xxLarge,
@@ -620,7 +764,10 @@ void _showVisaPeriodDialog(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: AppSpacing.md.h,
           children: [
-            Text(context.localizations.visaPeriodTitle, style: context.typography.semiBold16),
+            Text(
+              context.localizations.visaPeriodTitle,
+              style: context.typography.semiBold16,
+            ),
             Expanded(
               child: ListView.separated(
                 separatorBuilder: (_, _) => const AppDivider(),
@@ -644,9 +791,14 @@ void _showVisaPeriodDialog(
                         children: [
                           Text(
                             context.localizations.visaMonths(period),
-                            style: isSelected ? context.typography.medium16 : context.typography.regular16,
+                            style: isSelected
+                                ? context.typography.medium16
+                                : context.typography.regular16,
                           ),
-                          if (isSelected) const AppVectorGraphic(path: Assets.vectorsCheckline),
+                          if (isSelected)
+                            const AppVectorGraphic(
+                              path: Assets.vectorsCheckline,
+                            ),
                         ],
                       ),
                     ),

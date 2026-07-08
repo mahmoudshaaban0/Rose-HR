@@ -50,6 +50,7 @@ class Datum {
   Datum({
     this.id,
     this.name,
+    this.technicalName,
     this.hasValidAllocation,
     this.requiresAllocation,
     this.virtualRemainingLeaves,
@@ -63,6 +64,8 @@ class Datum {
   int? id;
   @JsonKey(name: "name")
   String? name;
+  @JsonKey(name: "technical_name")
+  String? technicalName;
   @JsonKey(name: "has_valid_allocation")
   bool? hasValidAllocation;
   @JsonKey(name: "requires_allocation")

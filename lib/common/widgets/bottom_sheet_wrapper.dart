@@ -18,6 +18,7 @@ class BottomSheetWrapper extends StatefulWidget {
     this.removeAutoScroll = false,
     this.useSolidBackground = false,
     this.useRootNavigator = false,
+    this.fitSheetHeight = false,
   });
   final Widget child;
   final DraggableScrollableController? dragControl;
@@ -30,6 +31,12 @@ class BottomSheetWrapper extends StatefulWidget {
   final bool removeAutoScroll;
   final bool useSolidBackground;
   final bool? useRootNavigator;
+
+  /// When true, the sheet body is sized to the sheet's own extent instead of
+  /// the full screen height. Use for sheets whose child scrolls internally
+  /// (e.g. a `ListView`), so it scrolls on its own without a competing outer
+  /// scroll view and without clipping the last item.
+  final bool fitSheetHeight;
 
   @override
   State<BottomSheetWrapper> createState() => _BottomSheetWrapperState();
@@ -70,6 +77,11 @@ class BottomSheetWrapper extends StatefulWidget {
               minChildSize: minChildSize ?? .17,
               expand: false,
               builder: (ctx, scrl) {
+                if (fitSheetHeight) {
+                  // Size to the sheet extent so the child (e.g. a ListView)
+                  // scrolls internally without a competing outer scroll view.
+                  return this;
+                }
                 return removeAutoScroll
                     ? SizedBox(
                         height: MediaQuery.of(context).size.height,

@@ -16,6 +16,8 @@ class PunchCorrectionState extends Equatable {
     this.startTime,
     this.endTime,
     this.attendanceLogId,
+    this.attendanceLogOutId,
+    this.editingType,
     this.punchCorrectionResponseModel,
     this.attendanceLogsStatus = AttendanceLogsStatus.initial,
     this.attendanceLogs,
@@ -31,6 +33,14 @@ class PunchCorrectionState extends Equatable {
   final double? startTime;
   final double? endTime;
   final int? attendanceLogId;
+
+  /// Check-out attendance log ID, used when [correctionType] is 'both'.
+  final int? attendanceLogOutId;
+
+  /// Which slot the correction-time screen is currently editing: 'in' or
+  /// 'out'. Drives whether the picked time/log is stored as the check-in or
+  /// check-out value.
+  final String? editingType;
   final PunchCorrectionResponseModel? punchCorrectionResponseModel;
   final AttendanceLogsStatus attendanceLogsStatus;
   final AttendanceLogsResponseModel? attendanceLogs;
@@ -48,6 +58,8 @@ class PunchCorrectionState extends Equatable {
     startTime,
     endTime,
     attendanceLogId,
+    attendanceLogOutId,
+    editingType,
     punchCorrectionResponseModel,
     attendanceLogsStatus,
     attendanceLogs,
@@ -65,6 +77,8 @@ class PunchCorrectionState extends Equatable {
     double? startTime,
     double? endTime,
     int? attendanceLogId,
+    int? attendanceLogOutId,
+    String? editingType,
     PunchCorrectionResponseModel? punchCorrectionResponseModel,
     AttendanceLogsStatus? attendanceLogsStatus,
     AttendanceLogsResponseModel? attendanceLogs,
@@ -81,6 +95,8 @@ class PunchCorrectionState extends Equatable {
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       attendanceLogId: attendanceLogId ?? this.attendanceLogId,
+      attendanceLogOutId: attendanceLogOutId ?? this.attendanceLogOutId,
+      editingType: editingType ?? this.editingType,
       punchCorrectionResponseModel: punchCorrectionResponseModel ?? this.punchCorrectionResponseModel,
       attendanceLogsStatus: attendanceLogsStatus ?? this.attendanceLogsStatus,
       attendanceLogs: attendanceLogs ?? this.attendanceLogs,

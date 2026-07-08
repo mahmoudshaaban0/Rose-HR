@@ -45,6 +45,7 @@ Map<String, dynamic> _$LeaveTypesResultToJson(LeaveTypesResult instance) =>
 Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
   id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
+  technicalName: json['technical_name'] as String?,
   hasValidAllocation: json['has_valid_allocation'] as bool?,
   requiresAllocation: $enumDecodeNullable(
     _$RequiresAllocationEnumMap,
@@ -59,6 +60,7 @@ Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
 Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
+  'technical_name': instance.technicalName,
   'has_valid_allocation': instance.hasValidAllocation,
   'requires_allocation':
       _$RequiresAllocationEnumMap[instance.requiresAllocation],

@@ -10,6 +10,7 @@ class HolidayRequestState extends Equatable {
     this.holidayRequestResponseModel,
     this.selectedLeaveTypeName,
     this.selectedLeaveTypeId,
+    this.selectedLeaveTypeTechnicalName,
     this.startDate,
     this.endDate,
     this.advanceSalary = false,
@@ -28,6 +29,7 @@ class HolidayRequestState extends Equatable {
   final HolidayRequestResponseModel? holidayRequestResponseModel;
   final String? selectedLeaveTypeName;
   final int? selectedLeaveTypeId;
+  final String? selectedLeaveTypeTechnicalName;
   final String? startDate;
   final String? endDate;
   final bool advanceSalary;
@@ -47,6 +49,7 @@ class HolidayRequestState extends Equatable {
     holidayRequestResponseModel,
     selectedLeaveTypeName,
     selectedLeaveTypeId,
+    selectedLeaveTypeTechnicalName,
     startDate,
     endDate,
     advanceSalary,
@@ -66,6 +69,7 @@ class HolidayRequestState extends Equatable {
     HolidayRequestResponseModel? holidayRequestResponseModel,
     String? selectedLeaveTypeName,
     int? selectedLeaveTypeId,
+    String? selectedLeaveTypeTechnicalName,
     String? startDate,
     String? endDate,
     bool? advanceSalary,
@@ -84,6 +88,8 @@ class HolidayRequestState extends Equatable {
       holidayRequestResponseModel: holidayRequestResponseModel ?? this.holidayRequestResponseModel,
       selectedLeaveTypeName: selectedLeaveTypeName ?? this.selectedLeaveTypeName,
       selectedLeaveTypeId: selectedLeaveTypeId ?? this.selectedLeaveTypeId,
+      selectedLeaveTypeTechnicalName:
+          selectedLeaveTypeTechnicalName ?? this.selectedLeaveTypeTechnicalName,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       advanceSalary: advanceSalary ?? this.advanceSalary,
