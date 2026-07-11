@@ -673,18 +673,14 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                         final isLoading =
                             state.status == HolidayRequestStatus.submitting;
 
-                        // Check if selected leave type is compensatory leave
+                        // Check if selected leave type is compensatory leave.
+                        // Must match the compensated-day field's own check so a
+                        // non-compensatory type is never blocked by a missing
+                        // compensation day it can't set.
                         final isCompensatoryLeave =
-                            state.selectedLeaveTypeName != null &&
-                            (state.selectedLeaveTypeName!
-                                    .toLowerCase()
-                                    .contains('compensatory') ||
-                                state.selectedLeaveTypeName!
-                                    .toLowerCase()
-                                    .contains('compensation') ||
-                                state.selectedLeaveTypeName!.contains(
-                                  'تعويضية',
-                                ));
+                            LeaveTypeTechnical.isCompensatory(
+                              state.selectedLeaveTypeTechnicalName,
+                            );
 
                         final canSubmit =
                             state.selectedLeaveTypeId != null &&
