@@ -33,11 +33,13 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
     int leaveTypeId, [
     String? technicalName,
   ]) {
-    // Check if the selected leave type is annual leave
-    final isAnnualLeave = LeaveTypeTechnical.isAnnual(technicalName);
+    // Annual and compensatory leave show the advance-salary / visa switches.
+    final supportsSwitches =
+        LeaveTypeTechnical.isAnnual(technicalName) ||
+        LeaveTypeTechnical.isCompensatory(technicalName);
 
-    // If not annual leave, reset the switches to false
-    if (!isAnnualLeave) {
+    // If the leave type doesn't support the switches, reset them to false.
+    if (!supportsSwitches) {
       emit(
         state.copyWith(
           selectedLeaveTypeName: leaveTypeName,
@@ -172,11 +174,12 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
         return;
       }
 
-      // Validate compensation day for compensatory leave
-      final isCompensatoryLeave =
-          LeaveTypeTechnical.isCompensatory(state.selectedLeaveTypeTechnicalName);
+      // Validate compensation day for compensatory-off leave
+      final isCompensatoryOffLeave = LeaveTypeTechnical.isCompensatoryOff(
+        state.selectedLeaveTypeTechnicalName,
+      );
 
-      if (isCompensatoryLeave && state.compensationForDay == null) {
+      if (isCompensatoryOffLeave && state.compensationForDay == null) {
         emit(
           state.copyWith(
             status: HolidayRequestStatus.submitError,

@@ -38,7 +38,12 @@ Map<String, dynamic> _$HomeDataToJson(HomeData instance) => <String, dynamic>{
 LeaveBalance _$LeaveBalanceFromJson(Map<String, dynamic> json) => LeaveBalance(
   label: json['label'] as String?,
   balance: (json['balance'] as num?)?.toDouble(),
+  unit: json['unit'] as String?,
 );
 
 Map<String, dynamic> _$LeaveBalanceToJson(LeaveBalance instance) =>
-    <String, dynamic>{'label': instance.label, 'balance': instance.balance};
+    <String, dynamic>{
+      'label': instance.label,
+      'balance': instance.balance,
+      'unit': instance.unit,
+    };

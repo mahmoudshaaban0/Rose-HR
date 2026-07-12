@@ -6,11 +6,18 @@ abstract final class LeaveTypeTechnical {
   /// "exit/re-entry visa" options.
   static const String annual = 'annual';
 
-  /// Compensatory (time-off in lieu) leave. Shows the compensated-day field.
-  static const String compensatory = 'compensatory_off';
+  /// Compensatory (time-off in lieu) leave. Shows the "advance salary" /
+  /// "exit/re-entry visa" options, like annual leave.
+  static const String compensatory = 'compensatory';
+
+  /// Compensatory-off leave. Shows the compensated-day field.
+  static const String compensatoryOff = 'compensatory_off';
 
   static bool isAnnual(String? technicalName) => technicalName == annual;
 
   static bool isCompensatory(String? technicalName) =>
       technicalName == compensatory;
+
+  static bool isCompensatoryOff(String? technicalName) =>
+      technicalName == compensatoryOff;
 }

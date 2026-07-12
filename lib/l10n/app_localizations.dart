@@ -242,11 +242,11 @@ abstract class AppLocalizations {
   /// **'Resignation'**
   String get resignation;
 
-  /// No description provided for @accuredLeaveBalance.
+  /// No description provided for @accuredBalance.
   ///
   /// In en, this message translates to:
-  /// **'Accured Leave Balance'**
-  String get accuredLeaveBalance;
+  /// **'Accured Balance'**
+  String get accuredBalance;
 
   /// No description provided for @timeLeftUntilYourShiftEnds.
   ///

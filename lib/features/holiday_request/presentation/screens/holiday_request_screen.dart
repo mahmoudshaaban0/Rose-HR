@@ -304,14 +304,15 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                     builder: (context, state) {
                                       final cubit = context
                                           .read<HolidayRequestCubit>();
-                                      // Check if selected leave type is compensatory leave
-                                      final isCompensatoryLeave =
-                                          LeaveTypeTechnical.isCompensatory(
+                                      // Compensation day shows only for the
+                                      // compensatory-off leave type.
+                                      final isCompensatoryOffLeave =
+                                          LeaveTypeTechnical.isCompensatoryOff(
                                             state
                                                 .selectedLeaveTypeTechnicalName,
                                           );
 
-                                      if (!isCompensatoryLeave) {
+                                      if (!isCompensatoryOffLeave) {
                                         return const SizedBox.shrink();
                                       }
 
@@ -378,14 +379,18 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                               builder: (context, state) {
                                 final cubit = context
                                     .read<HolidayRequestCubit>();
-                                // Check if selected leave type is annual leave
-                                final isAnnualLeave =
+                                // Show the switches for annual and compensatory
+                                // leave types.
+                                final showSwitches =
                                     LeaveTypeTechnical.isAnnual(
+                                      state.selectedLeaveTypeTechnicalName,
+                                    ) ||
+                                    LeaveTypeTechnical.isCompensatory(
                                       state.selectedLeaveTypeTechnicalName,
                                     );
 
                                 return Visibility(
-                                  visible: isAnnualLeave,
+                                  visible: showSwitches,
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
                                       horizontal: AppSpacing.md.w,
@@ -432,14 +437,18 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                               builder: (context, state) {
                                 final cubit = context
                                     .read<HolidayRequestCubit>();
-                                // Check if selected leave type is annual leave
-                                final isAnnualLeave =
+                                // Show the switches for annual and compensatory
+                                // leave types.
+                                final showSwitches =
                                     LeaveTypeTechnical.isAnnual(
+                                      state.selectedLeaveTypeTechnicalName,
+                                    ) ||
+                                    LeaveTypeTechnical.isCompensatory(
                                       state.selectedLeaveTypeTechnicalName,
                                     );
 
                                 return Visibility(
-                                  visible: isAnnualLeave,
+                                  visible: showSwitches,
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
                                       horizontal: AppSpacing.md.w,
@@ -673,12 +682,9 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                         final isLoading =
                             state.status == HolidayRequestStatus.submitting;
 
-                        // Check if selected leave type is compensatory leave.
-                        // Must match the compensated-day field's own check so a
-                        // non-compensatory type is never blocked by a missing
-                        // compensation day it can't set.
-                        final isCompensatoryLeave =
-                            LeaveTypeTechnical.isCompensatory(
+                        // Compensatory-off leave requires a compensation day.
+                        final isCompensatoryOffLeave =
+                            LeaveTypeTechnical.isCompensatoryOff(
                               state.selectedLeaveTypeTechnicalName,
                             );
 
@@ -686,7 +692,7 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                             state.selectedLeaveTypeId != null &&
                             state.startDate != null &&
                             state.endDate != null &&
-                            (!isCompensatoryLeave ||
+                            (!isCompensatoryOffLeave ||
                                 state.compensationForDay != null);
 
                         return isLoading

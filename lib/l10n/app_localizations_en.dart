@@ -82,7 +82,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resignation => 'Resignation';
 
   @override
-  String get accuredLeaveBalance => 'Accured Leave Balance';
+  String get accuredBalance => 'Accured Balance';
 
   @override
   String get timeLeftUntilYourShiftEnds => 'Time left until your shift ends';

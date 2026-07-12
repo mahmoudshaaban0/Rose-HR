@@ -25,7 +25,7 @@
      "holidayRequest": "طلب إجازة",
      "permissionRequest": "طلب استئذان",
      "resignation": "استقالة",
-     "accuredLeaveBalance": "رصيد الإجازة المستحق",
+     "accuredBalance": "الرصيد المستحق",
      "timeLeftUntilYourShiftEnds": "تبقى على نهاية دوامك",
      "shiftEnded": "انتهى الدوام",
      "hours": "ساعات ",

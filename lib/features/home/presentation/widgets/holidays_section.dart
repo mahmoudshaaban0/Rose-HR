@@ -25,7 +25,7 @@ class HolidaysSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            context.localizations.accuredLeaveBalance,
+            context.localizations.accuredBalance,
             style: context.typography.semiBold16,
           ),
           const AppDivider(),
@@ -44,7 +44,7 @@ class HolidaysSection extends StatelessWidget {
               if (balances.isEmpty) {
                 return _LeaveBalanceCard(
                   balance: ' 0 ',
-                  label: context.localizations.accuredLeaveBalance,
+                  label: context.localizations.accuredBalance,
                 );
               }
               return Column(
@@ -57,7 +57,8 @@ class HolidaysSection extends StatelessWidget {
                         balance: ' ${_formatBalance(balance.balance)} ',
                         label:
                             balance.label ??
-                            context.localizations.accuredLeaveBalance,
+                            context.localizations.accuredBalance,
+                        unit: balance.unit,
                       ),
                     ),
                 ],
@@ -82,10 +83,12 @@ class _LeaveBalanceCard extends StatelessWidget {
   const _LeaveBalanceCard({
     required this.balance,
     required this.label,
+    this.unit,
   });
 
   final String balance;
   final String label;
+  final String? unit;
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +114,12 @@ class _LeaveBalanceCard extends StatelessWidget {
             balance,
             style: context.typography.semiBold16,
           ),
+          if (unit != null && unit!.isNotEmpty) ...[
+            Text(
+              unit!,
+              style: context.typography.regular14,
+            ),
+          ],
         ],
       ),
     );

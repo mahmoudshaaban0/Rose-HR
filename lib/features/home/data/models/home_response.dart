@@ -80,6 +80,7 @@ class LeaveBalance {
   LeaveBalance({
     this.label,
     this.balance,
+    this.unit,
   });
 
   factory LeaveBalance.fromJson(Map<String, dynamic> json) => _$LeaveBalanceFromJson(json);
@@ -87,6 +88,8 @@ class LeaveBalance {
   String? label;
   @JsonKey(name: "balance")
   double? balance;
+  @JsonKey(name: "unit")
+  String? unit;
 
   Map<String, dynamic> toJson() => _$LeaveBalanceToJson(this);
 }

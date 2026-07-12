@@ -83,7 +83,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get resignation => 'استقالة';
 
   @override
-  String get accuredLeaveBalance => 'رصيد الإجازة المستحق';
+  String get accuredBalance => 'الرصيد المستحق';
 
   @override
   String get timeLeftUntilYourShiftEnds => 'تبقى على نهاية دوامك';

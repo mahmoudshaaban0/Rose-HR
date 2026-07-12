@@ -24,7 +24,7 @@
     "holidayRequest": "Holiday Request",
     "permissionRequest": "Permission Request",
     "resignation": "Resignation",
-    "accuredLeaveBalance": "Accured Leave Balance",
+    "accuredBalance": "Accured Balance",
     "timeLeftUntilYourShiftEnds": "Time left until your shift ends",
     "shiftEnded": "Shift Ended",
     "hours": "Hours",
