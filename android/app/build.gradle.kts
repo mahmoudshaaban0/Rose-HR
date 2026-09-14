@@ -37,7 +37,7 @@ android {
     defaultConfig {
         applicationId = "com.roseholding.hr"
         minSdk = flutter.minSdkVersion
-        targetSdk = 35
+        targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
