@@ -3,15 +3,21 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:rose_hr/common/constants/app_strings.dart';
 import 'package:rose_hr/common/notifications/notification_helpers.dart';
 import 'package:rose_hr/common/utility/logger.dart';
 
-class NotificationService {
+class NotificationService with WidgetsBindingObserver {
   factory NotificationService() => _instance;
   NotificationService._();
   static final NotificationService _instance = NotificationService._();
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  static const MethodChannel _badgeChannel = MethodChannel(
+    AppStrings.badgeChannel,
+  );
   FlutterLocalNotificationsPlugin? _plugin;
   bool _initialized = false;
   final _tapController = StreamController<Map<String, dynamic>>.broadcast();
@@ -35,6 +41,10 @@ class NotificationService {
         await _createChannel();
       }
       await _setupListeners();
+      WidgetsBinding.instance.addObserver(this);
+      // Cold start: the app may have been launched from a notification, or
+      // opened normally while a badge from an earlier push was still set.
+      await clearBadge();
       _initialized = true;
     } catch (e) {
       AppLogger.instance.logError('Init error: $e');
@@ -89,6 +99,34 @@ class NotificationService {
     return null;
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(clearBadge());
+    }
+  }
+
+  /// Resets the app-icon badge and drops any notifications still sitting in
+  /// the tray.
+  ///
+  /// Neither platform does this on its own when the app is opened:
+  /// * iOS keeps whatever `aps.badge` the last push carried until the app
+  ///   explicitly zeroes it — hence the native channel call.
+  /// * The Android launcher dot/count is derived from the app's notifications
+  ///   still in the shade, so `cancelAll()` (a plain
+  ///   `NotificationManagerCompat.cancelAll()`) is what clears it. That covers
+  ///   pushes rendered by the Firebase SDK too, not just our local ones.
+  Future<void> clearBadge() async {
+    try {
+      await _plugin?.cancelAll();
+      if (Platform.isIOS) {
+        await _badgeChannel.invokeMethod<void>(AppStrings.badgeClearMethod);
+      }
+    } on Exception catch (e) {
+      AppLogger.instance.logError('Clear badge error: $e');
+    }
+  }
+
   Future<void> _showForeground(RemoteMessage message) async {
     if (_plugin != null) {
       await NotificationHelpers.showNotification(message, _plugin!);
@@ -124,6 +162,7 @@ class NotificationService {
   static Future<void> subscribeToTopic(String topic) => _messaging.subscribeToTopic(topic);
   static Future<void> unsubscribeFromTopic(String topic) => _messaging.unsubscribeFromTopic(topic);
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _tapController.close();
   }
 }

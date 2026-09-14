@@ -729,6 +729,21 @@ class AppLocalizationsAr extends AppLocalizations {
       'يرجى اختيار يوم التعويض للإجازة التعويضية';
 
   @override
+  String get bereavementType => 'نوع إجازة الوفاة';
+
+  @override
+  String get selectBereavementType => 'اختر نوع إجازة الوفاة';
+
+  @override
+  String get bereavementTypeRacines => 'الأصول (الوالدين)';
+
+  @override
+  String get bereavementTypeSibling => 'الأشقاء';
+
+  @override
+  String get pleaseSelectBereavementType => 'يرجى اختيار نوع إجازة الوفاة';
+
+  @override
   String get noLeaveTypesAvailable => 'لا توجد أنواع إجازات متاحة';
 
   @override

@@ -32,8 +32,7 @@ class HomeScreen extends StatelessWidget {
       ],
       child: Builder(
         builder: (context) {
-          return Scaffold(
-            body: SafeArea(
+          return Scaffold(            body: SafeArea(
               child: RefreshIndicator.adaptive(
                 onRefresh: () async {
                   await TimezoneManager.refreshFromGps();

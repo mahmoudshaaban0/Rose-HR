@@ -13,6 +13,9 @@ abstract final class LeaveTypeTechnical {
   /// Compensatory-off leave. Shows the compensated-day field.
   static const String compensatoryOff = 'compensatory_off';
 
+  /// Bereavement leave. Shows the bereavement-type picker.
+  static const String bereavement = 'bereavement';
+
   static bool isAnnual(String? technicalName) => technicalName == annual;
 
   static bool isCompensatory(String? technicalName) =>
@@ -20,4 +23,7 @@ abstract final class LeaveTypeTechnical {
 
   static bool isCompensatoryOff(String? technicalName) =>
       technicalName == compensatoryOff;
+
+  static bool isBereavement(String? technicalName) =>
+      technicalName == bereavement;
 }

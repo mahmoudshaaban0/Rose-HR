@@ -220,7 +220,7 @@ class Datum {
   @JsonKey(name: "leave_require_advance_salary")
   bool? leaveRequireAdvanceSalary;
   @JsonKey(name: "leave_bereavement_type")
-  bool? leaveBereavementType;
+  dynamic leaveBereavementType;
   @JsonKey(name: "leave_can_cancel")
   bool? leaveCanCancel;
   @JsonKey(name: "leave_can_approve")

@@ -37,4 +37,8 @@ class AppStrings {
   static const String androidIcon = '@mipmap/ic_launcher';
   static const String androidSound = 'notification_sound';
   static const String iosSound = 'notification_sound.aiff';
+
+  /// Platform channel used to reset the iOS app-icon badge (see AppDelegate).
+  static const String badgeChannel = 'com.roseholding.crm/badge';
+  static const String badgeClearMethod = 'clear';
 }

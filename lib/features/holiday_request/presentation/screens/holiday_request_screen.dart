@@ -17,6 +17,7 @@ import 'package:rose_hr/common/widgets/success_request_bottomsheet.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
 import 'package:rose_hr/features/holiday_request/data/models/leave_type_technical.dart';
 import 'package:rose_hr/features/holiday_request/presentation/bloc/holiday_request_cubit.dart';
+import 'package:rose_hr/features/holiday_request/presentation/widgets/bereavement_type_listview.dart';
 import 'package:rose_hr/features/holiday_request/presentation/widgets/leave_type_listview.dart';
 import 'package:rose_hr/features/holiday_request/presentation/widgets/visa_type_listview.dart';
 import 'package:rose_hr/theme/app_sizes.dart';
@@ -369,6 +370,63 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                                       );
                                     },
                                   ),
+                                  BlocBuilder<
+                                    HolidayRequestCubit,
+                                    HolidayRequestState
+                                  >(
+                                    builder: (context, state) {
+                                      final cubit = context
+                                          .read<HolidayRequestCubit>();
+                                      // The bereavement type shows only for
+                                      // the bereavement leave type.
+                                      final isBereavementLeave =
+                                          LeaveTypeTechnical.isBereavement(
+                                            state
+                                                .selectedLeaveTypeTechnicalName,
+                                          );
+
+                                      if (!isBereavementLeave) {
+                                        return const SizedBox.shrink();
+                                      }
+
+                                      return InfoCard(
+                                        title: context
+                                            .localizations
+                                            .bereavementType,
+                                        subtitle:
+                                            state.bereavementTypeName ??
+                                            context
+                                                .localizations
+                                                .selectBereavementType,
+                                        subTitlestyle:
+                                            state.bereavementTypeName != null
+                                            ? context.typography.regular16
+                                                  .copyWith(
+                                                    color: context
+                                                        .colors
+                                                        .onSurface,
+                                                  )
+                                            : null,
+                                        value:
+                                            state.bereavementTypeName ??
+                                            context
+                                                .localizations
+                                                .selectBereavementType,
+                                        onTap: () {
+                                          BottomSheetWrapper(
+                                            disableDrag: true,
+                                            initialSize: .3.h,
+                                            maxChildSize: .3.h,
+                                            child: BlocProvider.value(
+                                              value: cubit,
+                                              child:
+                                                  const BereavementTypeListView(),
+                                            ),
+                                          ).callSheet(context);
+                                        },
+                                      );
+                                    },
+                                  ),
                                 ],
                               ),
                             ),
@@ -688,12 +746,20 @@ class _HolidayRequestScreenState extends State<HolidayRequestScreen> {
                               state.selectedLeaveTypeTechnicalName,
                             );
 
+                        // Bereavement leave requires a bereavement type.
+                        final isBereavementLeave =
+                            LeaveTypeTechnical.isBereavement(
+                              state.selectedLeaveTypeTechnicalName,
+                            );
+
                         final canSubmit =
                             state.selectedLeaveTypeId != null &&
                             state.startDate != null &&
                             state.endDate != null &&
                             (!isCompensatoryOffLeave ||
-                                state.compensationForDay != null);
+                                state.compensationForDay != null) &&
+                            (!isBereavementLeave ||
+                                state.bereavementTypeId != null);
 
                         return isLoading
                             ? Center(

@@ -38,6 +38,10 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
         LeaveTypeTechnical.isAnnual(technicalName) ||
         LeaveTypeTechnical.isCompensatory(technicalName);
 
+    // The bereavement-type picker only applies to bereavement leave, so drop
+    // any previously picked value when switching to another leave type.
+    final keepBereavementType = LeaveTypeTechnical.isBereavement(technicalName);
+
     // If the leave type doesn't support the switches, reset them to false.
     if (!supportsSwitches) {
       emit(
@@ -48,6 +52,8 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
           advanceSalary: false,
           airTicket: false,
           compensationForDay: null,
+          bereavementTypeName: keepBereavementType ? state.bereavementTypeName : null,
+          bereavementTypeId: keepBereavementType ? state.bereavementTypeId : null,
         ),
       );
     } else {
@@ -58,6 +64,8 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
           selectedLeaveTypeId: leaveTypeId,
           selectedLeaveTypeTechnicalName: technicalName,
           compensationForDay: null,
+          bereavementTypeName: keepBereavementType ? state.bereavementTypeName : null,
+          bereavementTypeId: keepBereavementType ? state.bereavementTypeId : null,
         ),
       );
     }
@@ -128,6 +136,16 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
     emit(state.copyWith(visaDate: date.toIso8601String()));
   }
 
+  void selectBereavementType(String bereavementTypeName, String bereavementTypeId) {
+    if (isClosed) return;
+    emit(
+      state.copyWith(
+        bereavementTypeName: bereavementTypeName,
+        bereavementTypeId: bereavementTypeId,
+      ),
+    );
+  }
+
   void selectCompensationForDay(DateTime date) {
     if (isClosed) return;
     emit(state.copyWith(compensationForDay: date.toIso8601String()));
@@ -184,6 +202,21 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
           state.copyWith(
             status: HolidayRequestStatus.submitError,
             errorMessage: 'pleaseSelectCompensationDay',
+          ),
+        );
+        return;
+      }
+
+      // Validate bereavement type for bereavement leave
+      final isBereavementLeave = LeaveTypeTechnical.isBereavement(
+        state.selectedLeaveTypeTechnicalName,
+      );
+
+      if (isBereavementLeave && state.bereavementTypeId == null) {
+        emit(
+          state.copyWith(
+            status: HolidayRequestStatus.submitError,
+            errorMessage: 'pleaseSelectBereavementType',
           ),
         );
         return;
@@ -254,6 +287,7 @@ class HolidayRequestCubit extends Cubit<HolidayRequestState> {
           visaType: state.airTicket ? state.visaTypeId : null,
           visaPeriod: state.airTicket ? state.visaPeriod : null,
           visaNeededBefore: formattedVisaDate,
+          bereavementType: isBereavementLeave ? state.bereavementTypeId : null,
           attachmentIds: attachments,
           compensationForDay: formattedCompensationForDay,
         ),

@@ -22,6 +22,7 @@ import 'package:rose_hr/common/widgets/success_request_bottomsheet.dart';
 import 'package:rose_hr/common/widgets/upload_file_placholder.dart';
 import 'package:rose_hr/common/widgets/upload_source_bottom_sheet.dart';
 import 'package:rose_hr/common/widgets/vector.dart';
+import 'package:rose_hr/features/permission_request/data/models/permission_request_model.dart';
 import 'package:rose_hr/features/permission_request/data/models/shift_id_response_model.dart';
 import 'package:rose_hr/features/permission_request/presentation/cubit/shift_id_cubit.dart';
 import 'package:rose_hr/features/permission_request/presentation/cubit/shift_id_state.dart';
@@ -260,10 +261,26 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
     // Get reason from controller
     final reason = _reasonController.text.trim().isEmpty ? '' : _reasonController.text.trim();
 
+    // Collect the successfully encoded attachments. Files still encoding are
+    // blocked by the submit button, so anything pending here already failed.
+    final uploadedFiles = _fileUploadCubit.state.uploadedFiles;
+    final attachments = uploadedFiles.isEmpty
+        ? null
+        : uploadedFiles
+              .map(
+                (file) => AttachmentData(
+                  name: file.name,
+                  data: file.base64Data ?? '',
+                  mimetype: file.mimeType,
+                ),
+              )
+              .toList();
+
     // Submit the request using manual method with formatted date
     context.read<PunchCorrectionCubit>().submitPunchCorrection(
       formattedDate: formattedDate,
       reason: !reason.isNullOrEmpty ? '${state.reasonId} - $reason' : state.reasonId,
+      attachmentIds: attachments,
     );
   }
 
@@ -429,7 +446,10 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                               AppLogger.instance.logDebug('selected date: ${cubit.state.date}');
                                               AppLogger.instance.logDebug('fetching shift for date: $formattedDate');
                                             },
-                                            child: Text(context.localizations.done, style: context.typography.regular16),
+                                            child: Text(
+                                              context.localizations.done,
+                                              style: context.typography.regular16,
+                                            ),
                                           ),
                                         );
                                       },
@@ -493,14 +513,19 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 spacing: AppSpacing.md.h,
                                                 children: [
-                                                  Text(context.localizations.selectShift, style: context.typography.semiBold18),
+                                                  Text(
+                                                    context.localizations.selectShift,
+                                                    style: context.typography.semiBold18,
+                                                  ),
                                                   ListView.separated(
                                                     separatorBuilder: (context, index) => const AppDivider(),
-                                                    itemCount: shiftState.shiftIdResponseModel?.result?.data?.length ?? 0,
+                                                    itemCount:
+                                                        shiftState.shiftIdResponseModel?.result?.data?.length ?? 0,
                                                     shrinkWrap: true,
                                                     physics: const NeverScrollableScrollPhysics(),
                                                     itemBuilder: (context, index) {
-                                                      final shift = shiftState.shiftIdResponseModel?.result?.data?[index];
+                                                      final shift =
+                                                          shiftState.shiftIdResponseModel?.result?.data?[index];
                                                       final isSelected = shift?.id == punchCorrectionState.shiftId;
 
                                                       return InkWell(
@@ -698,11 +723,14 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                 return InfoCard(
                                   title: context.localizations.reason,
                                   subtitle:
-                                      selectedReason?.label(context.localizations) ?? context.localizations.forgotFingerprint,
+                                      selectedReason?.label(context.localizations) ??
+                                      context.localizations.forgotFingerprint,
                                   subTitlestyle: selectedReason != null
                                       ? context.typography.regular16.copyWith(color: context.colors.onSurface)
                                       : null,
-                                  value: selectedReason?.label(context.localizations) ?? context.localizations.enterDetailsHere,
+                                  value:
+                                      selectedReason?.label(context.localizations) ??
+                                      context.localizations.enterDetailsHere,
                                   onTap: () {
                                     BottomSheetWrapper(
                                       initialSize: 0.5.h,
@@ -730,7 +758,8 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                                     separatorBuilder: (context, index) => const AppDivider(),
                                                     itemCount: punchCorrectionReasons.length,
                                                     itemBuilder: (context, index) {
-                                                      final isSelected = punchCorrectionReasons[index].id == state.reasonId;
+                                                      final isSelected =
+                                                          punchCorrectionReasons[index].id == state.reasonId;
                                                       return InkWell(
                                                         onTap: () {
                                                           cubit.selectReasonId(punchCorrectionReasons[index].id);
@@ -745,7 +774,9 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                             children: [
                                                               Text(
-                                                                punchCorrectionReasons[index].label(context.localizations),
+                                                                punchCorrectionReasons[index].label(
+                                                                  context.localizations,
+                                                                ),
                                                                 style: context.typography.regular16.copyWith(
                                                                   color: isSelected ? context.colors.onSurface : null,
                                                                   fontWeight: isSelected ? FontWeight.w600 : null,
@@ -781,7 +812,8 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                               bloc: _fileUploadCubit,
                               builder: (context, fileUploadState) {
                                 // Hide upload area when uploading or when files exist
-                                final shouldShowUploadArea = !fileUploadState.isAnyFileUploading && fileUploadState.files.isEmpty;
+                                final shouldShowUploadArea =
+                                    !fileUploadState.isAnyFileUploading && fileUploadState.files.isEmpty;
 
                                 return Column(
                                   spacing: AppSpacing.md.h,
@@ -815,39 +847,45 @@ class _PunchCorrectionScreenState extends State<PunchCorrectionScreen> {
                       ),
                     ),
 
-                    BlocBuilder<PunchCorrectionCubit, PunchCorrectionState>(
-                      builder: (context, state) {
-                        final isLoading = state.status == PunchCorrectionStatus.loading;
+                    BlocBuilder<FileUploadCubit, FileUploadState>(
+                      bloc: _fileUploadCubit,
+                      builder: (context, fileUploadState) {
+                        return BlocBuilder<PunchCorrectionCubit, PunchCorrectionState>(
+                          builder: (context, state) {
+                            final isLoading = state.status == PunchCorrectionStatus.loading;
 
-                        return isLoading
-                            ? Center(
-                                child: SizedBox(
-                                  width: 24.r,
-                                  height: 24.r,
-                                  child: CircularProgressIndicator.adaptive(
-                                    strokeWidth: 2.r,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      context.colors.success,
+                            return isLoading
+                                ? Center(
+                                    child: SizedBox(
+                                      width: 24.r,
+                                      height: 24.r,
+                                      child: CircularProgressIndicator.adaptive(
+                                        strokeWidth: 2.r,
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          context.colors.success,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              )
-                            : Padding(
-                                padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.r),
-                                child: PrimaryTextButton(
-                                  onTap:
-                                      state.date == null ||
-                                          state.shiftId == null ||
-                                          state.correctionType == null ||
-                                          state.attendanceMethod == null ||
-                                          state.reasonId == null ||
-                                          !_hasRequiredCorrectionTimes(state)
-                                      ? null
-                                      : () => _submitPunchCorrection(context, state),
-                                  appButtonSize: AppButtonSize.xxLarge,
-                                  label: context.localizations.submit,
-                                ),
-                              );
+                                  )
+                                : Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.r),
+                                    child: PrimaryTextButton(
+                                      onTap:
+                                          state.date == null ||
+                                              state.shiftId == null ||
+                                              state.correctionType == null ||
+                                              state.attendanceMethod == null ||
+                                              state.reasonId == null ||
+                                              !_hasRequiredCorrectionTimes(state) ||
+                                              fileUploadState.isAnyFileUploading
+                                          ? null
+                                          : () => _submitPunchCorrection(context, state),
+                                      appButtonSize: AppButtonSize.xxLarge,
+                                      label: context.localizations.submit,
+                                    ),
+                                  );
+                          },
+                        );
                       },
                     ),
                   ],

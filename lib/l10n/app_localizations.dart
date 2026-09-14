@@ -1514,6 +1514,36 @@ abstract class AppLocalizations {
   /// **'Please select compensation day for compensatory leave'**
   String get pleaseSelectCompensationDay;
 
+  /// No description provided for @bereavementType.
+  ///
+  /// In en, this message translates to:
+  /// **'Bereavement Type'**
+  String get bereavementType;
+
+  /// No description provided for @selectBereavementType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select bereavement type'**
+  String get selectBereavementType;
+
+  /// No description provided for @bereavementTypeRacines.
+  ///
+  /// In en, this message translates to:
+  /// **'Ascendants (parents)'**
+  String get bereavementTypeRacines;
+
+  /// No description provided for @bereavementTypeSibling.
+  ///
+  /// In en, this message translates to:
+  /// **'Sibling'**
+  String get bereavementTypeSibling;
+
+  /// No description provided for @pleaseSelectBereavementType.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select bereavement type for bereavement leave'**
+  String get pleaseSelectBereavementType;
+
   /// No description provided for @noLeaveTypesAvailable.
   ///
   /// In en, this message translates to:

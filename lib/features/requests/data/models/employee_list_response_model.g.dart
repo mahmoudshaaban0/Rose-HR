@@ -119,7 +119,7 @@ Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
     json['leave_visa_needed_before'],
   ),
   leaveRequireAdvanceSalary: json['leave_require_advance_salary'] as bool?,
-  leaveBereavementType: json['leave_bereavement_type'] as bool?,
+  leaveBereavementType: json['leave_bereavement_type'],
   leaveCanCancel: json['leave_can_cancel'] as bool?,
   leaveCanApprove: json['leave_can_approve'] as bool?,
   clrLastWorkingDay: const FalseOrStringConverter().fromJson(

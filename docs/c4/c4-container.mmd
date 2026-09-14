@@ -1,0 +1,42 @@
+%%{init: {"flowchart": {"htmlLabels": true, "curve": "basis"}, "themeVariables": {"fontSize": "15px"}}}%%
+flowchart TB
+    classDef person fill:#08427B,stroke:#052E56,color:#ffffff
+    classDef container fill:#438DD5,stroke:#2E6295,color:#ffffff
+    classDef ext fill:#8A8A8A,stroke:#5F5F5F,color:#ffffff
+
+    employee["<b>Employee</b><br/><i>[Person]</i>"]
+    manager["<b>Manager</b><br/><i>[Person]</i>"]
+
+    subgraph app["Rose HR Mobile App  (Flutter)"]
+        direction TB
+        ui["<b>Presentation Layer</b><br/><i>[Flutter · go_router · flutter_bloc]</i><br/>Screens &amp; widgets driven by feature<br/>Cubits/Blocs. Localized EN/AR,<br/>theming via ThemeExtensions"]
+        dataL["<b>Feature Data Layer</b><br/><i>[Dart · repositories + datasources]</i><br/>Repositories map exceptions to<br/>Failures and return Result&lt;T&gt;;<br/>datasources build request models"]
+        network["<b>Networking</b><br/><i>[Dio · DioConsumer / ApiConsumer]</i><br/>Wraps payloads in a {params} envelope,<br/>injects Bearer key + lang header,<br/>maps errors to typed exceptions"]
+        storage["<b>Local Storage</b><br/><i>[shared_preferences · AppManager]</i><br/>Persists apiKey, uid, email,<br/>name, locale — auth state =<br/>presence of apiKey"]
+        notif["<b>Notification Service</b><br/><i>[firebase_messaging + local]</i><br/>Handles foreground/background<br/>FCM &amp; local notifications"]
+        loc["<b>Location &amp; Timezone</b><br/><i>[geolocator + timezone]</i><br/>LocationProvider + TimezoneManager<br/>detect country and set<br/>the working timezone"]
+        di["<b>Dependency Injection</b><br/><i>[get_it · injection_container]</i><br/>datasources/repos as singletons,<br/>cubits/blocs as factories"]
+    end
+
+    backend["<b>Rose HR Backend</b><br/><i>[External System]</i><br/>Odoo JSON-RPC API"]
+    fcm["<b>Firebase Cloud Messaging</b><br/><i>[External System]</i>"]
+    location["<b>Device Location Services</b><br/><i>[External System]</i>"]
+
+    employee --> ui
+    manager --> ui
+
+    ui -->|"Calls via Cubits/Blocs<br/>[Result&lt;T&gt;]"| dataL
+    ui -->|"Reads session / locale"| storage
+    ui -->|"Shows notifications"| notif
+    ui -->|"Reads position / timezone"| loc
+    dataL -->|"Sends requests"| network
+    network -->|"HTTPS / JSON-RPC,<br/>Bearer key"| backend
+    notif -.->|"Push / registers token"| fcm
+    loc -->|"Reads GPS"| location
+    di -.->|"Wires"| dataL
+    di -.->|"Wires"| network
+
+    class employee,manager person
+    class ui,dataL,network,storage,notif,loc,di container
+    class backend,fcm,location ext
+    style app fill:none,stroke:#2E6295,stroke-width:1px,color:#438DD5

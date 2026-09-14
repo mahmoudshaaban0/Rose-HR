@@ -1,0 +1,63 @@
+%%{init: {"flowchart": {"htmlLabels": true, "curve": "basis"}, "themeVariables": {"fontSize": "14px"}}}%%
+flowchart TB
+    classDef person fill:#08427B,stroke:#052E56,color:#ffffff
+    classDef comp fill:#85BBF0,stroke:#5D82A8,color:#000000
+    classDef ext fill:#8A8A8A,stroke:#5F5F5F,color:#ffffff
+
+    user["<b>Employee / Manager</b><br/><i>[Person]</i>"]
+
+    router["<b>AppRouter</b><br/><i>[go_router + RoutingNotifier]</i><br/>Route table; redirects on auth<br/>state (presence of apiKey)"]
+
+    subgraph pres["Presentation Layer"]
+        direction TB
+        screens["<b>Screens &amp; Widgets</b><br/><i>[Flutter]</i><br/>Home, Attendance, Requests, Account,<br/>EOS, Notifications, Stores, request forms"]
+        cubits["<b>Cubits / Blocs</b><br/><i>[flutter_bloc]</i><br/>Auth, Home/Shift/Timezone, Attendance,<br/>Permission, Holiday, WorkMission, PunchCorrection,<br/>Requests (team/pending/single), Notifications,<br/>Account, Eos, FileUpload"]
+    end
+
+    subgraph dataL["Feature Data Layer"]
+        direction TB
+        repos["<b>Repositories</b><br/><i>[Dart · one per feature]</i><br/>try/catch around datasources, map<br/>ServerException to Failure, return Result&lt;T&gt;"]
+        datasources["<b>DataSources</b><br/><i>[Dart · one per feature]</i><br/>auth, home, account, attendance, permission,<br/>punch_correction, work_mission, holiday, requests,<br/>notifications, eos — build models, call ApiConsumer"]
+        models["<b>Request/Response Models</b><br/><i>[json_serializable]</i><br/>*Model with fromJson/toJson (.g.dart)"]
+    end
+
+    subgraph shared["Shared Infrastructure (lib/common)"]
+        direction TB
+        api["<b>ApiConsumer / DioConsumer</b><br/><i>[Dio]</i><br/>GET/POST helpers, {params} envelope,<br/>throws typed ServerExceptions"]
+        intercept["<b>AppIntercepters</b><br/><i>[Dio interceptor]</i><br/>Injects Bearer key, content-type<br/>and lang header (en_US / ar_001)"]
+        result["<b>Result&lt;T&gt; + Failures</b><br/><i>[sealed classes]</i><br/>Success / Error switched on by cubits"]
+        di["<b>Injection Container</b><br/><i>[get_it]</i><br/>datasource → repository → bloc"]
+        appManager["<b>AppManager</b><br/><i>[shared_preferences]</i><br/>apiKey, uid, email, name, locale"]
+        notif["<b>NotificationService</b><br/><i>[FCM + local notifications]</i><br/>Foreground/background push"]
+        locTz["<b>Location / TimezoneManager</b><br/><i>[geolocator + timezone]</i><br/>GPS + Egypt/KSA timezone detection"]
+    end
+
+    backend["<b>Rose HR Backend</b><br/><i>[External System]</i>"]
+    fcm["<b>Firebase Cloud Messaging</b><br/><i>[External System]</i>"]
+    location["<b>Device Location Services</b><br/><i>[External System]</i>"]
+
+    user -->|"Interacts with [Mobile UI]"| screens
+    router -->|"Navigates to"| screens
+    screens -->|"Events / watches state"| cubits
+    cubits -->|"Calls [returns Result&lt;T&gt;]"| repos
+    cubits -->|"Reads/writes session"| appManager
+    cubits -->|"Reads position / timezone"| locTz
+    repos -->|"Calls"| datasources
+    repos -.->|"Maps → Failure"| result
+    datasources -->|"Builds / parses"| models
+    datasources -->|"Sends requests"| api
+    api -->|"Uses"| intercept
+    api -->|"HTTPS / JSON-RPC, Bearer key"| backend
+    intercept -.->|"Reads apiKey &amp; locale"| appManager
+    notif -.->|"Push / registers token"| fcm
+    locTz -->|"Reads GPS"| location
+    di -.->|"Wires"| repos
+    di -.->|"Wires"| datasources
+    di -.->|"Wires"| cubits
+
+    class user person
+    class router,screens,cubits,repos,datasources,models,api,intercept,result,di,appManager,notif,locTz comp
+    class backend,fcm,location ext
+    style pres fill:none,stroke:#5D82A8,color:#1168BD
+    style dataL fill:none,stroke:#5D82A8,color:#1168BD
+    style shared fill:none,stroke:#5D82A8,color:#1168BD

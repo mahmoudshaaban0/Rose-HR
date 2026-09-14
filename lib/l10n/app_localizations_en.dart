@@ -737,6 +737,22 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please select compensation day for compensatory leave';
 
   @override
+  String get bereavementType => 'Bereavement Type';
+
+  @override
+  String get selectBereavementType => 'Select bereavement type';
+
+  @override
+  String get bereavementTypeRacines => 'Ascendants (parents)';
+
+  @override
+  String get bereavementTypeSibling => 'Sibling';
+
+  @override
+  String get pleaseSelectBereavementType =>
+      'Please select bereavement type for bereavement leave';
+
+  @override
   String get noLeaveTypesAvailable => 'No leave types available';
 
   @override

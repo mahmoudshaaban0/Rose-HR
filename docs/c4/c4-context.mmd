@@ -1,0 +1,29 @@
+%%{init: {"flowchart": {"htmlLabels": true, "curve": "basis"}, "themeVariables": {"fontSize": "16px"}}}%%
+flowchart TB
+    classDef person fill:#08427B,stroke:#052E56,color:#ffffff
+    classDef system fill:#1168BD,stroke:#0B4884,color:#ffffff
+    classDef ext fill:#8A8A8A,stroke:#5F5F5F,color:#ffffff
+
+    employee["<b>Employee</b><br/><i>[Person]</i><br/>Punches attendance; requests<br/>permissions, holidays &amp;<br/>work-missions; submits<br/>punch corrections"]
+    manager["<b>Manager</b><br/><i>[Person]</i><br/>Approves / rejects the requests<br/>of their team, plus all<br/>employee actions"]
+
+    roseHr["<b>Rose HR Mobile App</b><br/><i>[Software System]</i><br/>Flutter app (Android / iOS).<br/>Attendance punching, shift summaries,<br/>HR requests and manager approvals.<br/>English + Arabic (RTL)"]
+
+    backend["<b>Rose HR Backend</b><br/><i>[External System]</i><br/>Odoo-style JSON-RPC HTTP API.<br/>Source of truth for employees,<br/>attendance, shifts, requests<br/>and end-of-service data"]
+    fcm["<b>Firebase Cloud Messaging</b><br/><i>[External System]</i><br/>Delivers push notifications for<br/>request status updates<br/>and approvals"]
+    location["<b>Device Location Services</b><br/><i>[External System]</i><br/>GPS position to geotag punches and<br/>auto-detect the working timezone<br/>(Egypt / Saudi Arabia)"]
+    stores["<b>Google Play / App Store</b><br/><i>[External System]</i><br/>Distributes the app and serves<br/>forced / optional update prompts"]
+
+    employee -->|"Punches in/out, submits<br/>&amp; tracks requests [Mobile UI]"| roseHr
+    manager -->|"Approves / rejects<br/>team requests [Mobile UI]"| roseHr
+
+    roseHr -->|"Sends punches &amp; requests,<br/>fetches HR data<br/>[HTTPS / JSON-RPC, Bearer key]"| backend
+    backend -.->|"Triggers push"| fcm
+    fcm -.->|"Delivers push notifications"| roseHr
+    roseHr -->|"Registers FCM device token<br/>(via backend on login)"| backend
+    roseHr -->|"Requests current<br/>GPS position"| location
+    roseHr -->|"Checks for app updates"| stores
+
+    class employee,manager person
+    class roseHr system
+    class backend,fcm,location,stores ext
