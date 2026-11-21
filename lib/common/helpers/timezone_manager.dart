@@ -30,8 +30,10 @@ import 'package:timezone/timezone.dart' as tz;
 ///
 /// ## Timezone Detection Priority
 ///
-/// 1. GPS-based detection (determines Egypt vs Saudi Arabia based on location)
-/// 2. Fallback to Saudi Arabia (default for the app)
+/// 1. GPS country (reverse geocoded) mapped to its IANA zone, e.g. Jordan ->
+///    Asia/Amman. See [LocationProvider.countryTimezones].
+/// 2. Fallback to the device's current UTC offset (matches the OS clock) when
+///    location is unavailable or the country is unknown.
 /// 3. UTC as last resort if all else fails
 class TimezoneManager {
   TimezoneManager._();
@@ -161,8 +163,9 @@ class TimezoneManager {
     // Initialize timezone database
     tz_data.initializeTimeZones();
 
-    // Set default timezone immediately (Saudi Arabia)
-    _setTimezone(AppTimezone.saudiArabia);
+    // Use the device's offset until GPS detection completes, so the app
+    // matches the OS clock even without location permission.
+    _setLocation(_deviceLocation());
     _isInitialized = true;
 
     if (detectFromGps) {
@@ -179,13 +182,55 @@ class TimezoneManager {
     try {
       final permissionStatus = await LocationProvider.checkPermission();
 
-      if (permissionStatus == LocationPermissionStatus.granted) {
-        final result = await LocationProvider.getTimezoneWithLocationName();
-        _setTimezone(result.timezone, cityName: result.locationName);
+      if (permissionStatus != LocationPermissionStatus.granted) {
+        _setLocation(_deviceLocation());
+        return;
       }
+
+      final result = await LocationProvider.getTimezoneWithLocationName();
+      final ianaName = result.ianaName;
+      _setLocation(
+        ianaName != null ? tz.getLocation(ianaName) : _deviceLocation(),
+        cityName: result.locationName,
+      );
     } on Exception catch (e) {
       _log.e('Failed to detect timezone from GPS: $e');
-      // Keep the default timezone (Saudi Arabia)
+      _setLocation(_deviceLocation());
+    }
+  }
+
+  /// A fixed-offset location using the device's current UTC offset.
+  ///
+  /// Used when the user's country is unknown, so the app shows the same
+  /// time as the OS instead of guessing Egypt/Saudi Arabia.
+  static tz.Location _deviceLocation() {
+    final now = DateTime.now();
+    final offset = now.timeZoneOffset;
+    return tz.Location(
+      'Device',
+      [tz.minTime],
+      [0],
+      [
+        tz.TimeZone(
+          offset.inMilliseconds,
+          isDst: false,
+          abbreviation: now.timeZoneName,
+        ),
+      ],
+    );
+  }
+
+  /// Apply [location] as the app timezone and keep [_appTimezone] in sync.
+  void _setLocation(tz.Location location, {String? cityName}) {
+    _location = location;
+    _timezoneName = location.name;
+    _cityName = cityName;
+    tz.setLocalLocation(location);
+
+    if (location.name == AppTimezone.egypt.locationName) {
+      _appTimezone = AppTimezone.egypt;
+    } else if (location.name == AppTimezone.saudiArabia.locationName) {
+      _appTimezone = AppTimezone.saudiArabia;
     }
   }
 

@@ -267,27 +267,47 @@ class LocationProvider {
     return (isWithin: distance <= radiusInMeters, distance: distance);
   }
 
-  /// Get city name from coordinates using reverse geocoding
+  /// Reverse geocode coordinates into a city name and ISO country code.
   ///
-  /// Returns the city/locality name, trying multiple placemark fields
-  static Future<String?> _getCityFromCoordinates({
+  /// Never throws: returns nulls if geocoding fails.
+  static Future<({String? city, String? countryCode})> _reverseGeocode({
     required double latitude,
     required double longitude,
   }) async {
     try {
       final placemarks = await placemarkFromCoordinates(latitude, longitude);
-
-      if (placemarks.isEmpty) return null;
-
-      final placemark = placemarks.first.administrativeArea;
-
-      if (placemark == null) return null;
-
-      return placemark;
+      if (placemarks.isEmpty) return (city: null, countryCode: null);
+      final placemark = placemarks.first;
+      return (
+        city: placemark.administrativeArea,
+        countryCode: placemark.isoCountryCode?.toUpperCase(),
+      );
     } on Exception catch (_) {
-      throw Exception('Failed Geocoding Getting City Name');
+      return (city: null, countryCode: null);
     }
   }
+
+  /// IANA timezone for countries where the app may be used.
+  ///
+  /// All of these are single-timezone countries, so the country code alone
+  /// identifies the correct zone (including DST rules).
+  static const Map<String, String> countryTimezones = {
+    'EG': 'Africa/Cairo',
+    'SA': 'Asia/Riyadh',
+    'JO': 'Asia/Amman',
+    'AE': 'Asia/Dubai',
+    'KW': 'Asia/Kuwait',
+    'QA': 'Asia/Qatar',
+    'BH': 'Asia/Bahrain',
+    'OM': 'Asia/Muscat',
+    'IQ': 'Asia/Baghdad',
+    'LB': 'Asia/Beirut',
+    'SY': 'Asia/Damascus',
+    'YE': 'Asia/Aden',
+    'SD': 'Africa/Khartoum',
+    'LY': 'Africa/Tripoli',
+    'TR': 'Europe/Istanbul',
+  };
 
   /// Determine timezone based on given coordinates
   ///
@@ -313,25 +333,44 @@ class LocationProvider {
 
   /// Get timezone and location name based on current GPS location
   ///
-  /// Returns a record with timezone and city name from geocoding
-  static Future<({AppTimezone timezone, String locationName})> getTimezoneWithLocationName() async {
+  /// `ianaName` is the real IANA timezone of the country the user is in
+  /// (e.g. "Asia/Amman"), or null if the country could not be determined
+  /// or is not in [countryTimezones].
+  static Future<
+    ({AppTimezone timezone, String? ianaName, String locationName})
+  >
+  getTimezoneWithLocationName() async {
     try {
       final location = await getCurrentLocation();
-      final timezone = getTimezoneFromCoordinates(location.latitude, location.longitude);
-
-      // Try to get real city name from geocoding
-      final cityName = await _getCityFromCoordinates(
+      final geo = await _reverseGeocode(
         latitude: location.latitude,
         longitude: location.longitude,
       );
+      final ianaName = countryTimezones[geo.countryCode];
 
-      // Use geocoded city name if available, otherwise fallback based on timezone
-      final locationName = cityName ?? 'No Location Name';
+      final AppTimezone timezone;
+      if (ianaName == AppTimezone.egypt.locationName) {
+        timezone = AppTimezone.egypt;
+      } else if (ianaName == AppTimezone.saudiArabia.locationName) {
+        timezone = AppTimezone.saudiArabia;
+      } else {
+        timezone = getTimezoneFromCoordinates(
+          location.latitude,
+          location.longitude,
+        );
+      }
 
-      return (timezone: timezone, locationName: locationName);
+      return (
+        timezone: timezone,
+        ianaName: ianaName,
+        locationName: geo.city ?? 'No Location Name',
+      );
     } on Exception catch (_) {
-      // Default to Riyadh if location cannot be obtained
-      return (timezone: AppTimezone.saudiArabia, locationName: 'No Location');
+      return (
+        timezone: AppTimezone.saudiArabia,
+        ianaName: null,
+        locationName: 'No Location',
+      );
     }
   }
 }
