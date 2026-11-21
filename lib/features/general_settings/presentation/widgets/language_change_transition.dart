@@ -6,6 +6,7 @@ import 'package:rose_hr/l10n/app_localizations.dart';
 import 'package:rose_hr/theme/app_spacing.dart';
 import 'package:rose_hr/theme/theme_ext.dart';
 
+
 /// Full-screen animated overlay before [GoRouter.go] to splash after a language change.
 class LanguageChangeTransition {
   LanguageChangeTransition._();

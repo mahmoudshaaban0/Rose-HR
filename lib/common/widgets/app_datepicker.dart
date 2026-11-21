@@ -68,7 +68,7 @@ class AppDatePicker {
                 context: modalContext,
                 locale: const Locale('en', 'US'),
                 child: CupertinoDatePicker(
-                  maximumYear: maximumYear ?? DateTime.now().year,
+                  maximumYear: maximumYear ?? DateTime.now().year + 1,
                   minimumYear: minimumYear ?? (DateTime.now().year - 100),
                   minimumDate: minimumDate,
                   onDateTimeChanged: (DateTime date) {

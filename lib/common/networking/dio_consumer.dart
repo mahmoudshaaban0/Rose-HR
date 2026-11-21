@@ -31,6 +31,7 @@ class DioConsumer implements ApiConsumer {
         // This means use the system’s default certificate validation, so only
         // valid, trusted SSL certificates are accepted.
         httpClient.badCertificateCallback = null;
+        
       }
 
       return httpClient;
